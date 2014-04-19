@@ -21,13 +21,9 @@ describe('Consul', function() {
   });
 
   describe('constructor', function() {
-    it('should set default url', function() {
-      var url = this.c.url;
-
-      url.protocol.should.eql('http:');
-      url.hostname.should.eql('localhost');
-      url.port.should.eql('8500');
-      url.path.should.eql('/v1');
+    it('should have vaild defaults', function() {
+      this.c.host.should.eql('localhost');
+      this.c.httpPort.should.eql('8500');
     });
   });
 
