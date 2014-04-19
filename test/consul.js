@@ -116,6 +116,52 @@ describe('Consul', function() {
           done();
         });
       });
+
+      it('should wait for update', function(done) {
+        var c = this.c;
+        var key = this.key;
+        var update = 'new-value';
+
+        var jobs = {};
+
+        jobs.get = function(cb) {
+          c.kv.get(key, function(err, data) {
+            should.not.exist(err);
+
+            cb(null, data);
+          });
+        };
+
+        jobs.wait = ['get', function(cb, result) {
+          var options = {
+            key: key,
+            index: result.get.modifyIndex,
+            wait: '3s'
+          };
+
+          c.kv.get(options, function(err, data) {
+            should.not.exist(err);
+
+            data.value.should.eql(update);
+
+            cb();
+          });
+        }];
+
+        jobs.update = ['get', function(cb) {
+          c.kv.set(key, update, function(err) {
+            should.not.exist(err);
+
+            cb();
+          });
+        }];
+
+        async.auto(jobs, function(err) {
+          should.not.exist(err);
+
+          done();
+        });
+      });
     });
 
     describe('set', function() {
