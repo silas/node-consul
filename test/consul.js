@@ -68,15 +68,15 @@ describe('Consul', function() {
           should.not.exist(err);
 
           data.should.have.properties(
-            'createIndex',
-            'modifyIndex',
-            'key',
-            'flags',
-            'value'
+            'CreateIndex',
+            'ModifyIndex',
+            'Key',
+            'Flags',
+            'Value'
           );
-          data.key.should.eql(key);
-          data.flags.should.eql(0);
-          data.value.should.eql(value);
+          data.Key.should.eql(key);
+          data.Flags.should.eql(0);
+          data.Value.should.eql(value);
 
           done();
         });
@@ -103,15 +103,15 @@ describe('Consul', function() {
 
           var item = data[0];
           item.should.have.properties(
-            'createIndex',
-            'modifyIndex',
-            'key',
-            'flags',
-            'value'
+            'CreateIndex',
+            'ModifyIndex',
+            'Key',
+            'Flags',
+            'Value'
           );
-          item.key.should.eql(key);
-          item.flags.should.eql(0);
-          item.value.should.eql(value);
+          item.Key.should.eql(key);
+          item.Flags.should.eql(0);
+          item.Value.should.eql(value);
 
           done();
         });
@@ -135,14 +135,14 @@ describe('Consul', function() {
         jobs.wait = ['get', function(cb, result) {
           var options = {
             key: key,
-            index: result.get.modifyIndex,
+            index: result.get.ModifyIndex,
             wait: '3s'
           };
 
           c.kv.get(options, function(err, data) {
             should.not.exist(err);
 
-            data.value.should.eql(update);
+            data.Value.should.eql(update);
 
             cb();
           });
@@ -178,8 +178,8 @@ describe('Consul', function() {
           c.kv.get(key, function(err, data) {
             should.not.exist(err);
 
-            data.should.have.property('value');
-            data.value.should.eql(value);
+            data.should.have.property('Value');
+            data.Value.should.eql(value);
 
             done();
           });
