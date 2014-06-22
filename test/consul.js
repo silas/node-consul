@@ -9,7 +9,7 @@
 var async = require('async');
 var should = require('should');
 
-var Consul = require('../lib/consul').Consul;
+var consul = require('../lib');
 
 /**
  * Tests
@@ -17,7 +17,7 @@ var Consul = require('../lib/consul').Consul;
 
 describe('Consul', function() {
   before(function() {
-    this.c = new Consul();
+    this.c = consul();
   });
 
   describe('constructor', function() {
