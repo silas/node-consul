@@ -16,8 +16,7 @@
   },
   "scripts": {
     "test": "./node_modules/.bin/jshint lib test && ./node_modules/.bin/jscs lib test && ./node_modules/.bin/mocha --recursive --require should -R spec",
-    "setup": "mkdir -p ./tmp/data && if test -f ./tmp/consul; then wget https://dl.bintray.com/mitchellh/consul/0.3.0_$( uname -s | tr '[:upper:]' '[:lower:]' )_amd64.zip && unzip *.zip && mv ./consul ./tmp/consul && rm *.zip; fi",
-    "start": "npm run setup; rm -fr ./tmp/data/* ; ./tmp/consul agent -data-dir=./tmp/data -server -bootstrap -node=node1 -dc=dc1 -pid-file=./tmp/consul.pid &> ./tmp/consul.log &",
+    "start": "./scripts/setup && ./tmp/consul agent -data-dir=./tmp/data -server -bootstrap -node=node1 -dc=dc1 -pid-file=./tmp/consul.pid &> ./tmp/consul.log &",
     "stop": "if [[ -f ./tmp/consul.pid ]]; then kill $( cat ./tmp/consul.pid ) &>/dev/null; fi"
   },
   "keywords": [
