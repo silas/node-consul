@@ -3,6 +3,5 @@
 .env
 .rock.yml
 config
-consul
 node_modules
 tmp

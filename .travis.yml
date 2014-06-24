@@ -4,9 +4,6 @@ node_js:
   - "0.10"
 
 install:
- - wget https://dl.bintray.com/mitchellh/consul/0.3.0_linux_amd64.zip
- - unzip *.zip
- - rm *.zip
  - npm start
  - npm install
 
