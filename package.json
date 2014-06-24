@@ -15,7 +15,9 @@
     "uuid": "^1.4.1"
   },
   "scripts": {
-    "test": "./node_modules/.bin/jshint lib test && ./node_modules/.bin/jscs lib test && ./node_modules/.bin/mocha --recursive --require should -R spec"
+    "test": "./node_modules/.bin/jshint lib test && ./node_modules/.bin/jscs lib test && ./node_modules/.bin/mocha --recursive --require should -R spec",
+    "start": "consul agent -data-dir=$( mktemp -d -t consul ) -server -bootstrap -node=node1 -dc=dc1 2>&1 >> consul.log & echo $! > consul.pid",
+    "stop": "kill $( cat consul.pid ) && rm consul.pid"
   },
   "keywords": [
     "consul"
