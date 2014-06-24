@@ -5,9 +5,8 @@ This is a [Consul][consul] client.
 ## Test
 
 ```
-$ npm start
+$ npm start  # start consul server
 $ npm test
-$ npm stop
 ```
 
 ## License

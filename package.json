@@ -16,8 +16,8 @@
   },
   "scripts": {
     "test": "./node_modules/.bin/jshint lib test && ./node_modules/.bin/jscs lib test && ./node_modules/.bin/mocha --recursive --require should -R spec",
-    "start": "consul agent -data-dir=$( mktemp -d $TMPDIR/consul_XXXXX ) -server -bootstrap -node=node1 -dc=dc1 -pid-file=consul.pid &> consul.log &",
-    "stop": "if [[ -f consul.pid ]]; then kill $( cat consul.pid ) &>/dev/null; fi"
+    "start": "mkdir -p ./tmp/data; rm -fr ./tmp/data ; consul agent -data-dir=./tmp/data -server -bootstrap -node=node1 -dc=dc1 -pid-file=./tmp/consul.pid &> ./tmp/consul.log &",
+    "stop": "if [[ -f ./tmp/consul.pid ]]; then kill $( cat ./tmp/consul.pid ) &>/dev/null; fi"
   },
   "keywords": [
     "consul"

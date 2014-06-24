@@ -1,10 +1,8 @@
 *.log
-*.pid
 *swp
 .env
 .rock.yml
 config
 consul
-example.js
 node_modules
 tmp

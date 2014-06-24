@@ -9,3 +9,6 @@ install:
  - rm *.zip
  - npm start
  - npm install
+
+after_script:
+ - npm stop
