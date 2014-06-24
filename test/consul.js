@@ -63,9 +63,10 @@ describe('Consul', function() {
         this.c.kv.get(key, function(err, data) {
           should.not.exist(err);
 
-          data.should.have.properties(
+          data.should.have.keys(
             'CreateIndex',
             'ModifyIndex',
+            'LockIndex',
             'Key',
             'Flags',
             'Value'
@@ -98,9 +99,10 @@ describe('Consul', function() {
           data.length.should.eql(1);
 
           var item = data[0];
-          item.should.have.properties(
+          item.should.have.keys(
             'CreateIndex',
             'ModifyIndex',
+            'LockIndex',
             'Key',
             'Flags',
             'Value'
@@ -174,7 +176,14 @@ describe('Consul', function() {
           c.kv.get(key, function(err, data) {
             should.not.exist(err);
 
-            data.should.have.property('Value');
+            data.should.have.keys(
+              'CreateIndex',
+              'ModifyIndex',
+              'LockIndex',
+              'Key',
+              'Flags',
+              'Value'
+            );
             data.Value.should.eql(value);
 
             done();
