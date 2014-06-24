@@ -1,4 +1,4 @@
-# Consul [![Build Status](https://travis-ci.org/silas/consul.png?branch=master)](https://travis-ci.org/silas/consul)
+# Consul [![Build Status](https://travis-ci.org/silas/node-consul.png?branch=master)](https://travis-ci.org/silas/node-consul)
 
 This is a [Consul][consul] client.
 
