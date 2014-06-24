@@ -5,9 +5,8 @@ This is a [Consul][consul] client.
 ## Test
 
 ``` console
-$ consul agent -data-dir=/tmp -server -bootstrap 2>&1 >> consul.log & echo $! > consul.pid
+$ consul agent -data-dir="$( mktemp -d -t consul )" -server -bootstrap
 $ npm test
-$ kill $( cat consul.pid ) && rm consul.pid
 ```
 
 ## License
