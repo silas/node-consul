@@ -3,12 +3,9 @@ language: node_js
 node_js:
   - "0.10"
 
-before_script:
+install:
  - wget https://dl.bintray.com/mitchellh/consul/0.3.0_linux_amd64.zip
  - unzip *.zip
  - rm *.zip
- - PATH=".:$PATH" npm start
- - sleep 5
-
-after_failure:
- - cat consul.log
+ - npm start
+ - npm install
