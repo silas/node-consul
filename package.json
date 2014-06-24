@@ -8,7 +8,7 @@
   },
   "devDependencies": {
     "async": "^0.9.0",
-    "jscs": "^1.5.3",
+    "jscs": "^1.5.4",
     "jshint": "^2.5.1",
     "mocha": "^1.20.1",
     "should": "^4.0.4",
@@ -16,8 +16,8 @@
   },
   "scripts": {
     "test": "./node_modules/.bin/jshint lib test && ./node_modules/.bin/jscs lib test && ./node_modules/.bin/mocha --recursive --require should -R spec",
-    "start": "consul agent -data-dir=$( mktemp -d -t consul ) -server -bootstrap -node=node1 -dc=dc1 2>&1 >> consul.log & echo $! > consul.pid",
-    "stop": "kill $( cat consul.pid ) && rm consul.pid"
+    "start": "consul agent -data-dir=$( mktemp -d -t consul ) -server -bootstrap -node=node1 -dc=dc1 -pid-file=consul.pid &> consul.log &",
+    "stop": "test -f consul.pid && kill $( cat consul.pid )"
   },
   "keywords": [
     "consul"
