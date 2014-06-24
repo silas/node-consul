@@ -4,4 +4,6 @@
 .npmignore
 .rock.yml
 config
+scripts
 test
+tmp
