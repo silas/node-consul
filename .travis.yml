@@ -11,7 +11,10 @@ install:
 
 before_script:
  - npm start
- - sleep 3
+ - sleep 10
 
 after_script:
  - npm stop
+
+after_failure:
+ - cat consul.log
