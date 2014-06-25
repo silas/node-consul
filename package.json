@@ -17,7 +17,7 @@
   "scripts": {
     "test": "./node_modules/.bin/jshint lib test && ./node_modules/.bin/jscs lib test && ./node_modules/.bin/mocha --recursive --require should -R spec",
     "start": "consul agent -data-dir=$( mktemp -d -t consul ) -server -bootstrap -node=node1 -dc=dc1 -pid-file=consul.pid &> consul.log &",
-    "stop": "kill $( cat consul.pid || : ) &>/dev/null"
+    "stop": "kill $( cat consul.pid || : )"
   },
   "keywords": [
     "consul"
