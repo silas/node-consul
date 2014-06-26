@@ -63,6 +63,14 @@ describe('Agent', function() {
         should(data).be.instanceOf(Object);
         data.should.have.keys('Config', 'Member');
 
+        data.Config.Bootstrap.should.be.true;
+        data.Config.Server.should.be.true;
+        data.Config.Datacenter.should.eql('dc1');
+        data.Config.NodeName.should.eql('node1');
+
+        data.Member.Name.should.eql('node1');
+        data.Member.Addr.should.eql('127.0.0.1');
+
         done();
       });
     });
