@@ -16,6 +16,8 @@
   },
   "scripts": {
     "test": "./node_modules/.bin/jshint lib test && ./node_modules/.bin/jscs lib test && ./node_modules/.bin/mocha --recursive --require should -R spec",
+    "less": "less ./test/tmp/*.log",
+    "tail": "tail -f ./test/tmp/*.log",
     "start": "./test/cluster start",
     "stop": "./test/cluster stop"
   },

@@ -2,12 +2,12 @@
 
 tmp="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/tmp"
 
-mkdir -p "$tmp"
-
-ensure_consul() {
+setup() {
   version='0.3.0'
   os="$( uname -s | tr '[:upper:]' '[:lower:]' )"
   arch='amd64'
+
+  mkdir -p "$tmp"
 
   if [[ ! -e "${tmp}/consul" ]]; then
     echo
@@ -49,9 +49,7 @@ start_server() {
 }
 
 start() {
-  stop
-
-  ensure_consul
+  setup; stop &>/dev/null
 
   echo 'Starting server id 1 (bootstrap)'
 
@@ -76,20 +74,8 @@ stop() {
   done
 }
 
-log() {
-  for id in {1..3}; do
-    if [[ -f "${tmp}/consul_${id}.log" ]]; then
-      echo
-      echo "Server ${id}"
-      echo
-      cat "${tmp}/consul_${id}.log"
-    fi
-  done
-}
-
 case $1 in
   start) shift; start "$@" ;;
   stop) shift; stop "$@" ;;
-  log) shift; log "$@" ;;
   *) echo "Unknown command: $1" ;;
 esac
