@@ -51,14 +51,14 @@ start_server() {
 start() {
   setup; stop &>/dev/null
 
-  echo 'Starting server id 1 (bootstrap)'
-
-  start_server 1 -bootstrap -server
-
-  for id in {2..3}; do
+  for id in {1..3}; do
     echo "Starting server id $id"
 
-    start_server $id
+    if [[ $id == 1 ]]; then
+      start_server $id -bootstrap -server
+    else
+      start_server $id
+    fi
   done
 }
 
