@@ -39,7 +39,7 @@ start_server() {
 
   "${tmp}/consul" agent \
     -data-dir="$data" \
-    -node="node_${id}" \
+    -node="node${id}" \
     -dc=dc1 \
     -bind="127.0.0.${id}" \
     -client="127.0.0.${id}" \
