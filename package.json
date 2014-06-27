@@ -8,11 +8,12 @@
     "jscs": "^1.5.4",
     "jshint": "^2.5.1",
     "mocha": "^1.20.1",
+    "node-uuid": "^1.4.1",
     "should": "^4.0.4",
     "uuid": "^1.4.1"
   },
   "scripts": {
-    "test": "./node_modules/.bin/jshint lib test && ./node_modules/.bin/jscs lib test && ./node_modules/.bin/mocha --recursive --require should -R spec",
+    "test": "./node_modules/.bin/jshint lib test/*.js && ./node_modules/.bin/jscs lib test/*.js && ./node_modules/.bin/mocha --require should -R spec",
     "less": "less ./test/tmp/*.log",
     "tail": "tail -f ./test/tmp/*.log",
     "start": "./test/cluster start",

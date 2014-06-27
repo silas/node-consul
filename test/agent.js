@@ -6,7 +6,9 @@
  * Module dependencies.
  */
 
+var async = require('async');
 var should = require('should');
+var uuid = require('node-uuid');
 
 var consul = require('../lib');
 
@@ -115,6 +117,70 @@ describe('Agent', function() {
       // TODO: check for leaving state
       this.c1.agent.forceLeave('node2', function(err) {
         should.not.exist(err);
+
+        done();
+      });
+    });
+  });
+
+  describe('registerCheck', function() {
+    it('should register a check', function(done) {
+      var c = this.c1;
+
+      var name = 'check-' + uuid.v4();
+
+      var jobs = {};
+
+      jobs.register = function(cb) {
+        var opts = { name: name, ttl: '10ms' };
+
+        c.agent.registerCheck(opts, cb);
+      };
+
+      jobs.exists = ['register', function(cb) {
+        // TODO: ensure check exists
+        cb();
+      }];
+
+      jobs.deregister = ['exists', function(cb) {
+        c.agent.deregisterCheck(name, cb);
+      }];
+
+      async.auto(jobs, function(err) {
+        should.not.exist(err);
+
+        done();
+      });
+    });
+  });
+
+  describe('deregisterCheck', function() {
+    it('should deregister a check', function(done) {
+      var c = this.c1;
+
+      var name = 'check-' + uuid.v4();
+
+      var jobs = {};
+
+      jobs.register = function(cb) {
+        var opts = { name: name, ttl: '10ms' };
+
+        c.agent.registerCheck(opts, cb);
+      };
+
+      jobs.exists = ['register', function(cb) {
+        // TODO: ensure check exists
+        cb();
+      }];
+
+      jobs.deregister = ['exists', function(cb) {
+        c.agent.deregisterCheck(name, cb);
+      }];
+
+      async.auto(jobs, function(err) {
+        should.not.exist(err);
+
+        // TODO: ensure check doesn't exist
 
         done();
       });
