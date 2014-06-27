@@ -14,17 +14,24 @@ setup() {
     echo "Downloading consul into $tmp"
     echo
 
-    name="${version}_${os}_${arch}.zip"
+    rm -fr "${tmp}/consul-ui"
+
+    bin_name="${version}_${os}_${arch}.zip"
+    ui_name="${version}_web_ui.zip"
 
     pushd "$tmp" &>/dev/null
 
-    curl -LO "https://dl.bintray.com/mitchellh/consul/${name}"
+    echo "Getting $bin_name"
+    curl -LO "https://dl.bintray.com/mitchellh/consul/${bin_name}"
+    unzip "$bin_name"
+
+    echo "Getting $ui_name"
+    curl -LO "https://dl.bintray.com/mitchellh/consul/${ui_name}"
+    unzip "$ui_name"
 
     echo
-    unzip "$name"
-    echo
 
-    rm -f "$name"
+    rm -f "$bin_name" "$ui_name"
 
     popd &>/dev/null
   fi
@@ -44,6 +51,7 @@ start_server() {
     -bind="127.0.0.${id}" \
     -client="127.0.0.${id}" \
     -pid-file="${tmp}/consul_${id}.pid" \
+    -ui-dir="${tmp}/dist" \
     $@ \
     &> "${tmp}/consul_${id}.log" &
 }
@@ -67,7 +75,7 @@ stop() {
     if [[ -f "${tmp}/consul_${id}.pid" ]]; then
       pid="$( cat "${tmp}/consul_${id}.pid" )"
       echo "Killing server id $id pid $pid"
-      kill "$pid"
+      kill -9 "$pid"
     fi
 
     rm -rf "${tmp}/consul_${id}."* "${tmp}/data/${id}"
