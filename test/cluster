@@ -68,6 +68,16 @@ start() {
       start_server $id
     fi
   done
+
+  sleep ${CLUSTER_START_SLEEP:-0.1}
+
+  for id in {1..3}; do
+    path="${tmp}/consul_${id}.pid"
+
+    if [[ ! -f "$path" ]] || ! kill -0 $( cat $path ) &>/dev/null; then
+      echo "Failed to start server id $id" ; stop ; break
+    fi
+  done
 }
 
 stop() {
