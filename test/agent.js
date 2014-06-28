@@ -123,66 +123,68 @@ describe('Agent', function() {
     });
   });
 
-  describe('registerCheck', function() {
-    it('should register a check', function(done) {
-      var c = this.c1;
+  describe('check', function() {
+    describe('register', function() {
+      it('should register a check', function(done) {
+        var c = this.c1;
 
-      var name = 'check-' + uuid.v4();
+        var name = 'check-' + uuid.v4();
 
-      var jobs = {};
+        var jobs = {};
 
-      jobs.register = function(cb) {
-        var opts = { name: name, ttl: '10ms' };
+        jobs.register = function(cb) {
+          var opts = { name: name, ttl: '10ms' };
 
-        c.agent.registerCheck(opts, cb);
-      };
+          c.agent.check.register(opts, cb);
+        };
 
-      jobs.exists = ['register', function(cb) {
-        // TODO: ensure check exists
-        cb();
-      }];
+        jobs.exists = ['register', function(cb) {
+          // TODO: ensure check exists
+          cb();
+        }];
 
-      jobs.deregister = ['exists', function(cb) {
-        c.agent.deregisterCheck(name, cb);
-      }];
+        jobs.deregister = ['exists', function(cb) {
+          c.agent.check.deregister(name, cb);
+        }];
 
-      async.auto(jobs, function(err) {
-        should.not.exist(err);
+        async.auto(jobs, function(err) {
+          should.not.exist(err);
 
-        done();
+          done();
+        });
       });
     });
-  });
 
-  describe('deregisterCheck', function() {
-    it('should deregister a check', function(done) {
-      var c = this.c1;
+    describe('deregister', function() {
+      it('should deregister a check', function(done) {
+        var c = this.c1;
 
-      var name = 'check-' + uuid.v4();
+        var name = 'check-' + uuid.v4();
 
-      var jobs = {};
+        var jobs = {};
 
-      jobs.register = function(cb) {
-        var opts = { name: name, ttl: '10ms' };
+        jobs.register = function(cb) {
+          var opts = { name: name, ttl: '10ms' };
 
-        c.agent.registerCheck(opts, cb);
-      };
+          c.agent.check.register(opts, cb);
+        };
 
-      jobs.exists = ['register', function(cb) {
-        // TODO: ensure check exists
-        cb();
-      }];
+        jobs.exists = ['register', function(cb) {
+          // TODO: ensure check exists
+          cb();
+        }];
 
-      jobs.deregister = ['exists', function(cb) {
-        c.agent.deregisterCheck(name, cb);
-      }];
+        jobs.deregister = ['exists', function(cb) {
+          c.agent.check.deregister(name, cb);
+        }];
 
-      async.auto(jobs, function(err) {
-        should.not.exist(err);
+        async.auto(jobs, function(err) {
+          should.not.exist(err);
 
-        // TODO: ensure check doesn't exist
+          // TODO: ensure check doesn't exist
 
-        done();
+          done();
+        });
       });
     });
   });
