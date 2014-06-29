@@ -106,7 +106,7 @@ Info
     "Bootstrap": true,
     "Server": true,
     "Datacenter": "dc1",
-    "DataDir": "/var/folders/8_/068x29n92s91rsjl_zjqwgph0000gp/T/114529-6937-ptz1uw/node1/data",
+    "DataDir": "/tmp/node1/data",
     "DNSRecursor": "",
     "DNSConfig": {
       "NodeTTL": 0,
@@ -141,7 +141,7 @@ Info
     "ServerName": "",
     "StartJoin": [],
     "UiDir": "",
-    "PidFile": "/var/folders/8_/068x29n92s91rsjl_zjqwgph0000gp/T/114529-6937-ptz1uw/node1/pid",
+    "PidFile": "/tmp/node1/pid",
     "EnableSyslog": false,
     "SyslogFacility": "LOCAL0",
     "RejoinAfterLeave": false,
@@ -356,7 +356,7 @@ consul.agent.check.fail('example', function(err) {
 <a name="agent-service-list"/>
 ### consul.agent.service.list(callback)
 
-Returns the services agent is managing.
+Returns the services the agent is managing.
 
 Usage
 
