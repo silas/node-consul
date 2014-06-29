@@ -613,6 +613,90 @@ Result
  * [set](#kv-set)
  * [del](#kv-del)
 
+<a name="kv-get"/>
+### consul.kv.get(options, callback)
+
+Return key/value (kv) pair(s).
+
+Options
+
+ * key (String): path to value
+ * dc (String, optional): datacenter (defaults to local for agent)
+ * recurse (Boolean, default: false): return all keys with given key prefix
+ * index (String, optional): used with `ModifyIndex` to block and wait for changes
+ * wait (String, optional): limit how long to wait for changes (ex: `5m`), used with index
+ * raw (Boolean, optional): return raw value (can't be used with recursive, implies buffer)
+ * buffer (Boolean, default: false): decode value into Buffer instead of String
+
+Usage
+
+``` javascript
+consul.kv.get('hello', function(err, result) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+{
+  "CreateIndex": 6,
+  "ModifyIndex": 6,
+  "LockIndex": 0,
+  "Key": "hello",
+  "Flags": 0,
+  "Value": "world"
+}
+```
+
+<a name="kv-set"/>
+### consul.kv.set(options, callback)
+
+Set key/value (kv) pair.
+
+Options
+
+ * key (String): key
+ * value (String|Buffer): value
+ * dc (String, optional): datacenter (defaults to local for agent)
+ * flags (Number, optional): unsigned integer opaque to user, can be used by application
+ * cas (String, optional): use with `ModifyIndex` to do a check-and-set operation
+ * acquire (String, optional): session ID, lock acquisition operation
+ * release (String, optional): session ID, lock release operation
+
+Usage
+
+``` javascript
+consul.kv.set('hello', 'world', function(err, result) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+true
+```
+
+<a name="kv-del"/>
+### consul.kv.del(options, callback)
+
+Delete key/value (kv) pair(s).
+
+Options
+
+ * key (String): key
+ * dc (String, optional): datacenter (defaults to local for agent)
+ * recurse (Boolean, default: false): delete all keys with given key prefix
+
+Usage
+
+``` javascript
+consul.kv.del('hello', function(err) {
+  if (err) throw err;
+});
+```
+
 <a name="session"/>
 ### consul.session
 
