@@ -20,10 +20,10 @@ This is a [Consul][consul] client.
 
 Initialize a new Consul client.
 
-`options`
+Options
 
- * `host`: Consul agent address (default `127.0.0.1`)
- * `port`: Consul agent HTTP port (default `8500`)
+ * host (String, default: 127.0.0.1): agent address
+ * port (String, default: 8500): agent HTTP port
 
 ``` javascript
 var consul = require('consul')();
@@ -32,12 +32,130 @@ var consul = require('consul')();
 <a name="agent"/>
 ### consul.agent
 
- * [check](#agent-check)
- * [service](#agent-service)
  * [members](#agent-members)
  * [self](#agent-self)
  * [join](#agent-join)
  * [forceLeave](#agent-force-leave)
+
+<a name="agent-members"/>
+### consul.agent.members([options], callback)
+
+Returns the members as seen by the consul agent.
+
+Options
+
+ * wan (Boolean, default: false): return WAN members instead of LAN members 
+
+Example
+
+``` json
+[
+  {
+    "Name": "node1",
+    "Addr": "127.0.0.1",
+    "Port": 8301,
+    "Tags": {
+      "bootstrap": "1",
+      "build": "0.3.0:441d613e",
+      "dc": "dc1",
+      "port": "8300",
+      "role": "consul",
+      "vsn": "2",
+      "vsn_max": "2",
+      "vsn_min": "1"
+    },
+    "Status": 1,
+    "ProtocolMin": 1,
+    "ProtocolMax": 2,
+    "ProtocolCur": 2,
+    "DelegateMin": 2,
+    "DelegateMax": 4,
+    "DelegateCur": 4
+  }
+]
+```
+
+<a name="agent-self"/>
+### consul.agent.self(callback)
+
+Returns the agent node configuration.
+
+Example
+
+``` json
+{
+  "Config": {
+    "Bootstrap": true,
+    "Server": true,
+    "Datacenter": "dc1",
+    "DataDir": "/var/folders/8_/068x29n92s91rsjl_zjqwgph0000gp/T/114529-6937-ptz1uw/node1/data",
+    "DNSRecursor": "",
+    "DNSConfig": {
+      "NodeTTL": 0,
+      "ServiceTTL": null,
+      "AllowStale": false,
+      "MaxStale": 5000000000
+    },
+    "Domain": "consul.",
+    "LogLevel": "INFO",
+    "NodeName": "node1",
+    "ClientAddr": "127.0.0.1",
+    "BindAddr": "127.0.0.1",
+    "AdvertiseAddr": "127.0.0.1",
+    "Ports": {
+      "DNS": 8600,
+      "HTTP": 8500,
+      "RPC": 8400,
+      "SerfLan": 8301,
+      "SerfWan": 8302,
+      "Server": 8300
+    },
+    "LeaveOnTerm": false,
+    "SkipLeaveOnInt": false,
+    "StatsiteAddr": "",
+    "Protocol": 2,
+    "EnableDebug": false,
+    "VerifyIncoming": false,
+    "VerifyOutgoing": false,
+    "CAFile": "",
+    "CertFile": "",
+    "KeyFile": "",
+    "ServerName": "",
+    "StartJoin": [],
+    "UiDir": "",
+    "PidFile": "/var/folders/8_/068x29n92s91rsjl_zjqwgph0000gp/T/114529-6937-ptz1uw/node1/pid",
+    "EnableSyslog": false,
+    "SyslogFacility": "LOCAL0",
+    "RejoinAfterLeave": false,
+    "CheckUpdateInterval": 300000000000,
+    "Revision": "441d613e1bd96254c78c46ee7c1b35c161fc7295+CHANGES",
+    "Version": "0.3.0",
+    "VersionPrerelease": ""
+  },
+  "Member": {
+    "Name": "node1",
+    "Addr": "127.0.0.1",
+    "Port": 8301,
+    "Tags": {
+      "bootstrap": "1",
+      "build": "0.3.0:441d613e",
+      "dc": "dc1",
+      "port": "8300",
+      "role": "consul",
+      "vsn": "2",
+      "vsn_max": "2",
+      "vsn_min": "1"
+    },
+    "Status": 1,
+    "ProtocolMin": 1,
+    "ProtocolMax": 2,
+    "ProtocolCur": 2,
+    "DelegateMin": 2,
+    "DelegateMax": 4,
+    "DelegateCur": 4
+  }
+}
+```
 
 <a name="agent-check"/>
 ### consul.agent.check
