@@ -187,7 +187,7 @@ describe('Agent', function() {
       var self = this;
 
       // helper function to check existence of check
-      self.check = function(id, exists, cb) {
+      self.exists = function(id, exists, cb) {
         self.c1.agent.checks(function(err, checks) {
           should.not.exist(err);
 
@@ -196,6 +196,20 @@ describe('Agent', function() {
           if (!exists) s = s.not;
 
           s.have.property(id);
+
+          cb();
+        });
+      };
+
+      self.state = function(id, state, cb) {
+        self.c1.agent.checks(function(err, checks) {
+          should.not.exist(err);
+
+          checks.should.have.property(id);
+
+          var check = checks[id];
+
+          check.Status.should.eql(state);
 
           cb();
         });
@@ -225,7 +239,7 @@ describe('Agent', function() {
 
       // add check
       jobs.push(function(cb) {
-        var opts = { name: self.name, ttl: '1s' };
+        var opts = { name: self.name, ttl: '10s' };
         self.c1.agent.check.register(opts, cb);
       });
 
@@ -249,7 +263,7 @@ describe('Agent', function() {
         var jobs = [];
 
         jobs.push(function(cb) {
-          self.check(name, false, cb);
+          self.exists(name, false, cb);
         });
 
         jobs.push(function(cb) {
@@ -258,7 +272,7 @@ describe('Agent', function() {
         });
 
         jobs.push(function(cb) {
-          self.check(name, true, cb);
+          self.exists(name, true, cb);
         });
 
         async.series(jobs, done);
@@ -272,7 +286,7 @@ describe('Agent', function() {
         var jobs = [];
 
         jobs.push(function(cb) {
-          self.check(self.name, true, cb);
+          self.exists(self.name, true, cb);
         });
 
         jobs.push(function(cb) {
@@ -280,7 +294,73 @@ describe('Agent', function() {
         });
 
         jobs.push(function(cb) {
-          self.check(self.name, false, cb);
+          self.exists(self.name, false, cb);
+        });
+
+        async.series(jobs, done);
+      });
+    });
+
+    describe('pass', function() {
+      it('should work', function(done) {
+        var self = this;
+
+        var jobs = [];
+
+        jobs.push(function(cb) {
+          self.state(self.name, 'unknown', cb);
+        });
+
+        jobs.push(function(cb) {
+          self.c1.agent.check.pass(self.name, cb);
+        });
+
+        jobs.push(function(cb) {
+          self.state(self.name, 'passing', cb);
+        });
+
+        async.series(jobs, done);
+      });
+    });
+
+    describe('warn', function() {
+      it('should work', function(done) {
+        var self = this;
+
+        var jobs = [];
+
+        jobs.push(function(cb) {
+          self.state(self.name, 'unknown', cb);
+        });
+
+        jobs.push(function(cb) {
+          self.c1.agent.check.warn(self.name, cb);
+        });
+
+        jobs.push(function(cb) {
+          self.state(self.name, 'warning', cb);
+        });
+
+        async.series(jobs, done);
+      });
+    });
+
+    describe('fail', function() {
+      it('should work', function(done) {
+        var self = this;
+
+        var jobs = [];
+
+        jobs.push(function(cb) {
+          self.state(self.name, 'unknown', cb);
+        });
+
+        jobs.push(function(cb) {
+          self.c1.agent.check.fail(self.name, cb);
+        });
+
+        jobs.push(function(cb) {
+          self.state(self.name, 'critical', cb);
         });
 
         async.series(jobs, done);
