@@ -9,9 +9,11 @@ This is a [Consul][consul] client.
 
  * [Consul](#init)
  * [Agent](#agent)
-   * [Check](#agent-check)
-   * [Service](#agent-service)
+  * [Check](#agent-check)
+  * [Service](#agent-service)
  * [Catalog](#catalog)
+  * [Node](#catalog-node)
+  * [Service](#catalog-service)
  * [KV](#kv)
  * [Session](#session)
 
