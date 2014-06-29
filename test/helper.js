@@ -4,6 +4,8 @@
  * Module dependencies.
  */
 
+require('should');
+
 var async = require('async');
 var path = require('path');
 var spawn = require('child_process').spawn;
