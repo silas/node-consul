@@ -77,37 +77,26 @@ Cluster.prototype.spawn = function(options, callback) {
   }];
 
   jobs.connected = ['process', function(cb, results) {
-    var started = false;
-    var count = 0;
-
     var client = consul({ host: options.bind });
 
-    async.until(
-      function() { return started || count > 1000; },
+    async.retry(
+      100,
       function(cb) {
-        count++;
-
         // wait until server starts
         if (options.bootstrap) {
           client.kv.set('check', 'ok', function(err) {
-            if (err) return setTimeout(function() { cb(); }, 10);
-
-            started = true;
-
+            if (err) return setTimeout(function() { cb(err); }, 100);
             cb();
           });
         } else {
           client.agent.self(function(err) {
-            if (err) return setTimeout(function() { cb(); }, 10);
-
-            started = true;
-
+            if (err) return setTimeout(function() { cb(err); }, 100);
             cb();
           });
         }
       },
       function(err) {
-        if (err || !started) {
+        if (err) {
           results.process.destroy();
 
           return cb(new Error('Failed to start: ' + options.node));
