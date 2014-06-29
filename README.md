@@ -25,6 +25,8 @@ Options
  * host (String, default: 127.0.0.1): agent address
  * port (String, default: 8500): agent HTTP port
 
+Usage
+
 ``` javascript
 var consul = require('consul')();
 ```
@@ -46,7 +48,15 @@ Options
 
  * wan (Boolean, default: false): return WAN members instead of LAN members 
 
-Example
+Usage
+
+``` javascript
+consul.agent.members(function(err, members) {
+  if (err) throw err;
+});
+```
+
+Output
 
 ``` json
 [
@@ -80,7 +90,15 @@ Example
 
 Returns the agent node configuration.
 
-Example
+Usage
+
+``` javascript
+consul.agent.self(function(err, members) {
+  if (err) throw err;
+});
+```
+
+Output
 
 ``` json
 {
