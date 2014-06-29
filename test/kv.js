@@ -82,7 +82,7 @@ describe('Kv', function() {
       this.c1.kv.get({ key: key, raw: true }, function(err, data) {
         should.not.exist(err);
 
-        console.log(data);
+        new Buffer(value).should.eql(data);
 
         done();
       });
