@@ -56,7 +56,7 @@ consul.agent.members(function(err, members) {
 });
 ```
 
-Output
+Members
 
 ``` json
 [
@@ -93,12 +93,12 @@ Returns the agent node configuration.
 Usage
 
 ``` javascript
-consul.agent.self(function(err, members) {
+consul.agent.self(function(err, info) {
   if (err) throw err;
 });
 ```
 
-Output
+Info
 
 ``` json
 {
@@ -175,6 +175,41 @@ Output
 }
 ```
 
+<a name="agent-join"/>
+### consul.agent.join([options], callback)
+
+Trigger agent to join a node.
+
+Options
+
+ * address (String): node IP address to join
+ * wan (Boolean, default false): attempt to join using the WAN pool
+
+Usage
+
+``` javascript
+consul.agent.join('127.0.0.2', function(err) {
+  if (err) throw err;
+});
+```
+
+<a name="agent-force-leave"/>
+### consul.agent.forceLeave([options], callback)
+
+Force remove node.
+
+Options
+
+ * node (String): node name to remove
+
+Usage
+
+``` javascript
+consul.agent.forceLeave('node2', function(err) {
+  if (err) throw err;
+});
+```
+
 <a name="agent-check"/>
 ### consul.agent.check
 
@@ -185,12 +220,205 @@ Output
  * [warn](#agent-check-warn)
  * [fail](#agent-check-fail)
 
+<a name="agent-check-list"/>
+### consul.agent.check.list(callback)
+
+Returns the checks the agent is managing.
+
+Usage
+
+``` javascript
+consul.agent.check.list(function(err, checks) {
+  if (err) throw err;
+});
+```
+
+Checks
+
+``` json
+{
+  "example": {
+    "Node": "node1",
+    "CheckID": "example",
+    "Name": "example",
+    "Status": "passing",
+    "Notes": "This is an example check.",
+    "Output": "",
+    "ServiceID": "",
+    "ServiceName": ""
+  }
+}
+```
+
+<a name="agent-check-register"/>
+### consul.agent.check.register(options, callback)
+
+Registers a new check.
+
+Options
+
+ * name (String): check name
+ * id (String, optional): check ID
+ * script (String): path to check script, requires interval
+ * internal (String): interval to run check, requires script (ex: `15s`)
+ * ttl (String): time to live before check must be updated, instead of script and interval (ex: `60s`)
+ * notes (String, optional): human readable description of check
+
+Usage
+
+``` javascript
+var check = {
+  name: 'example',
+  ttl: '15s',
+  notes: 'This is an example check.',
+};
+
+consul.agent.check.register(check, function(err) {
+  if (err) throw err;
+});
+```
+
+<a name="agent-check-deregister"/>
+### consul.agent.check.deregister(options, callback)
+
+Deregister a check.
+
+Options
+
+ * id (String): check ID
+
+Usage
+
+``` javascript
+consul.agent.check.deregister('example', function(err) {
+  if (err) throw err;
+});
+```
+
+<a name="agent-check-pass"/>
+### consul.agent.check.pass(options, callback)
+
+Mark a test as passing.
+
+Options
+
+ * id (String): check ID
+
+Usage
+
+``` javascript
+consul.agent.check.pass('example', function(err) {
+  if (err) throw err;
+});
+```
+
+<a name="agent-check-warn"/>
+### consul.agent.check.warn(options, callback)
+
+Mark a test as warning.
+
+Options
+
+ * id (String): check ID
+
+Usage
+
+``` javascript
+consul.agent.check.warn('example', function(err) {
+  if (err) throw err;
+});
+```
+
+<a name="agent-check-fail"/>
+### consul.agent.check.fail(options, callback)
+
+Mark a test as critical.
+
+Options
+
+ * id (String): check ID
+
+Usage
+
+``` javascript
+consul.agent.check.fail('example', function(err) {
+  if (err) throw err;
+});
+```
+
 <a name="agent-service"/>
 ### consul.agent.service
 
  * [list](#agent-service-list)
  * [register](#agent-service-register)
  * [deregister](#agent-service-deregister)
+
+<a name="agent-service-list"/>
+### consul.agent.service.list(callback)
+
+Returns the services agent is managing.
+
+Usage
+
+``` javascript
+consul.agent.service.list(function(err, services) {
+  if (err) throw err;
+});
+```
+
+Services
+
+``` json
+{
+  "example": {
+    "ID": "example",
+    "Service": "example",
+    "Tags": ["web"],
+    "Port": 80
+  }
+}
+```
+
+<a name="agent-service-register"/>
+### consul.agent.service.register(options, callback)
+
+Registers a new service.
+
+Options
+
+ * name (String): service name
+ * id (String, optional): service ID
+ * tags (String[], optional): service tags
+ * check (Object, optional): service check
+  * script (String): path to check script, requires interval
+  * internal (String): interval to run check, requires script (ex: `15s`)
+  * ttl (String): time to live before check must be updated, instead of script and interval (ex: `60s`)
+  * notes (String, optional): human readable description of check
+
+Usage
+
+``` javascript
+consul.agent.service.register('example', function(err) {
+  if (err) throw err;
+});
+```
+
+<a name="agent-service-deregister"/>
+### consul.agent.service.deregister(options, callback)
+
+Deregister a service.
+
+Options
+
+ * id (String): check ID
+
+Usage
+
+``` javascript
+consul.agent.service.deregister('example', function(err) {
+  if (err) throw err;
+});
+```
 
 <a name="catalog"/>
 ### consul.catalog

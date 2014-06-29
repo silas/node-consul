@@ -181,7 +181,7 @@ describe('Agent', function() {
     beforeEach(function(done) {
       var self = this;
 
-      self.name = 'test-' + uuid.v4();
+      self.name = 'check-' + uuid.v4();
       self.deregister = [self.name];
 
       var jobs = [];
@@ -235,7 +235,7 @@ describe('Agent', function() {
       it('should create check', function(done) {
         var self = this;
 
-        var name = 'test-' + uuid.v4();
+        var name = 'check-' + uuid.v4();
 
         var jobs = [];
 
@@ -368,7 +368,7 @@ describe('Agent', function() {
     beforeEach(function(done) {
       var self = this;
 
-      self.name = 'test-' + uuid.v4();
+      self.name = 'service-' + uuid.v4();
       self.deregister = [self.name];
 
       var jobs = [];
@@ -422,7 +422,7 @@ describe('Agent', function() {
       it('should create service', function(done) {
         var self = this;
 
-        var name = 'test-' + uuid.v4();
+        var name = 'service-' + uuid.v4();
 
         var jobs = [];
 
