@@ -36,6 +36,8 @@ var consul = require('consul')();
 <a name="agent"/>
 ### consul.agent
 
+ * [check](#agent-check)
+ * [service](#agent-service)
  * [members](#agent-members)
  * [self](#agent-self)
  * [join](#agent-join)
@@ -53,7 +55,7 @@ Options
 Usage
 
 ``` javascript
-consul.agent.members(function(err, members) {
+consul.agent.members(function(err, result) {
   if (err) throw err;
 });
 ```
@@ -95,7 +97,7 @@ Returns the agent node configuration.
 Usage
 
 ``` javascript
-consul.agent.self(function(err, info) {
+consul.agent.self(function(err, result) {
   if (err) throw err;
 });
 ```
@@ -230,7 +232,7 @@ Returns the checks the agent is managing.
 Usage
 
 ``` javascript
-consul.agent.check.list(function(err, checks) {
+consul.agent.check.list(function(err, result) {
   if (err) throw err;
 });
 ```
@@ -363,7 +365,7 @@ Returns the services the agent is managing.
 Usage
 
 ``` javascript
-consul.agent.service.list(function(err, services) {
+consul.agent.service.list(function(err, result) {
   if (err) throw err;
 });
 ```
@@ -375,7 +377,10 @@ Result
   "example": {
     "ID": "example",
     "Service": "example",
-    "Tags": ["web"],
+    "Tags": [
+      "dev",
+      "web"
+    ],
     "Port": 80
   }
 }
@@ -429,17 +434,177 @@ consul.agent.service.deregister('example', function(err) {
  * [service](#catalog-service)
  * [datacenters](#catalog-datacenters)
 
+<a name="catalog-datacenters"/>
+### consul.catalog.datacenters(callback)
+
+Lists known datacenters.
+
+Usage
+
+``` javascript
+consul.catalog.datacenters(function(err, result) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+[
+  "dc1"
+]
+```
+
 <a name="catalog-node"/>
 ### consul.catalog.node
 
  * [list](#catalog-node-list)
  * [services](#catalog-node-services)
 
+<a name="catalog-node-list"/>
+### consul.catalog.node.list(callback)
+
+Lists nodes in a given datacenter.
+
+Options
+
+ * dc (String, optional): datacenter (defaults to local for agent)
+
+Usage
+
+``` javascript
+consul.catalog.node.list(function(err, result) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+[
+  {
+    "Node": "node1",
+    "Address": "127.0.0.1"
+  }
+]
+```
+
+<a name="catalog-node-services"/>
+### consul.catalog.node.services(callback)
+
+Lists the services provided by a node.
+
+Options
+
+ * node (String): node ID
+
+Usage
+
+``` javascript
+consul.catalog.node.services('node1', function(err, result) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+{
+  "Node": {
+    "Node": "node1",
+    "Address": "127.0.0.1"
+  },
+  "Services": {
+    "consul": {
+      "ID": "consul",
+      "Service": "consul",
+      "Tags": null,
+      "Port": 8300
+    },
+    "example": {
+      "ID": "example",
+      "Service": "example",
+      "Tags": [
+        "dev",
+        "web"
+      ],
+      "Port": 80
+    }
+  }
+}
+```
+
 <a name="catalog-service"/>
 ### consul.catalog.service
 
  * [list](#catalog-service-list)
  * [nodes](#catalog-service-nodes)
+
+<a name="catalog-service-list"/>
+### consul.catalog.service.list(callback)
+
+Lists services in a given datacenter.
+
+Options
+
+ * dc (String): datacenter (defaults to local for agent)
+
+Usage
+
+``` javascript
+consul.catalog.service.list(function(err, result) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+{
+  "consul": [],
+  "example": [
+    "dev",
+    "web"
+  ]
+}
+```
+
+<a name="catalog-service-nodes"/>
+### consul.catalog.service.nodes(callback)
+
+Lists the nodes in a given service.
+
+Options
+
+ * service (String): service ID
+ * dc (String, optional): datacenter (defaults to local for agent)
+ * tag (String, optional): filter by tag
+
+Usage
+
+``` javascript
+consul.catalog.service.nodes('example', function(err, result) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+[
+  {
+    "Node": "node1",
+    "Address": "127.0.0.1",
+    "ServiceID": "example",
+    "ServiceName": "example",
+    "ServiceTags": [
+      "dev",
+      "web"
+    ],
+    "ServicePort": 80
+  }
+]
+```
 
 <a name="kv"/>
 ### consul.kv
