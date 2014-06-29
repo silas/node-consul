@@ -7,6 +7,8 @@ This is a [Consul][consul] client.
 
 ## Documentation
 
+See the official [HTTP API][consul-docs-api] docs for more information.
+
  * [Consul](#init)
  * [Agent](#agent)
   * [Check](#agent-check)
@@ -706,6 +708,155 @@ consul.kv.del('hello', function(err) {
  * [node](#session-node)
  * [list](#session-list)
 
+<a name="session-create"/>
+### consul.session.create([options], callback)
+
+Create a new session.
+
+Options
+
+ * dc (String, optional): datacenter (defaults to local for agent)
+ * lockdelay (String, range: 1s-60s, default: `15s`): the time consul prevents locks held by the session from being acquired after a session has been invalidated
+ * name (String, optional): human readable name for the session
+ * node (String, optional): node with which to associate session (defaults to connected agent)
+ * checks (String[], optional): checks to associate with session
+
+Usage
+
+``` javascript
+consul.session.create(function(err, result) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+{
+  "ID": "a0f5dc05-84c3-5f5a-1d88-05b875e524e1"
+}
+```
+
+<a name="session-destroy"/>
+### consul.session.destroy(options, callback)
+
+Destroy a given session.
+
+Options
+
+ * id (String): session ID
+ * dc (String, optional): datacenter (defaults to local for agent)
+
+Usage
+
+``` javascript
+consul.session.destroy('a0f5dc05-84c3-5f5a-1d88-05b875e524e1', function(err) {
+  if (err) throw err;
+});
+```
+
+<a name="session-get"/>
+### consul.session.get(options, callback)
+
+Queries a given session.
+
+Options
+
+ * id (String): session ID
+ * dc (String, optional): datacenter (defaults to local for agent)
+
+Usage
+
+``` javascript
+consul.session.get('a0f5dc05-84c3-5f5a-1d88-05b875e524e1', function(err, result) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+{
+  "CreateIndex": 11,
+  "ID": "a0f5dc05-84c3-5f5a-1d88-05b875e524e1",
+  "Name": "",
+  "Node": "node1",
+  "Checks": [
+    "serfHealth"
+  ],
+  "LockDelay": 15000000000
+}
+```
+
+<a name="session-node"/>
+### consul.session.node(options, callback)
+
+Lists sessions belonging to a node.
+
+Options
+
+ * node (String): node
+ * dc (String, optional): datacenter (defaults to local for agent)
+
+Usage
+
+``` javascript
+consul.session.node('node1', function(err, result) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+[
+  {
+    "CreateIndex": 13,
+    "ID": "a0f5dc05-84c3-5f5a-1d88-05b875e524e1",
+    "Name": "",
+    "Node": "node1",
+    "Checks": [
+      "serfHealth"
+    ],
+    "LockDelay": 15000000000
+  }
+]
+```
+
+<a name="session-list"/>
+### consul.session.list([options], callback)
+
+Lists all the active sessions.
+
+Options
+
+ * dc (String, optional): datacenter (defaults to local for agent)
+
+Usage
+
+``` javascript
+consul.session.list(function(err, result) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+[
+  {
+    "CreateIndex": 15,
+    "ID": "a0f5dc05-84c3-5f5a-1d88-05b875e524e1",
+    "Name": "",
+    "Node": "node1",
+    "Checks": [
+      "serfHealth"
+    ],
+    "LockDelay": 15000000000
+  }
+]
+```
+
 ## Development
 
  1. Install [Consul][download] into your `PATH`.
@@ -733,4 +884,5 @@ consul.kv.del('hello', function(err) {
 This work is licensed under the MIT License (see the LICENSE file).
 
 [consul]: http://www.consul.io/
+[consul-docs-api]: http://www.consul.io/docs/agent/http.html
 [download]: http://www.consul.io/downloads.html
