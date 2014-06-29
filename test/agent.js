@@ -10,17 +10,19 @@ var async = require('async');
 var should = require('should');
 var uuid = require('node-uuid');
 
-var consul = require('../lib');
+var helper = require('./helper');
 
 /**
  * Tests
  */
 
 describe('Agent', function() {
-  before(function() {
-    for (var i = 0; i < 3; i++) {
-      this['c' + i] = consul({ host: '127.0.0.' + i });
-    }
+  before(function(done) {
+    helper.before(this, done);
+  });
+
+  after(function(done) {
+    helper.after(this, done);
   });
 
   describe('checks', function() {
@@ -103,20 +105,46 @@ describe('Agent', function() {
 
   describe('join', function() {
     it('should make node2 join cluster', function(done) {
-      // TODO: check member list before and after
-      this.c2.agent.join('127.0.0.1', function(err) {
-        should.not.exist(err);
+      var self = this;
 
-        done();
+      var joinAddr = '127.0.0.1';
+      var joinerAddr = '127.0.0.2';
+
+      var jobs = [];
+
+      jobs.push(function(cb) {
+        self.c1.agent.members(function(err, data) {
+          should.not.exist(err);
+
+          data = data.map(function(m) { return m.Addr; });
+
+          data.should.containEql(joinAddr);
+          data.should.not.containEql(joinerAddr);
+
+          cb();
+        });
       });
+
+      jobs.push(function(cb) {
+        self.c2.agent.join(joinAddr, function(err) {
+          should.not.exist(err);
+
+          cb();
+        });
+      });
+
+      async.series(jobs, done);
     });
   });
 
   describe('forceLeave', function() {
     it('should remove node2 from the cluster', function(done) {
-      // TODO: check for leaving state
+      // TODO: check not leaving
+
       this.c1.agent.forceLeave('node2', function(err) {
         should.not.exist(err);
+
+        // TODO: check leaving
 
         done();
       });
@@ -124,67 +152,107 @@ describe('Agent', function() {
   });
 
   describe('check', function() {
-    describe('register', function() {
-      it('should register a check', function(done) {
-        var c = this.c1;
+    before(function() {
+      var self = this;
 
-        var name = 'check-' + uuid.v4();
-
-        var jobs = {};
-
-        jobs.register = function(cb) {
-          var opts = { name: name, ttl: '10ms' };
-
-          c.agent.check.register(opts, cb);
-        };
-
-        jobs.exists = ['register', function(cb) {
-          // TODO: ensure check exists
-          cb();
-        }];
-
-        jobs.deregister = ['exists', function(cb) {
-          c.agent.check.deregister(name, cb);
-        }];
-
-        async.auto(jobs, function(err) {
+      // helper function to check existence of check
+      self.check = function(id, exists, cb) {
+        self.c1.agent.checks(function(err, checks) {
           should.not.exist(err);
 
-          done();
+          var s = checks.should;
+
+          if (!exists) s = s.not;
+
+          s.have.property(id);
+
+          cb();
         });
+      };
+    });
+
+    beforeEach(function(done) {
+      var self = this;
+
+      self.name = 'test-' + uuid.v4();
+      self.deregister = [self.name];
+
+      var jobs = [];
+
+      // remove existing checks
+      jobs.push(function(cb) {
+        self.c1.agent.checks(function(err, checks) {
+          if (err) return cb(err);
+
+          async.map(
+            Object.keys(checks),
+            self.c1.agent.check.deregister.bind(self.c1.agent.check),
+            cb
+          );
+        });
+      });
+
+      // add check
+      jobs.push(function(cb) {
+        var opts = { name: self.name, ttl: '1s' };
+        self.c1.agent.check.register(opts, cb);
+      });
+
+      async.series(jobs, done);
+    });
+
+    afterEach(function(done) {
+      async.map(
+        this.deregister,
+        this.c1.agent.check.deregister.bind(this.c1.agent.check),
+        done
+      );
+    });
+
+    describe('register', function() {
+      it('should work', function(done) {
+        var self = this;
+
+        var name = 'test-' + uuid.v4();
+
+        var jobs = [];
+
+        jobs.push(function(cb) {
+          self.check(name, false, cb);
+        });
+
+        jobs.push(function(cb) {
+          self.deregister.push(name);
+          self.c1.agent.check.register({ name: name, ttl: '1s' }, cb);
+        });
+
+        jobs.push(function(cb) {
+          self.check(name, true, cb);
+        });
+
+        async.series(jobs, done);
       });
     });
 
     describe('deregister', function() {
-      it('should deregister a check', function(done) {
-        var c = this.c1;
+      it('should work', function(done) {
+        var self = this;
 
-        var name = 'check-' + uuid.v4();
+        var jobs = [];
 
-        var jobs = {};
-
-        jobs.register = function(cb) {
-          var opts = { name: name, ttl: '10ms' };
-
-          c.agent.check.register(opts, cb);
-        };
-
-        jobs.exists = ['register', function(cb) {
-          // TODO: ensure check exists
-          cb();
-        }];
-
-        jobs.deregister = ['exists', function(cb) {
-          c.agent.check.deregister(name, cb);
-        }];
-
-        async.auto(jobs, function(err) {
-          should.not.exist(err);
-
-          // TODO: ensure check doesn't exist
-
-          done();
+        jobs.push(function(cb) {
+          self.check(self.name, true, cb);
         });
+
+        jobs.push(function(cb) {
+          self.c1.agent.check.deregister(self.name, cb);
+        });
+
+        jobs.push(function(cb) {
+          self.check(self.name, false, cb);
+        });
+
+        async.series(jobs, done);
       });
     });
   });

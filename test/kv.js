@@ -9,19 +9,23 @@
 var async = require('async');
 var should = require('should');
 
-var consul = require('../lib');
+var helper = require('./helper');
 
 /**
  * Tests
  */
 
 describe('Kv', function() {
-  before(function() {
-    this.c = consul();
+  before(function(done) {
+    helper.before(this, done);
+  });
+
+  after(function(done) {
+    helper.after(this, done);
   });
 
   beforeEach(function(done) {
-    var c = this.c;
+    var c = this.c1;
     var key = this.key = 'hello';
     var value = this.value = 'world';
 
@@ -52,7 +56,7 @@ describe('Kv', function() {
       var key = this.key;
       var value = this.value;
 
-      this.c.kv.get(key, function(err, data) {
+      this.c1.kv.get(key, function(err, data) {
         should.not.exist(err);
 
         data.should.have.keys(
@@ -72,7 +76,7 @@ describe('Kv', function() {
     });
 
     it('should return no kv pair', function(done) {
-      this.c.kv.get('none', function(err, data) {
+      this.c1.kv.get('none', function(err, data) {
         should.not.exist(err);
         should.not.exist(data);
 
@@ -84,7 +88,7 @@ describe('Kv', function() {
       var key = this.key;
       var value = this.value;
 
-      this.c.kv.get({ recurse: true }, function(err, data) {
+      this.c1.kv.get({ recurse: true }, function(err, data) {
         should.not.exist(err);
 
         data.should.be.instanceof(Array);
@@ -108,7 +112,7 @@ describe('Kv', function() {
     });
 
     it('should wait for update', function(done) {
-      var c = this.c;
+      var c = this.c1;
       var key = this.key;
       var update = 'new-value';
 
@@ -156,7 +160,7 @@ describe('Kv', function() {
 
   describe('set', function() {
     it('should create kv pair', function(done) {
-      var c = this.c;
+      var c = this.c1;
       var key = 'one';
       var value = 'two';
 
@@ -186,7 +190,7 @@ describe('Kv', function() {
 
   describe('del', function() {
     it('should delete kv pair', function(done) {
-      var c = this.c;
+      var c = this.c1;
       var key = this.key;
 
       c.kv.del(key, function(err) {

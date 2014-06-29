@@ -10,14 +10,11 @@
     "mocha": "^1.20.1",
     "node-uuid": "^1.4.1",
     "should": "^4.0.4",
+    "temp": "^0.8.0",
     "uuid": "^1.4.1"
   },
   "scripts": {
-    "test": "./node_modules/.bin/jshint lib test/*.js && ./node_modules/.bin/jscs lib test/*.js && ./node_modules/.bin/mocha --require should -R spec",
-    "less": "less ./test/tmp/*.log",
-    "tail": "tail -f ./test/tmp/*.log",
-    "start": "./test/cluster start",
-    "stop": "./test/cluster stop"
+    "test": "./node_modules/.bin/jshint lib test/*.js && ./node_modules/.bin/jscs lib test/*.js && ./node_modules/.bin/mocha --require should -R spec"
   },
   "keywords": [
     "consul"
