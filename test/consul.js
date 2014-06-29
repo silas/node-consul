@@ -19,6 +19,6 @@ describe('Consul', function() {
 
   it('should have valid defaults', function() {
     this.c.host.should.eql('localhost');
-    this.c.httpPort.should.eql('8500');
+    this.c.port.should.eql('8500');
   });
 });

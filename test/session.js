@@ -58,7 +58,7 @@ describe('Session', function() {
       self.c1.session.destroy(self.id, function(err) {
         should.not.exist(err);
 
-        self.c1.session.info(self.id, function(err, session) {
+        self.c1.session.get(self.id, function(err, session) {
           should.not.exist(err);
           should.not.exist(session);
 
@@ -68,9 +68,9 @@ describe('Session', function() {
     });
   });
 
-  describe('info', function() {
+  describe('get', function() {
     it('should return session information', function(done) {
-      this.c1.session.info(this.id, function(err, session) {
+      this.c1.session.get(this.id, function(err, session) {
         should.not.exist(err);
 
         session.should.have.keys(
