@@ -56,7 +56,7 @@ consul.agent.members(function(err, members) {
 });
 ```
 
-Members
+Result
 
 ``` json
 [
@@ -98,7 +98,7 @@ consul.agent.self(function(err, info) {
 });
 ```
 
-Info
+Result
 
 ``` json
 {
@@ -233,7 +233,7 @@ consul.agent.check.list(function(err, checks) {
 });
 ```
 
-Checks
+Result
 
 ``` json
 {
@@ -366,7 +366,7 @@ consul.agent.service.list(function(err, services) {
 });
 ```
 
-Services
+Result
 
 ``` json
 {
