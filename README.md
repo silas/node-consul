@@ -180,7 +180,7 @@ Result
 ```
 
 <a name="agent-join"/>
-### consul.agent.join([options], callback)
+### consul.agent.join(options, callback)
 
 Trigger agent to join a node.
 
@@ -198,7 +198,7 @@ consul.agent.join('127.0.0.2', function(err) {
 ```
 
 <a name="agent-force-leave"/>
-### consul.agent.forceLeave([options], callback)
+### consul.agent.forceLeave(options, callback)
 
 Force remove node.
 
@@ -462,7 +462,7 @@ Result
  * [services](#catalog-node-services)
 
 <a name="catalog-node-list"/>
-### consul.catalog.node.list(callback)
+### consul.catalog.node.list([options], callback)
 
 Lists nodes in a given datacenter.
 
@@ -490,7 +490,7 @@ Result
 ```
 
 <a name="catalog-node-services"/>
-### consul.catalog.node.services(callback)
+### consul.catalog.node.services(options, callback)
 
 Lists the services provided by a node.
 
@@ -541,7 +541,7 @@ Result
  * [nodes](#catalog-service-nodes)
 
 <a name="catalog-service-list"/>
-### consul.catalog.service.list(callback)
+### consul.catalog.service.list([options], callback)
 
 Lists services in a given datacenter.
 
@@ -570,7 +570,7 @@ Result
 ```
 
 <a name="catalog-service-nodes"/>
-### consul.catalog.service.nodes(callback)
+### consul.catalog.service.nodes(options, callback)
 
 Lists the nodes in a given service.
 
