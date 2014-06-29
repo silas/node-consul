@@ -75,6 +75,19 @@ describe('Kv', function() {
       });
     });
 
+    it('should return raw value', function(done) {
+      var key = this.key;
+      var value = this.value;
+
+      this.c1.kv.get({ key: key, raw: true }, function(err, data) {
+        should.not.exist(err);
+
+        console.log(data);
+
+        done();
+      });
+    });
+
     it('should return no kv pair', function(done) {
       this.c1.kv.get('none', function(err, data) {
         should.not.exist(err);
