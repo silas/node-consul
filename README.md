@@ -18,6 +18,7 @@ See the official [HTTP API][consul-docs-api] docs for more information.
   * [Service](#catalog-service)
  * [KV](#kv)
  * [Session](#session)
+ * [Status](#status)
 
 <a name="init"/>
 ### consul([options])
@@ -854,6 +855,52 @@ Result
     ],
     "LockDelay": 15000000000
   }
+]
+```
+
+<a name="status"/>
+### consul.status
+
+ * [leader](#status-leader)
+ * [peers](#status-peers)
+
+<a name="status-leader"/>
+### consul.status.leader(callback)
+
+Returns the current Raft leader.
+
+Usage
+
+``` javascript
+consul.status.leader(function(err, result) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+"127.0.0.1:8300"
+```
+
+<a name="status-peers"/>
+### consul.status.peers(callback)
+
+Returns the current Raft peer set.
+
+Usage
+
+``` javascript
+consul.status.peers(function(err, result) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+[
+  "127.0.0.1:8300"
 ]
 ```
 
