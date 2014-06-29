@@ -7,9 +7,11 @@
  */
 
 var async = require('async');
+var lodash = require('lodash');
 var should = require('should');
 var uuid = require('node-uuid');
 
+var constants = require('../lib/constants');
 var helper = require('./helper');
 
 /**
@@ -26,11 +28,23 @@ describe('Agent', function() {
   });
 
   describe('checks', function() {
+    beforeEach(function(done) {
+      this.name = 'test-' + uuid.v4();
+      this.c1.agent.check.register({ name: this.name, ttl: '1s' }, done);
+    });
+
+    after(function(done) {
+      this.c1.agent.check.deregister(this.name, done);
+    });
+
     it('should return local checks', function(done) {
-      this.c1.agent.checks(function(err, data) {
+      var self = this;
+
+      self.c1.agent.checks(function(err, data) {
         should.not.exist(err);
 
-        should(data).be.instanceOf(Object);
+        should.exist(data);
+        data.should.have.property(self.name);
 
         done();
       });
@@ -42,7 +56,9 @@ describe('Agent', function() {
       this.c1.agent.services(function(err, data) {
         should.not.exist(err);
 
-        should(data).be.instanceOf(Object);
+        should.exist(data);
+
+        // TODO: check for service
 
         done();
       });
@@ -54,28 +70,10 @@ describe('Agent', function() {
       this.c1.agent.members(function(err, data) {
         should.not.exist(err);
 
-        should(data).be.instanceOf(Object);
+        should(data).be.instanceOf(Array);
 
-        done();
-      });
-    });
-  });
-
-  describe('self', function() {
-    it('should return information about agent', function(done) {
-      this.c1.agent.self(function(err, data) {
-        should.not.exist(err);
-
-        should(data).be.instanceOf(Object);
-        data.should.have.keys('Config', 'Member');
-
-        data.Config.Bootstrap.should.be.true;
-        data.Config.Server.should.be.true;
-        data.Config.Datacenter.should.eql('dc1');
-        data.Config.NodeName.should.eql('node1');
-
-        data.Member.Name.should.eql('node1');
-        data.Member.Addr.should.eql('127.0.0.1');
+        data.length.should.eql(1);
+        data.map(function(m) { return m.Name; }).should.containEql('node1');
 
         done();
       });
@@ -139,15 +137,48 @@ describe('Agent', function() {
 
   describe('forceLeave', function() {
     it('should remove node2 from the cluster', function(done) {
-      // TODO: check not leaving
+      var self = this;
 
-      this.c1.agent.forceLeave('node2', function(err) {
-        should.not.exist(err);
+      var jobs = {};
 
-        // TODO: check leaving
+      jobs.ensureJoined = function(cb) {
+        self.c1.agent.members(function(err, data) {
+          should.not.exist(err);
 
-        done();
-      });
+          var node = lodash.find(data, function(m) { return m.Name === 'node2'; });
+
+          should.exist(node);
+          node.Status.should.eql(constants.AGENT_STATUS.indexOf('alive'));
+
+          cb(null, data);
+        });
+      };
+
+      jobs.forceLeave = ['ensureJoined', function(cb) {
+        self.c1.agent.forceLeave('node2', cb);
+      }];
+
+      jobs.after = ['forceLeave', function(cb) {
+        async.retry(
+          100,
+          function(cb) {
+            self.c1.agent.members(function(err, data) {
+              var node = lodash.find(data, function(m) { return m.Name === 'node2'; });
+              var leaving = node && node.Status === constants.AGENT_STATUS.indexOf('leaving');
+
+              if (err || !leaving) {
+                if (!err) err = new Error('Not leaving');
+                return setTimeout(function() { cb(err); }, 100);
+              }
+
+              cb();
+            });
+          },
+          cb
+        );
+      }];
+
+      async.auto(jobs, done);
     });
   });
 

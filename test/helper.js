@@ -27,21 +27,16 @@ Cluster.prototype.spawn = function(options, callback) {
 
   var binPath = process.env.CONSUL_BIN || 'consul';
 
-  if (process.env.CONSUL_UI_DIR) {
-    options['ui-dir'] = process.env.CONSUL_UI_DIR;
-  }
-
   var args = ['agent'];
 
   Object.keys(options).forEach(function(key) {
     args.push('-' + key);
 
-    if (options.hasOwnProperty(key) && typeof options[key] !== 'boolean') {
+    if (options.hasOwnProperty(key) && typeof options[key] !== 'boolean' &&
+        options[key] !== undefined) {
       args.push('' + options[key]);
     }
   });
-
-  var client = consul({ host: options.bind });
 
   var jobs = {};
 
@@ -66,7 +61,6 @@ Cluster.prototype.spawn = function(options, callback) {
     self.process[options.node] = process;
 
     var out = '';
-
     process.stdout.on('data', function(data) { out += data.toString(); });
     process.stderr.on('data', function(data) { out += data.toString(); });
 
@@ -86,10 +80,10 @@ Cluster.prototype.spawn = function(options, callback) {
     var started = false;
     var count = 0;
 
+    var client = consul({ host: options.bind });
+
     async.until(
-      function() {
-        return started || count > 1000;
-      },
+      function() { return started || count > 1000; },
       function(cb) {
         count++;
 
