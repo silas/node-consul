@@ -388,8 +388,7 @@ describe('Agent', function() {
 
       // add service
       jobs.push(function(cb) {
-        var opts = { name: self.name, ttl: '10s' };
-        self.c1.agent.service.register(opts, cb);
+        self.c1.agent.service.register(self.name, cb);
       });
 
       async.series(jobs, done);
