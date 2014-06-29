@@ -66,7 +66,7 @@ Cluster.prototype.spawn = function(options, callback) {
 
     process.on('exit', function(code) {
       if (code !== 0 && !process._destroyed) {
-        var err = new Error('Server exited (' + options.node + ')\n');
+        var err = new Error('Server exited (' + options.node + '): ' + code + '\n');
         err.message += 'Command: ' + binPath + ' ' + JSON.stringify(args) + '\n';
         err.message += 'Output:\n' + out;
         throw err;

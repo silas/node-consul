@@ -16,6 +16,7 @@ See the official [HTTP API][consul-docs-api] docs for more information.
  * [Catalog](#catalog)
   * [Node](#catalog-node)
   * [Service](#catalog-service)
+ * [Health](#health)
  * [KV](#kv)
  * [Session](#session)
  * [Status](#status)
@@ -605,6 +606,190 @@ Result
       "web"
     ],
     "ServicePort": 80
+  }
+]
+```
+
+<a name="health"/>
+### consul.health
+
+ * [node](#health-node)
+ * [checks](#health-checks)
+ * [service](#health-service)
+ * [state](#health-state)
+
+<a name="health-node"/>
+### consul.health.node(options, callback)
+
+Returns the health info of a node.
+
+Options
+
+ * node (String): node
+ * dc (String, optional): datacenter (defaults to local for agent)
+
+Usage
+
+``` javascript
+consul.health.node('node1', function(err, result) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+[
+  {
+    "Node": "node1",
+    "CheckID": "serfHealth",
+    "Name": "Serf Health Status",
+    "Status": "passing",
+    "Notes": "",
+    "Output": "Agent alive and reachable",
+    "ServiceID": "",
+    "ServiceName": ""
+  },
+  {
+    "Node": "node1",
+    "CheckID": "service:example",
+    "Name": "Service 'example' check",
+    "Status": "unknown",
+    "Notes": "",
+    "Output": "",
+    "ServiceID": "example",
+    "ServiceName": "example"
+  }
+]
+```
+
+<a name="health-checks"/>
+### consul.health.checks(options, callback)
+
+Returns the checks of a service.
+
+Options
+
+ * service (String): service ID
+ * dc (String, optional): datacenter (defaults to local for agent)
+
+Usage
+
+``` javascript
+consul.health.checks('example', function(err, result) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+[
+  {
+    "Node": "node1",
+    "CheckID": "service:example",
+    "Name": "Service 'example' check",
+    "Status": "unknown",
+    "Notes": "",
+    "Output": "",
+    "ServiceID": "example",
+    "ServiceName": "example"
+  }
+]
+```
+
+<a name="health-service"/>
+### consul.health.service(options, callback)
+
+Returns the nodes and health info of a service.
+
+Options
+
+ * service (String): service ID
+ * dc (String, optional): datacenter (defaults to local for agent)
+ * tag (String, optional): filter by tag
+ * passing (Boolean, optional): restrict to passing checks
+
+Usage
+
+``` javascript
+consul.health.service('example', function(err, result) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+[
+  {
+    "Node": {
+      "Node": "node1",
+      "Address": "127.0.0.1"
+    },
+    "Service": {
+      "ID": "example",
+      "Service": "example",
+      "Tags": null,
+      "Port": 0
+    },
+    "Checks": [
+      {
+        "Node": "node1",
+        "CheckID": "service:example",
+        "Name": "Service 'example' check",
+        "Status": "unknown",
+        "Notes": "",
+        "Output": "",
+        "ServiceID": "example",
+        "ServiceName": "example"
+      },
+      {
+        "Node": "node1",
+        "CheckID": "serfHealth",
+        "Name": "Serf Health Status",
+        "Status": "passing",
+        "Notes": "",
+        "Output": "Agent alive and reachable",
+        "ServiceID": "",
+        "ServiceName": ""
+      }
+    ]
+  }
+]
+```
+
+<a name="health-state"/>
+### consul.health.state(options, callback)
+
+Returns the checks in a given state.
+
+Options
+
+ * state (String, enum: any, unknown, passing, warning, critical): state
+ * dc (String, optional): datacenter (defaults to local for agent)
+
+Usage
+
+``` javascript
+consul.health.state('unknown', function(err, result) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+[
+  {
+    "Node": "node1",
+    "CheckID": "service:example",
+    "Name": "Service 'example' check",
+    "Status": "unknown",
+    "Notes": "",
+    "Output": "",
+    "ServiceID": "example",
+    "ServiceName": "example"
   }
 ]
 ```
