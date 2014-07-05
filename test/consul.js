@@ -6,6 +6,8 @@
  * Module dependencies.
  */
 
+require('should');
+
 var consul = require('../lib');
 
 /**
@@ -18,7 +20,19 @@ describe('Consul', function() {
   });
 
   it('should have valid defaults', function() {
-    this.c.host.should.eql('localhost');
-    this.c.port.should.eql('8500');
+    this.c.opts.baseUrl.should.eql({
+      protocol: 'http:',
+      slashes: true,
+      auth: null,
+      host: 'localhost:8500',
+      port: '8500',
+      hostname: 'localhost',
+      hash: null,
+      search: null,
+      query: null,
+      pathname: '/v1',
+      path: '/v1',
+      href: 'http://localhost:8500/v1',
+    });
   });
 });

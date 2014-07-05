@@ -7,6 +7,7 @@
 require('should');
 
 var async = require('async');
+var debug = require('debug');
 var path = require('path');
 var spawn = require('child_process').spawn;
 var temp = require('temp').track();
@@ -77,7 +78,10 @@ Cluster.prototype.spawn = function(options, callback) {
   }];
 
   jobs.connected = ['process', function(cb, results) {
+    var log = debug('consul:' + options.bind);
     var client = consul({ host: options.bind });
+
+    client.on('debug', log);
 
     async.retry(
       100,
@@ -85,11 +89,13 @@ Cluster.prototype.spawn = function(options, callback) {
         // wait until server starts
         if (options.bootstrap) {
           client.kv.set('check', 'ok', function(err) {
+            if (err) log(err);
             if (err) return setTimeout(function() { cb(err); }, 100);
             cb();
           });
         } else {
           client.agent.self(function(err) {
+            if (err) log(err);
             if (err) return setTimeout(function() { cb(err); }, 100);
             cb();
           });
@@ -177,8 +183,11 @@ function before(test, callback) {
   test.cluster.setup(function(err) {
     if (err) return callback(err);
 
+    var client;
+
     for (var i = 1; i <= 3; i++) {
-      test['c' + i] = consul({ host: '127.0.0.' + i });
+      client = test['c' + i] = consul({ host: '127.0.0.' + i });
+      client.on('debug', debug('consul:' + '127.0.0.' + i));
     }
 
     callback();
