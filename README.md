@@ -30,6 +30,7 @@ Options
 
  * host (String, default: 127.0.0.1): agent address
  * port (String, default: 8500): agent HTTP port
+ * secure (Boolean, default: false): enable HTTPS
 
 Usage
 

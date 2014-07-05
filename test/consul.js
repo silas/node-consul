@@ -24,15 +24,15 @@ describe('Consul', function() {
       protocol: 'http:',
       slashes: true,
       auth: null,
-      host: 'localhost:8500',
+      host: '127.0.0.1:8500',
       port: '8500',
-      hostname: 'localhost',
+      hostname: '127.0.0.1',
       hash: null,
       search: null,
       query: null,
       pathname: '/v1',
       path: '/v1',
-      href: 'http://localhost:8500/v1',
+      href: 'http://127.0.0.1:8500/v1',
     });
   });
 });
