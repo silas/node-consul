@@ -7,12 +7,45 @@
 require('should');
 
 var async = require('async');
-var debug = require('debug');
 var path = require('path');
 var spawn = require('child_process').spawn;
 var temp = require('temp').track();
 
 var consul = require('../lib');
+
+/**
+ * Buffer to string
+ */
+
+function bufferToString(value) {
+  if (!value) return value;
+
+  if (Buffer.isBuffer(value)) return value.toString();
+
+  if (Array.isArray(value)) {
+    return value.map(bufferToString);
+  }
+
+  if (typeof value === 'object') {
+    Object.keys(value).forEach(function(key) {
+      value[key] = bufferToString(value[key]);
+    });
+  }
+
+  return value;
+}
+
+/**
+ * Debug (convert buffers to strings)
+ */
+
+function debugBuffer(name) {
+  var debug = require('debug')(name);
+
+  return function() {
+    debug.apply(debug, bufferToString(Array.prototype.slice.call(arguments)));
+  };
+}
 
 /**
  * Cluster
@@ -78,7 +111,7 @@ Cluster.prototype.spawn = function(options, callback) {
   }];
 
   jobs.connected = ['process', function(cb, results) {
-    var log = debug('consul:' + options.bind);
+    var log = debugBuffer('consul:' + options.bind);
     var client = consul({ host: options.bind });
 
     client.on('debug', log);
@@ -187,7 +220,7 @@ function before(test, callback) {
 
     for (var i = 1; i <= 3; i++) {
       client = test['c' + i] = consul({ host: '127.0.0.' + i });
-      client.on('debug', debug('consul:' + '127.0.0.' + i));
+      client.on('debug', debugBuffer('consul:' + '127.0.0.' + i));
     }
 
     callback();

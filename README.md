@@ -4,6 +4,7 @@ This is a [Consul][consul] client.
 
  * [Documentation](#documentation)
  * [Development](#development)
+ * [License](#license)
 
 ## Documentation
 
