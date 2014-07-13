@@ -4,5 +4,6 @@
 .npmignore
 .rock.yml
 config
+coverage
 test
 tmp

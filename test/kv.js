@@ -199,6 +199,34 @@ describe('Kv', function() {
         });
       });
     });
+
+    it('should create kv pair with null value', function(done) {
+      var c = this.c1;
+      var key = 'one';
+      var value = null;
+
+      c.kv.set(key, value, function(err, ok) {
+        should.not.exist(err);
+
+        ok.should.be.true;
+
+        c.kv.get(key, function(err, data) {
+          should.not.exist(err);
+
+          data.should.have.keys(
+            'CreateIndex',
+            'ModifyIndex',
+            'LockIndex',
+            'Key',
+            'Flags',
+            'Value'
+          );
+          should(data.Value).be.null;
+
+          done();
+        });
+      });
+    });
   });
 
   describe('del', function() {
