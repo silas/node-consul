@@ -1,10 +1,10 @@
 {
   "name": "consul",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Consul client",
   "main": "lib/index.js",
   "dependencies": {
-    "rapi": "^0.2.0"
+    "rapi": "^0.3.0"
   },
   "devDependencies": {
     "async": "^0.9.0",

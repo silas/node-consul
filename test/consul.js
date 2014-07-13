@@ -20,7 +20,7 @@ describe('Consul', function() {
   });
 
   it('should have valid defaults', function() {
-    this.c.opts.baseUrl.should.eql({
+    this.c._opts.baseUrl.should.eql({
       protocol: 'http:',
       slashes: true,
       auth: null,
