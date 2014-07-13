@@ -114,7 +114,7 @@ Cluster.prototype.spawn = function(options, callback) {
     var log = debugBuffer('consul:' + options.bind);
     var client = consul({ host: options.bind });
 
-    client.on('debug', log);
+    client.on('log', log);
 
     async.retry(
       100,
@@ -220,7 +220,7 @@ function before(test, callback) {
 
     for (var i = 1; i <= 3; i++) {
       client = test['c' + i] = consul({ host: '127.0.0.' + i });
-      client.on('debug', debugBuffer('consul:' + '127.0.0.' + i));
+      client.on('log', debugBuffer('consul:' + '127.0.0.' + i));
     }
 
     callback();
