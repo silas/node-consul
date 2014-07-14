@@ -23,7 +23,7 @@ See the official [HTTP API][consul-docs-api] docs for more information.
  * [Status](#status)
 
 <a name="init"/>
-### consul([opts])
+### consul([options])
 
 Initialize a new Consul client.
 
@@ -50,7 +50,7 @@ var consul = require('consul')();
  * [forceLeave](#agent-force-leave)
 
 <a name="agent-members"/>
-### consul.agent.members([opts], callback)
+### consul.agent.members([options], callback)
 
 Returns the members as seen by the consul agent.
 
@@ -186,7 +186,7 @@ Result
 ```
 
 <a name="agent-join"/>
-### consul.agent.join(opts, callback)
+### consul.agent.join(options, callback)
 
 Trigger agent to join a node.
 
@@ -204,7 +204,7 @@ consul.agent.join('127.0.0.2', function(err) {
 ```
 
 <a name="agent-force-leave"/>
-### consul.agent.forceLeave(opts, callback)
+### consul.agent.forceLeave(options, callback)
 
 Force remove node.
 
@@ -261,7 +261,7 @@ Result
 ```
 
 <a name="agent-check-register"/>
-### consul.agent.check.register(opts, callback)
+### consul.agent.check.register(options, callback)
 
 Registers a new check.
 
@@ -289,7 +289,7 @@ consul.agent.check.register(check, function(err) {
 ```
 
 <a name="agent-check-deregister"/>
-### consul.agent.check.deregister(opts, callback)
+### consul.agent.check.deregister(options, callback)
 
 Deregister a check.
 
@@ -306,7 +306,7 @@ consul.agent.check.deregister('example', function(err) {
 ```
 
 <a name="agent-check-pass"/>
-### consul.agent.check.pass(opts, callback)
+### consul.agent.check.pass(options, callback)
 
 Mark a test as passing.
 
@@ -323,7 +323,7 @@ consul.agent.check.pass('example', function(err) {
 ```
 
 <a name="agent-check-warn"/>
-### consul.agent.check.warn(opts, callback)
+### consul.agent.check.warn(options, callback)
 
 Mark a test as warning.
 
@@ -340,7 +340,7 @@ consul.agent.check.warn('example', function(err) {
 ```
 
 <a name="agent-check-fail"/>
-### consul.agent.check.fail(opts, callback)
+### consul.agent.check.fail(options, callback)
 
 Mark a test as critical.
 
@@ -393,7 +393,7 @@ Result
 ```
 
 <a name="agent-service-register"/>
-### consul.agent.service.register(opts, callback)
+### consul.agent.service.register(options, callback)
 
 Registers a new service.
 
@@ -417,7 +417,7 @@ consul.agent.service.register('example', function(err) {
 ```
 
 <a name="agent-service-deregister"/>
-### consul.agent.service.deregister(opts, callback)
+### consul.agent.service.deregister(options, callback)
 
 Deregister a service.
 
@@ -468,7 +468,7 @@ Result
  * [services](#catalog-node-services)
 
 <a name="catalog-node-list"/>
-### consul.catalog.node.list([opts], callback)
+### consul.catalog.node.list([options], callback)
 
 Lists nodes in a given datacenter.
 
@@ -496,7 +496,7 @@ Result
 ```
 
 <a name="catalog-node-services"/>
-### consul.catalog.node.services(opts, callback)
+### consul.catalog.node.services(options, callback)
 
 Lists the services provided by a node.
 
@@ -547,7 +547,7 @@ Result
  * [nodes](#catalog-service-nodes)
 
 <a name="catalog-service-list"/>
-### consul.catalog.service.list([opts], callback)
+### consul.catalog.service.list([options], callback)
 
 Lists services in a given datacenter.
 
@@ -576,7 +576,7 @@ Result
 ```
 
 <a name="catalog-service-nodes"/>
-### consul.catalog.service.nodes(opts, callback)
+### consul.catalog.service.nodes(options, callback)
 
 Lists the nodes in a given service.
 
@@ -621,7 +621,7 @@ Result
  * [state](#health-state)
 
 <a name="health-node"/>
-### consul.health.node(opts, callback)
+### consul.health.node(options, callback)
 
 Returns the health info of a node.
 
@@ -666,7 +666,7 @@ Result
 ```
 
 <a name="health-checks"/>
-### consul.health.checks(opts, callback)
+### consul.health.checks(options, callback)
 
 Returns the checks of a service.
 
@@ -701,7 +701,7 @@ Result
 ```
 
 <a name="health-service"/>
-### consul.health.service(opts, callback)
+### consul.health.service(options, callback)
 
 Returns the nodes and health info of a service.
 
@@ -762,7 +762,7 @@ Result
 ```
 
 <a name="health-state"/>
-### consul.health.state(opts, callback)
+### consul.health.state(options, callback)
 
 Returns the checks in a given state.
 
@@ -804,7 +804,7 @@ Result
  * [del](#kv-del)
 
 <a name="kv-get"/>
-### consul.kv.get(opts, callback)
+### consul.kv.get(options, callback)
 
 Return key/value (kv) pair(s).
 
@@ -840,7 +840,7 @@ Result
 ```
 
 <a name="kv-set"/>
-### consul.kv.set(opts, callback)
+### consul.kv.set(options, callback)
 
 Set key/value (kv) pair.
 
@@ -869,7 +869,7 @@ true
 ```
 
 <a name="kv-del"/>
-### consul.kv.del(opts, callback)
+### consul.kv.del(options, callback)
 
 Delete key/value (kv) pair(s).
 
@@ -897,7 +897,7 @@ consul.kv.del('hello', function(err) {
  * [list](#session-list)
 
 <a name="session-create"/>
-### consul.session.create([opts], callback)
+### consul.session.create([options], callback)
 
 Create a new session.
 
@@ -926,7 +926,7 @@ Result
 ```
 
 <a name="session-destroy"/>
-### consul.session.destroy(opts, callback)
+### consul.session.destroy(options, callback)
 
 Destroy a given session.
 
@@ -944,7 +944,7 @@ consul.session.destroy('a0f5dc05-84c3-5f5a-1d88-05b875e524e1', function(err) {
 ```
 
 <a name="session-get"/>
-### consul.session.get(opts, callback)
+### consul.session.get(options, callback)
 
 Queries a given session.
 
@@ -977,7 +977,7 @@ Result
 ```
 
 <a name="session-node"/>
-### consul.session.node(opts, callback)
+### consul.session.node(options, callback)
 
 Lists sessions belonging to a node.
 
@@ -1012,7 +1012,7 @@ Result
 ```
 
 <a name="session-list"/>
-### consul.session.list([opts], callback)
+### consul.session.list([options], callback)
 
 Lists all the active sessions.
 
