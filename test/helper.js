@@ -56,19 +56,19 @@ function Cluster() {
   this.process = {};
 }
 
-Cluster.prototype.spawn = function(options, callback) {
+Cluster.prototype.spawn = function(opts, callback) {
   var self = this;
 
   var binPath = process.env.CONSUL_BIN || 'consul';
 
   var args = ['agent'];
 
-  Object.keys(options).forEach(function(key) {
+  Object.keys(opts).forEach(function(key) {
     args.push('-' + key);
 
-    if (options.hasOwnProperty(key) && typeof options[key] !== 'boolean' &&
-        options[key] !== undefined) {
-      args.push('' + options[key]);
+    if (opts.hasOwnProperty(key) && typeof opts[key] !== 'boolean' &&
+        opts[key] !== undefined) {
+      args.push('' + opts[key]);
     }
   });
 
@@ -80,10 +80,10 @@ Cluster.prototype.spawn = function(options, callback) {
 
   jobs.process = ['dirPath', function(cb, results) {
     args.push('-data-dir');
-    args.push(path.join(results.dirPath, options.node, 'data'));
+    args.push(path.join(results.dirPath, opts.node, 'data'));
 
     args.push('-pid-file');
-    args.push(path.join(results.dirPath, options.node, 'pid'));
+    args.push(path.join(results.dirPath, opts.node, 'pid'));
 
     var process = spawn(binPath, args);
 
@@ -92,7 +92,7 @@ Cluster.prototype.spawn = function(options, callback) {
       process.kill('SIGKILL');
     };
 
-    self.process[options.node] = process;
+    self.process[opts.node] = process;
 
     var out = '';
     process.stdout.on('data', function(data) { out += data.toString(); });
@@ -100,7 +100,7 @@ Cluster.prototype.spawn = function(options, callback) {
 
     process.on('exit', function(code) {
       if (code !== 0 && !process._destroyed) {
-        var err = new Error('Server exited (' + options.node + '): ' + code + '\n');
+        var err = new Error('Server exited (' + opts.node + '): ' + code + '\n');
         err.message += 'Command: ' + binPath + ' ' + JSON.stringify(args) + '\n';
         err.message += 'Output:\n' + out;
         throw err;
@@ -111,8 +111,8 @@ Cluster.prototype.spawn = function(options, callback) {
   }];
 
   jobs.connected = ['process', function(cb, results) {
-    var log = debugBuffer('consul:' + options.bind);
-    var client = consul({ host: options.bind });
+    var log = debugBuffer('consul:' + opts.bind);
+    var client = consul({ host: opts.bind });
 
     client.on('log', log);
 
@@ -120,7 +120,7 @@ Cluster.prototype.spawn = function(options, callback) {
       100,
       function(cb) {
         // wait until server starts
-        if (options.bootstrap) {
+        if (opts.bootstrap) {
           client.kv.set('check', 'ok', function(err) {
             if (err) log(err);
             if (err) return setTimeout(function() { cb(err); }, 100);
@@ -138,7 +138,7 @@ Cluster.prototype.spawn = function(options, callback) {
         if (err) {
           results.process.destroy();
 
-          return cb(new Error('Failed to start: ' + options.node));
+          return cb(new Error('Failed to start: ' + opts.node));
         }
 
         cb();

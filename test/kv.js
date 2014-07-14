@@ -140,13 +140,13 @@ describe('Kv', function() {
       };
 
       jobs.wait = ['get', function(cb, result) {
-        var options = {
+        var opts = {
           key: key,
           index: result.get.ModifyIndex,
           wait: '3s'
         };
 
-        c.kv.get(options, function(err, data) {
+        c.kv.get(opts, function(err, data) {
           should.not.exist(err);
 
           data.Value.should.eql(update);
