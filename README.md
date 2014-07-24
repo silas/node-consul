@@ -633,7 +633,7 @@ Options
 Usage
 
 ``` javascript
-consul.health.node('node1', function(err, result) {
+consul.health.node('node1', function(err, result, headers) {
   if (err) throw err;
 });
 ```
@@ -678,7 +678,7 @@ Options
 Usage
 
 ``` javascript
-consul.health.checks('example', function(err, result) {
+consul.health.checks('example', function(err, result, headers) {
   if (err) throw err;
 });
 ```
@@ -715,7 +715,7 @@ Options
 Usage
 
 ``` javascript
-consul.health.service('example', function(err, result) {
+consul.health.service('example', function(err, result, headers) {
   if (err) throw err;
 });
 ```
@@ -774,7 +774,7 @@ Options
 Usage
 
 ``` javascript
-consul.health.state('unknown', function(err, result) {
+consul.health.state('unknown', function(err, result, headers) {
   if (err) throw err;
 });
 ```
