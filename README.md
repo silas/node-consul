@@ -61,7 +61,7 @@ Options
 Usage
 
 ``` javascript
-consul.agent.members(function(err, result) {
+consul.agent.members(function(err, result, http_response) {
   if (err) throw err;
 });
 ```
@@ -103,7 +103,7 @@ Returns the agent node configuration.
 Usage
 
 ``` javascript
-consul.agent.self(function(err, result) {
+consul.agent.self(function(err, result, http_response) {
   if (err) throw err;
 });
 ```
@@ -198,7 +198,7 @@ Options
 Usage
 
 ``` javascript
-consul.agent.join('127.0.0.2', function(err) {
+consul.agent.join('127.0.0.2', function(err, http_response) {
   if (err) throw err;
 });
 ```
@@ -215,7 +215,7 @@ Options
 Usage
 
 ``` javascript
-consul.agent.forceLeave('node2', function(err) {
+consul.agent.forceLeave('node2', function(err, http_response) {
   if (err) throw err;
 });
 ```
@@ -448,7 +448,7 @@ Lists known datacenters.
 Usage
 
 ``` javascript
-consul.catalog.datacenters(function(err, result) {
+consul.catalog.datacenters(function(err, result, http_response) {
   if (err) throw err;
 });
 ```
@@ -633,7 +633,7 @@ Options
 Usage
 
 ``` javascript
-consul.health.node('node1', function(err, result, res) {
+consul.health.node('node1', function(err, result, http_response) {
   if (err) throw err;
 });
 ```
@@ -678,7 +678,7 @@ Options
 Usage
 
 ``` javascript
-consul.health.checks('example', function(err, result, res) {
+consul.health.checks('example', function(err, result, http_response) {
   if (err) throw err;
 });
 ```
@@ -715,7 +715,7 @@ Options
 Usage
 
 ``` javascript
-consul.health.service('example', function(err, result, res) {
+consul.health.service('example', function(err, result, http_response) {
   if (err) throw err;
 });
 ```
@@ -774,7 +774,7 @@ Options
 Usage
 
 ``` javascript
-consul.health.state('unknown', function(err, result, res) {
+consul.health.state('unknown', function(err, result, http_response) {
   if (err) throw err;
 });
 ```
