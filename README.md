@@ -25,7 +25,7 @@ See the official [HTTP API][consul-docs-api] docs for more information.
 <a name="callback"/>
 ### Callback
 
-All callbacks having the following signature `function(err, data, res)`.
+All callbacks have the following signature `function(err, data, res)`.
 
  * err (Error, optional): set if there was an error, otherwise falsy
  * data (Object, optional): response data if any, otherwise `undefined`
