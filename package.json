@@ -1,26 +1,27 @@
 {
   "name": "consul",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "description": "Consul client",
   "main": "lib/index.js",
   "dependencies": {
-    "rapi": "^0.6.0"
+    "rapi": "^0.12.0"
   },
   "devDependencies": {
     "async": "^0.9.0",
-    "debug": "^1.0.3",
+    "debug": "^1.0.4",
     "istanbul": "^0.3.0",
     "jscs": "^1.5.8",
     "jshint": "^2.5.2",
     "lodash": "^2.4.1",
-    "mocha": "^1.20.1",
+    "mocha": "^1.21.0",
     "node-uuid": "^1.4.1",
     "should": "^4.0.4",
     "temp": "^0.8.0",
     "uuid": "^1.4.1"
   },
   "scripts": {
-    "test": "./node_modules/.bin/jshint lib test/*.js && ./node_modules/.bin/jscs lib test/*.js && ./node_modules/.bin/mocha --reporter spec --timeout 15000"
+    "cover": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --recursive --check-leaks --timeout 15000 && open coverage/lcov-report/index.html",
+    "test": "./node_modules/.bin/jshint lib test && ./node_modules/.bin/jscs lib test && ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --recursive --check-leaks --timeout 15000"
   },
   "keywords": [
     "consul"

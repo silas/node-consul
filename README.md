@@ -22,6 +22,15 @@ See the official [HTTP API][consul-docs-api] docs for more information.
  * [Session](#session)
  * [Status](#status)
 
+<a name="callback"/>
+### Callback
+
+All callbacks having the following signature `function(err, data, res)`.
+
+ * err (Error, optional): set if there was an error, otherwise falsy
+ * data (Object, optional): response data if any, otherwise `undefined`
+ * res (http.IncomingMessage, optional): HTTP response object with additional `body` property. This might not exist when `err` is set. The `body` property can be a decoded object, string, or Buffer.
+
 <a name="init"/>
 ### consul([options])
 
