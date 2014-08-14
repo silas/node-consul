@@ -4,7 +4,7 @@
   "description": "Consul client",
   "main": "lib/index.js",
   "dependencies": {
-    "papi": "^0.13.0"
+    "papi": "^0.14.1"
   },
   "devDependencies": {
     "async": "^0.9.0",
