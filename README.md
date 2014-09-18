@@ -18,6 +18,7 @@ See the official [HTTP API][consul-docs-api] docs for more information.
  * [Catalog](#catalog)
   * [Node](#catalog-node)
   * [Service](#catalog-service)
+ * [Event](#event)
  * [Health](#health)
  * [KV](#kv)
  * [Session](#session)
@@ -796,6 +797,82 @@ Result
       "web"
     ],
     "ServicePort": 80
+  }
+]
+```
+
+<a name="event"/>
+### consul.event
+
+ * [fire](#event-fire)
+ * [list](#event-list)
+
+<a name="event-fire"/>
+### consul.event.fire(options, callback)
+
+Fires a new user event.
+
+Options
+
+ * name (String): event name
+ * payload (String|Buffer): payload
+ * node (String, optional): regular expression to filter by node
+ * service (String, optional): regular expression to filter by service
+ * tag (String, optional): regular expression to filter by tag
+
+Usage
+
+``` javascript
+consul.event.fire('deploy', '53', function(err, result) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+{
+  "ID": "4730953b-3135-7ff2-47a7-9d9fc9c4e5a2",
+  "Name": "deploy",
+  "Payload": "53",
+  "NodeFilter": "",
+  "ServiceFilter": "",
+  "TagFilter": "",
+  "Version": 1,
+  "LTime": 0
+}
+```
+
+<a name="event-list"/>
+### consul.event.list([options], callback)
+
+Lists the most recent events an agent has seen.
+
+Options
+
+ * name (String, optional): filter by event name
+
+Usage
+
+``` javascript
+consul.event.list('deploy', function(err, result) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+[
+  {
+    "ID": "4730953b-3135-7ff2-47a7-9d9fc9c4e5a2",
+    "Name": "deploy",
+    "Payload": "53",
+    "NodeFilter": "",
+    "ServiceFilter": "",
+    "TagFilter": "",
+    "Version": 1,
+    "LTime": 2
   }
 ]
 ```

@@ -1,6 +1,6 @@
 {
   "name": "consul",
-  "version": "0.9.2",
+  "version": "0.10.0",
   "description": "Consul client",
   "main": "./lib",
   "dependencies": {
@@ -16,8 +16,7 @@
     "mocha": "^1.21.0",
     "node-uuid": "^1.4.1",
     "should": "^4.0.4",
-    "temp": "^0.8.1",
-    "uuid": "^1.4.1"
+    "temp": "^0.8.1"
   },
   "scripts": {
     "cover": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --recursive --check-leaks --timeout 15000 && open coverage/lcov-report/index.html",

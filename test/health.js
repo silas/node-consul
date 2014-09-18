@@ -1,7 +1,5 @@
 'use strict';
 
-/* jshint expr: true */
-
 /**
  * Module dependencies.
  */
@@ -9,7 +7,7 @@
 var async = require('async');
 var lodash = require('lodash');
 var should = require('should');
-var uuid = require('uuid');
+var uuid = require('node-uuid');
 
 var helper = require('./helper');
 
