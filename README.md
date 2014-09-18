@@ -533,7 +533,7 @@ Result
     "consul": {
       "ID": "consul",
       "Service": "consul",
-      "Tags": null,
+      "Tags": [],
       "Port": 8300
     },
     "example": {
@@ -741,7 +741,7 @@ Result
     "Service": {
       "ID": "example",
       "Service": "example",
-      "Tags": null,
+      "Tags": [],
       "Port": 0
     },
     "Checks": [

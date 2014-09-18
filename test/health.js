@@ -126,7 +126,7 @@ describe('Health', function() {
         data[0].Service.should.eql({
           ID: self.service,
           Service: self.service,
-          Tags: null,
+          Tags: [],
           Port: 0,
         });
 
