@@ -11,6 +11,7 @@ This is a [Consul][consul] client.
 See the official [HTTP API][consul-docs-api] docs for more information.
 
  * [Consul](#init)
+ * [ACL](#acl)
  * [Agent](#agent)
   * [Check](#agent-check)
   * [Service](#agent-service)
@@ -31,6 +32,19 @@ All callbacks have the following signature `function(err, data, res)`.
  * data (Object, optional): response data if any, otherwise `undefined`
  * res (http.IncomingMessage, optional): HTTP response object with additional `body` property. This might not exist when `err` is set. The `body` property can be a decoded object, string, or Buffer.
 
+<a name="common-options"/>
+### Common Options
+
+These options will be passed along with any call, although only certain endpoints support them. See the [HTTP API][consul-docs-api] for more information.
+
+ * dc (String, optional): datacenter (defaults to local for agent)
+ * wan (Boolean, default: false): return WAN members instead of LAN members
+ * consistent (Boolean, default: false): require strong consistency
+ * stale (Boolean, default: false): use whatever is available, can be arbitrarily stale
+ * index (String, optional): used with `ModifyIndex` to block and wait for changes
+ * wait (String, optional): limit how long to wait for changes (ex: `5m`), used with index
+ * token (String, optional): ACL token
+
 <a name="init"/>
 ### consul([options])
 
@@ -46,6 +60,171 @@ Usage
 
 ``` javascript
 var consul = require('consul')();
+```
+
+<a name="acl"/>
+### consul.acl
+
+ * [create](#acl-create)
+ * [update](#acl-update)
+ * [destroy](#acl-destroy)
+ * [get](#acl-get)
+ * [clone](#acl-clone)
+ * [list](#acl-list)
+
+<a name="acl-create"/>
+### consul.acl.create([options], callback)
+
+Creates a new token with policy.
+
+Options
+
+ * name (String, optional): human readable name for the token
+ * type (String, enum: client, management; default: client): type of token
+ * rules (String, optional): string encoded HCL or JSON
+
+Usage
+
+``` javascript
+consul.acl.create(function(err, result) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+{
+  "ID": "b1f4c10e-b61b-e1de-de95-218c9fefdd3e"
+}
+```
+
+<a name="acl-update"/>
+### consul.acl.update(options, callback)
+
+Update the policy of a token.
+
+Options
+
+ * id (String): token ID
+ * name (String, optional): human readable name for the token
+ * type (String, enum: client, management; default: client): type of token
+ * rules (String, optional): string encoded HCL or JSON
+
+Usage
+
+``` javascript
+consul.acl.update({ id: '63e1d82e-f718-eb92-3b7d-61f0c71d45b4', name: 'test' }, function(err) {
+  if (err) throw err;
+});
+```
+
+<a name="acl-destroy"/>
+### consul.acl.destroy(options, callback)
+
+Destroys a given token.
+
+Options
+
+ * id (String): token ID
+
+Usage
+
+``` javascript
+consul.acl.destroy('b1f4c10e-b61b-e1de-de95-218c9fefdd3e', function(err) {
+  if (err) throw err;
+});
+```
+
+<a name="acl-get"/>
+### consul.acl.get(options, callback)
+
+Queries the policy of a given token.
+
+Options
+
+ * id (String): token ID
+
+Usage
+
+``` javascript
+consul.acl.get('63e1d82e-f718-eb92-3b7d-61f0c71d45b4', function(err, result) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+{
+  "CreateIndex": 7,
+  "ModifyIndex": 7,
+  "ID": "63e1d82e-f718-eb92-3b7d-61f0c71d45b4",
+  "Name": "Read only",
+  "Type": "client",
+  "Rules": "{\"key\":{\"\":{\"policy\":\"read\"}}}"
+}
+```
+
+<a name="acl-clone"/>
+### consul.acl.clone(options, callback)
+
+Creates a new token by cloning an existing token.
+
+Options
+
+ * id (String): token ID
+
+Usage
+
+``` javascript
+consul.acl.clone('63e1d82e-f718-eb92-3b7d-61f0c71d45b4', function(err) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+{
+  "ID": "9fb8b20b-2636-adbb-9b99-d879df3305ec"
+}
+```
+
+<a name="acl-list"/>
+### consul.acl.list([options], callback)
+
+Lists all the active tokens.
+
+Usage
+
+``` javascript
+consul.acl.list(function(err, result) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+[
+  {
+    "CreateIndex": 2,
+    "ModifyIndex": 2,
+    "ID": "anonymous",
+    "Name": "Anonymous Token",
+    "Type": "client",
+    "Rules": ""
+  }
+  {
+    "CreateIndex": 3,
+    "ModifyIndex": 3,
+    "ID": "root",
+    "Name": "Master Token",
+    "Type": "management",
+    "Rules": ""
+  }
+]
 ```
 
 <a name="agent"/>
@@ -65,7 +244,7 @@ Returns the members as seen by the consul agent.
 
 Options
 
- * wan (Boolean, default: false): return WAN members instead of LAN members 
+ * wan (Boolean, default: false): return WAN members instead of LAN members
 
 Usage
 

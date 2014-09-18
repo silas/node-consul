@@ -7,6 +7,7 @@
 require('should');
 
 var async = require('async');
+var fs = require('fs');
 var path = require('path');
 var spawn = require('child_process').spawn;
 var temp = require('temp').track();
@@ -78,7 +79,23 @@ Cluster.prototype.spawn = function(opts, callback) {
     temp.mkdir({}, cb);
   };
 
-  jobs.process = ['dirPath', function(cb, results) {
+  jobs.configFile = ['dirPath', function(cb, results) {
+    var config = {
+      acl_datacenter: 'dc1',
+      acl_master_token: 'root',
+    };
+
+    var filePath = path.join(results.dirPath, 'config.json');
+
+    fs.writeFile(filePath, JSON.stringify(config), function(err) {
+      cb(err, filePath);
+    });
+  }];
+
+  jobs.process = ['configFile', 'dirPath', function(cb, results) {
+    args.push('-config-file');
+    args.push(results.configFile);
+
     args.push('-data-dir');
     args.push(path.join(results.dirPath, opts.node, 'data'));
 
