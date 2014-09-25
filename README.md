@@ -1065,6 +1065,7 @@ Result
 ### consul.kv
 
  * [get](#kv-get)
+ * [keys](#kv-keys)
  * [set](#kv-set)
  * [del](#kv-del)
 
@@ -1102,6 +1103,34 @@ Result
   "Flags": 0,
   "Value": "world"
 }
+```
+
+<a name="kv-keys"/>
+### consul.kv.keys(options, callback)
+
+Return keys for a given prefix.
+
+Options
+
+ * key (String): path prefix
+ * dc (String, optional): datacenter (defaults to local for agent)
+ * separator (String, optional): list keys up to a given separator
+
+Usage
+
+``` javascript
+consul.kv.keys('a/', function(err, result) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+[
+  "a/b",
+  "a/c"
+]
 ```
 
 <a name="kv-set"/>

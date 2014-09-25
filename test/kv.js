@@ -169,6 +169,79 @@ describe('Kv', function() {
     });
   });
 
+  describe('keys', function() {
+    beforeEach(function(done) {
+      var self = this;
+
+      self.keys = [
+        'a/x/1',
+        'a/y/2',
+        'a/z/3',
+      ];
+
+      async.each(self.keys, function(key, next) {
+        self.c1.kv.set(key, 'value', function(err) {
+          next(err);
+        });
+      }, done);
+    });
+
+    it('should return keys', function(done) {
+      var self = this;
+
+      this.c1.kv.keys('a', function(err, data) {
+        should.not.exist(err);
+
+        should(data).be.instanceof(Array);
+
+        data.length.should.equal(3);
+
+        data.should.eql(self.keys.filter(function(key) {
+          return key.match(/^a/);
+        }));
+
+        done();
+      });
+    });
+
+    it('should return keys with separator', function(done) {
+      var self = this;
+
+      var opts = {
+        key: 'a/',
+        separator: '/',
+      };
+
+      this.c1.kv.keys(opts, function(err, data) {
+        should.not.exist(err);
+
+        should(data).be.instanceof(Array);
+
+        data.length.should.equal(3);
+
+        data.should.eql(
+          self.keys
+            .filter(function(key) { return key.match(/^a\//); })
+            .map(function(v) { return v.slice(0, 4); })
+        );
+
+        done();
+      });
+    });
+
+    it('should return all keys', function(done) {
+      this.c1.kv.keys(function(err, data) {
+        should.not.exist(err);
+
+        should(data).be.instanceof(Array);
+
+        data.length.should.equal(4);
+
+        done();
+      });
+    });
+  });
+
   describe('set', function() {
     it('should create kv pair', function(done) {
       var c = this.c1;
