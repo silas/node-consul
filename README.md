@@ -921,7 +921,7 @@ Result
     "Node": "node1",
     "CheckID": "service:example",
     "Name": "Service 'example' check",
-    "Status": "unknown",
+    "Status": "critical",
     "Notes": "",
     "Output": "",
     "ServiceID": "example",
@@ -956,7 +956,7 @@ Result
     "Node": "node1",
     "CheckID": "service:example",
     "Name": "Service 'example' check",
-    "Status": "unknown",
+    "Status": "critical",
     "Notes": "",
     "Output": "",
     "ServiceID": "example",
@@ -1005,7 +1005,7 @@ Result
         "Node": "node1",
         "CheckID": "service:example",
         "Name": "Service 'example' check",
-        "Status": "unknown",
+        "Status": "critical",
         "Notes": "",
         "Output": "",
         "ServiceID": "example",
@@ -1033,13 +1033,13 @@ Returns the checks in a given state.
 
 Options
 
- * state (String, enum: any, unknown, passing, warning, critical): state
+ * state (String, enum: any, passing, warning, critical): state
  * dc (String, optional): datacenter (defaults to local for agent)
 
 Usage
 
 ``` javascript
-consul.health.state('unknown', function(err, result) {
+consul.health.state('critical', function(err, result) {
   if (err) throw err;
 });
 ```
@@ -1052,7 +1052,7 @@ Result
     "Node": "node1",
     "CheckID": "service:example",
     "Name": "Service 'example' check",
-    "Status": "unknown",
+    "Status": "critical",
     "Notes": "",
     "Output": "",
     "ServiceID": "example",

@@ -124,7 +124,7 @@ describe('Health', function() {
         data[0].Service.should.eql({
           ID: self.service,
           Service: self.service,
-          Tags: [],
+          Tags: null,
           Port: 0,
         });
 
@@ -144,7 +144,7 @@ describe('Health', function() {
     it('should return checks with a given state', function(done) {
       var self = this;
 
-      self.c1.health.state('unknown', function(err, data) {
+      self.c1.health.state('critical', function(err, data) {
         should.not.exist(err);
 
         should(data).be.instanceof(Array);

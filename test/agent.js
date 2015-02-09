@@ -283,7 +283,7 @@ describe('Agent', function() {
         var jobs = [];
 
         jobs.push(function(cb) {
-          self.state(self.name, 'unknown', cb);
+          self.state(self.name, 'critical', cb);
         });
 
         jobs.push(function(cb) {
@@ -305,7 +305,7 @@ describe('Agent', function() {
         var jobs = [];
 
         jobs.push(function(cb) {
-          self.state(self.name, 'unknown', cb);
+          self.state(self.name, 'critical', cb);
         });
 
         jobs.push(function(cb) {
@@ -327,7 +327,7 @@ describe('Agent', function() {
         var jobs = [];
 
         jobs.push(function(cb) {
-          self.state(self.name, 'unknown', cb);
+          self.state(self.name, 'critical', cb);
         });
 
         jobs.push(function(cb) {
@@ -375,6 +375,10 @@ describe('Agent', function() {
       jobs.push(function(cb) {
         self.c1.agent.services(function(err, services) {
           if (err) return cb(err);
+
+          services = lodash.filter(services, function(service) {
+            return service && service.ID !== 'consul';
+          });
 
           async.map(
             Object.keys(services),
