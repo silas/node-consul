@@ -4,7 +4,7 @@
   "description": "Consul client",
   "main": "./lib",
   "dependencies": {
-    "papi": "^0.16.1"
+    "papi": "authbox-lib/node-papi#0dab3f611ea028037903d852ee0d21b0be4b21fc"
   },
   "devDependencies": {
     "async": "^0.9.0",
