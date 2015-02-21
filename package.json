@@ -4,18 +4,18 @@
   "description": "Consul client",
   "main": "./lib",
   "dependencies": {
-    "papi": "^0.16.1"
+    "papi": "^0.17.0"
   },
   "devDependencies": {
     "async": "^0.9.0",
     "debug": "^2.0.0",
-    "istanbul": "^0.3.2",
-    "jscs": "^1.6.2",
+    "istanbul": "^0.3.6",
+    "jscs": "^1.11.3",
     "jshint": "^2.5.5",
-    "lodash": "^3.1.0",
+    "lodash": "^3.3.0",
     "mocha": "^2.1.0",
     "node-uuid": "^1.4.1",
-    "should": "^4.0.4",
+    "should": "^5.0.1",
     "temp": "^0.8.1"
   },
   "scripts": {
