@@ -46,6 +46,11 @@ These options will be passed along with any call, although only certain endpoint
  * wait (String, optional): limit how long to wait for changes (ex: `5m`), used with index
  * token (String, optional): ACL token
 
+These options work for all endpoints.
+
+ * ctx (EventEmitter, optional): emit `done` to abort request
+ * timeout (Number, optional): number of milliseconds before request is aborted
+
 <a name="init"/>
 ### consul([options])
 
