@@ -59,9 +59,9 @@ Initialize a new Consul client.
 Options
 
  * host (String, default: 127.0.0.1): agent address
- * port (String, default: 8500): agent HTTP port
+ * port (String, default: 8500): agent HTTP(S) port
  * secure (Boolean, default: false): enable HTTPS
- * agent (Agent, optional): http or https Agent, use for HTTPS with custom CA
+ * ca (String[], optional): array of strings or Buffers of trusted certificates in PEM format
 
 Usage
 
