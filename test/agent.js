@@ -499,6 +499,84 @@ describe('Agent', function() {
 
         async.series(jobs, done);
       });
+
+      it('should create service with http check', function(done) {
+        var self = this;
+
+        var name = 'service-' + uuid.v4();
+        var notes = 'simple http check';
+
+        var jobs = [];
+
+        jobs.push(function(cb) {
+          self.exists(name, false, cb);
+        });
+
+        jobs.push(function(cb) {
+          var opts = {
+            name: name,
+            check: {
+              http: 'http://127.0.0.1:8500',
+              interval: '30s',
+              notes: notes,
+            },
+          };
+
+          self.c1.agent.service.register(opts, cb);
+        });
+
+        jobs.push(function(cb) {
+          self.c1.agent.check.list(function(err, checks) {
+            if (err) return cb(err);
+
+            should(checks).not.be.empty;
+            should(checks['service:' + name]).have.property('Notes', notes);
+
+            cb();
+          });
+        });
+
+        async.series(jobs, done);
+      });
+
+      it('should create service with script check', function(done) {
+        var self = this;
+
+        var name = 'service-' + uuid.v4();
+        var notes = 'simple script check';
+
+        var jobs = [];
+
+        jobs.push(function(cb) {
+          self.exists(name, false, cb);
+        });
+
+        jobs.push(function(cb) {
+          var opts = {
+            name: name,
+            check: {
+              script: 'true',
+              interval: '30s',
+              notes: notes,
+            },
+          };
+
+          self.c1.agent.service.register(opts, cb);
+        });
+
+        jobs.push(function(cb) {
+          self.c1.agent.check.list(function(err, checks) {
+            if (err) return cb(err);
+
+            should(checks).not.be.empty;
+            should(checks['service:' + name]).have.property('Notes', notes);
+
+            cb();
+          });
+        });
+
+        async.series(jobs, done);
+      });
     });
 
     describe('deregister', function() {
