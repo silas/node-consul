@@ -1,6 +1,6 @@
 {
   "name": "consul",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "description": "Consul client",
   "main": "./lib",
   "dependencies": {
@@ -20,7 +20,7 @@
   },
   "scripts": {
     "cover": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --recursive --check-leaks --timeout 15000 && open coverage/lcov-report/index.html",
-    "test": "./node_modules/.bin/jshint lib test && ./node_modules/.bin/jscs lib test && ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --recursive --check-leaks --timeout 15000"
+    "test": "./node_modules/.bin/jshint lib test && ./node_modules/.bin/jscs lib test && ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --recursive --check-leaks --timeout 15000 && istanbul check-coverage --statements 86 --functions 100 --branches 64 --lines 95"
   },
   "keywords": [
     "consul"
