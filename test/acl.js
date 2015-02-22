@@ -67,6 +67,26 @@ describe('Acl', function() {
     });
   });
 
+  describe('update', function() {
+    it('should update existing token', function(done) {
+      var self = this;
+
+      var newName = 'My New Name';
+
+      self.c1.acl.update({ id: self.id, token: 'root', name: newName }, function(err) {
+        should.not.exist(err);
+
+        self.c1.acl.get({ id: self.id }, function(err, acl) {
+          should.not.exist(err);
+
+          acl.Name.should.equal(newName);
+
+          done();
+        });
+      });
+    });
+  });
+
   describe('destroy', function() {
     it('should destroy token', function(done) {
       var self = this;
