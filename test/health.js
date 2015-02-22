@@ -125,6 +125,7 @@ describe('Health', function() {
           ID: self.service,
           Service: self.service,
           Tags: null,
+          Address: '',
           Port: 0,
         });
 

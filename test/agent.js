@@ -61,6 +61,63 @@ describe('Agent', function() {
     });
   });
 
+  describe('maintenance', function() {
+    it('should set node maintenance mode', function(done) {
+      var self = this;
+
+      var jobs = {};
+
+      jobs.status = function(next) {
+        self.c1.agent.checks(function(err, checks) {
+          should.not.exist(err);
+
+          should(checks).not.have.property('_node_maintenance');
+
+          next();
+        });
+      };
+
+      jobs.enable = ['status', function(next) {
+        self.c1.agent.maintenance(true, function(err) {
+          should.not.exist(err);
+
+          next();
+        });
+      }];
+
+      jobs.enableStatus = ['enable', function(next) {
+        self.c1.agent.checks(function(err, checks) {
+          should.not.exist(err);
+
+          should(checks).have.property('_node_maintenance');
+          checks._node_maintenance.should.have.property('Status', 'critical');
+
+          next();
+        });
+      }];
+
+      jobs.disable = ['enableStatus', function(next) {
+        self.c1.agent.maintenance({ enable: false }, function(err) {
+          should.not.exist(err);
+
+          next();
+        });
+      }];
+
+      jobs.disableStatus = ['disable', function(next) {
+        self.c1.agent.checks(function(err, checks) {
+          should.not.exist(err);
+
+          should(checks).not.have.property('_node_maintenance');
+
+          next();
+        });
+      }];
+
+      async.auto(jobs, done);
+    });
+  });
+
   describe('join', function() {
     it('should make node2 join cluster', function(done) {
       var self = this;
@@ -463,6 +520,75 @@ describe('Agent', function() {
         });
 
         async.series(jobs, done);
+      });
+    });
+
+    describe('maintenance', function() {
+      it('should set service maintenance mode', function(done) {
+        var self = this;
+
+        var checkId = '_service_maintenance:' + self.name;
+
+        var jobs = {};
+
+        jobs.status = function(next) {
+          self.c1.agent.checks(function(err, checks) {
+            should.not.exist(err);
+
+            should(checks).not.have.property(checkId);
+
+            next();
+          });
+        };
+
+        jobs.enable = ['status', function(next) {
+          var opts = {
+            id: self.name,
+            enable: true,
+          };
+
+          self.c1.agent.service.maintenance(opts, function(err) {
+            should.not.exist(err);
+
+            next();
+          });
+        }];
+
+        jobs.enableStatus = ['enable', function(next) {
+          self.c1.agent.checks(function(err, checks) {
+            should.not.exist(err);
+
+            should(checks).have.property(checkId);
+            checks[checkId].should.have.property('Status', 'critical');
+
+            next();
+          });
+        }];
+
+        jobs.disable = ['enableStatus', function(next) {
+          var opts = {
+            id: self.name,
+            enable: false,
+          };
+
+          self.c1.agent.service.maintenance(opts, function(err) {
+            should.not.exist(err);
+
+            next();
+          });
+        }];
+
+        jobs.disableStatus = ['disable', function(next) {
+          self.c1.agent.checks(function(err, checks) {
+            should.not.exist(err);
+
+            should(checks).not.have.property(checkId);
+
+            next();
+          });
+        }];
+
+        async.auto(jobs, done);
       });
     });
   });

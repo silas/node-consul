@@ -77,7 +77,9 @@ describe('Session', function() {
           'Name',
           'Node',
           'Checks',
-          'LockDelay'
+          'LockDelay',
+          'Behavior',
+          'TTL'
         );
 
         done();
@@ -100,7 +102,9 @@ describe('Session', function() {
             'Name',
             'Node',
             'Checks',
-            'LockDelay'
+            'LockDelay',
+            'Behavior',
+            'TTL'
           );
         });
 
@@ -135,9 +139,38 @@ describe('Session', function() {
             'Name',
             'Node',
             'Checks',
-            'LockDelay'
+            'LockDelay',
+            'Behavior',
+            'TTL'
           );
         });
+
+        done();
+      });
+    });
+  });
+
+  describe('renew', function() {
+    it('should renew session', function(done) {
+      var self = this;
+
+      self.c1.session.renew(self.id, function(err, renew) {
+        should.not.exist(err);
+
+        should(renew).be.an.Array;
+
+        renew.should.not.be.empty;
+
+        should(renew[0]).keys(
+          'CreateIndex',
+          'ID',
+          'Name',
+          'Node',
+          'Checks',
+          'LockDelay',
+          'Behavior',
+          'TTL'
+        );
 
         done();
       });

@@ -61,6 +61,7 @@ Options
  * host (String, default: 127.0.0.1): agent address
  * port (String, default: 8500): agent HTTP port
  * secure (Boolean, default: false): enable HTTPS
+ * agent (Agent, optional): http or https Agent, use for HTTPS with custom CA
 
 Usage
 
@@ -240,6 +241,7 @@ Result
  * [service](#agent-service)
  * [members](#agent-members)
  * [self](#agent-self)
+ * [maintenance](#agent-maintenance)
  * [join](#agent-join)
  * [forceLeave](#agent-force-leave)
 
@@ -379,6 +381,24 @@ Result
 }
 ```
 
+<a name="agent-maintenance"/>
+### consul.agent.maintenance(options, callback)
+
+Set node maintenance mode.
+
+Options
+
+ * enable (Boolean): maintenance mode enabled
+ * reason (String, optional): human readable reason for maintenance
+
+Usage
+
+``` javascript
+consul.agent.maintenance(true, function(err) {
+  if (err) throw err;
+});
+```
+
 <a name="agent-join"/>
 ### consul.agent.join(options, callback)
 
@@ -463,6 +483,8 @@ Options
 
  * name (String): check name
  * id (String, optional): check ID
+ * serviceid (String, optional): service ID, associate check with existing service
+ * http (String): url to test, 2xx passes, 429 warns, and all others fail
  * script (String): path to check script, requires interval
  * internal (String): interval to run check, requires script (ex: `15s`)
  * ttl (String): time to live before check must be updated, instead of script and interval (ex: `60s`)
@@ -556,6 +578,7 @@ consul.agent.check.fail('example', function(err) {
  * [list](#agent-service-list)
  * [register](#agent-service-register)
  * [deregister](#agent-service-deregister)
+ * [maintenance](#agent-service-maintenance)
 
 <a name="agent-service-list"/>
 ### consul.agent.service.list(callback)
@@ -617,12 +640,31 @@ Deregister a service.
 
 Options
 
- * id (String): check ID
+ * id (String): service ID
 
 Usage
 
 ``` javascript
 consul.agent.service.deregister('example', function(err) {
+  if (err) throw err;
+});
+```
+
+<a name="agent-service-maintenance"/>
+### consul.agent.service.maintenance(options, callback)
+
+Set service maintenance mode.
+
+Options
+
+ * id (String): service ID
+ * enable (Boolean): maintenance mode enabled
+ * reason (String, optional): human readable reason for maintenance
+
+Usage
+
+``` javascript
+consul.agent.service.maintenance({ id: 'example', enable: true }, function(err) {
   if (err) throw err;
 });
 ```
@@ -1177,6 +1219,7 @@ Options
  * key (String): key
  * dc (String, optional): datacenter (defaults to local for agent)
  * recurse (Boolean, default: false): delete all keys with given key prefix
+ * cas (String, optional): use with `ModifyIndex` to do a check-and-set operation (must be greater than `0`)
 
 Usage
 
@@ -1194,6 +1237,7 @@ consul.kv.del('hello', function(err) {
  * [get](#session-get)
  * [node](#session-node)
  * [list](#session-list)
+ * [renew](#session-renew)
 
 <a name="session-create"/>
 ### consul.session.create([options], callback)
@@ -1207,6 +1251,8 @@ Options
  * name (String, optional): human readable name for the session
  * node (String, optional): node with which to associate session (defaults to connected agent)
  * checks (String[], optional): checks to associate with session
+ * behavior (String, enum: release, delete; default: release): controls the behavior when a session is invalidated
+ * ttl (String, optional, valid: `10s`-`3600s`): interval session must be renewed
 
 Usage
 
@@ -1340,6 +1386,43 @@ Result
       "serfHealth"
     ],
     "LockDelay": 15000000000
+  }
+]
+```
+
+<a name="session-renew"/>
+### consul.session.renew(options, callback)
+
+Renew a given session.
+
+Options
+
+ * id (String): session ID
+ * dc (String, optional): datacenter (defaults to local for agent)
+
+Usage
+
+``` javascript
+consul.session.renew('a0f5dc05-84c3-5f5a-1d88-05b875e524e1', function(err, renew) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+[
+  {
+    "CreateIndex": 15,
+    "ID": "a0f5dc05-84c3-5f5a-1d88-05b875e524e1",
+    "Name": "",
+    "Node": "node1",
+    "Checks": [
+      "serfHealth"
+    ],
+    "LockDelay": 15000000000,
+    "Behavior": "release",
+    "TTL": ""
   }
 ]
 ```
