@@ -48,7 +48,7 @@ These options will be passed along with any call, although only certain endpoint
 
 These options work for all endpoints.
 
- * ctx (EventEmitter, optional): emit `done` to abort request
+ * ctx (EventEmitter, optional): emit `cancel` to abort request
  * timeout (Number, optional): number of milliseconds before request is aborted
 
 <a name="init"/>
