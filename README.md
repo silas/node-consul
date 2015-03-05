@@ -23,6 +23,7 @@ See the official [HTTP API][consul-docs-api] docs for more information.
  * [KV](#kv)
  * [Session](#session)
  * [Status](#status)
+ * [Watch](#watch)
 
 <a name="callback"/>
 ### Callback
@@ -1471,6 +1472,33 @@ Result
 [
   "127.0.0.1:8300"
 ]
+```
+
+<a name="watch"/>
+### consul.watch(fn, opts, [callback])
+
+Watch an endpoint for changes.
+
+Options
+
+ * fn (Function): method to watch
+ * opts (Object): method options
+ * callback (Function, optional): change/error callback
+
+Usage
+
+``` javascript
+var watch = consul.watch(consul.kv.get, { key: 'test' });
+
+watch.on('change', function(data, res) {
+  console.log('data:', data);
+});
+
+watch.on('error', function(err) {
+  console.log('error:', err);
+});
+
+setTimeout(function() { watch.end(); }, 30 * 1000);
 ```
 
 ## Development
