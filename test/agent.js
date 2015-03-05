@@ -59,6 +59,14 @@ describe('Agent', function() {
         done();
       });
     });
+
+    it('should work with opts', function(done) {
+      this.c1.agent.self({}, function(err) {
+        should.not.exist(err);
+
+        done();
+      });
+    });
   });
 
   describe('maintenance', function() {
@@ -116,6 +124,14 @@ describe('Agent', function() {
 
       async.auto(jobs, done);
     });
+
+    it('should require valid enable', function(done) {
+      this.c1.agent.maintenance({ enable: 'false' }, function(err) {
+        should(err).have.property('message', 'consul: agent.maintenance: enable required');
+
+        done();
+      });
+    });
   });
 
   describe('join', function() {
@@ -149,6 +165,14 @@ describe('Agent', function() {
       });
 
       async.series(jobs, done);
+    });
+
+    it('should require address', function(done) {
+      this.c1.agent.join({}, function(err) {
+        should(err).have.property('message', 'consul: agent.join: address required');
+
+        done();
+      });
     });
   });
 
@@ -196,6 +220,14 @@ describe('Agent', function() {
       }];
 
       async.auto(jobs, done);
+    });
+
+    it('should require node', function(done) {
+      this.c1.agent.forceLeave({}, function(err) {
+        should(err).have.property('message', 'consul: agent.forceLeave: node required');
+
+        done();
+      });
     });
   });
 

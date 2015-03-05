@@ -65,6 +65,16 @@ describe('Acl', function() {
         done();
       });
     });
+
+    it('should require token', function(done) {
+      var self = this;
+
+      self.c1.acl.create(function(err) {
+        should(err).have.property('message', 'Permission denied');
+
+        done();
+      });
+    });
   });
 
   describe('update', function() {
@@ -73,7 +83,15 @@ describe('Acl', function() {
 
       var newName = 'My New Name';
 
-      self.c1.acl.update({ id: self.id, token: 'root', name: newName }, function(err) {
+      var opts = {
+        id: self.id,
+        name: newName,
+        type: 'management',
+        rules: self.config.rules,
+        token: 'root',
+      };
+
+      self.c1.acl.update(opts, function(err) {
         should.not.exist(err);
 
         self.c1.acl.get({ id: self.id }, function(err, acl) {
@@ -83,6 +101,26 @@ describe('Acl', function() {
 
           done();
         });
+      });
+    });
+
+    it('should require token', function(done) {
+      var self = this;
+
+      self.c1.acl.destroy({ id: self.id }, function(err) {
+        should(err).have.property('message', 'Permission denied');
+
+        done();
+      });
+    });
+
+    it('should require id', function(done) {
+      var self = this;
+
+      self.c1.acl.update({}, function(err) {
+        should(err).have.property('message', 'consul: acl.update: id required');
+
+        done();
       });
     });
   });
@@ -100,6 +138,26 @@ describe('Acl', function() {
 
           done();
         });
+      });
+    });
+
+    it('should require token', function(done) {
+      var self = this;
+
+      self.c1.acl.destroy(self.id, function(err) {
+        should(err).have.property('message', 'Permission denied');
+
+        done();
+      });
+    });
+
+    it('should require id', function(done) {
+      var self = this;
+
+      self.c1.acl.destroy({}, function(err) {
+        should(err).have.property('message', 'consul: acl.destroy: id required');
+
+        done();
       });
     });
   });
@@ -123,6 +181,29 @@ describe('Acl', function() {
         acl.Name.should.equal(self.config.name);
         acl.Type.should.equal('client');
         acl.Rules.should.equal(self.config.rules);
+
+        done();
+      });
+    });
+
+    it('should require token', function(done) {
+      var self = this;
+
+      self.c1.acl.get(self.id, function(err) {
+        should.not.exist(err);
+
+        // TODO: should this be denied?
+        //should(err).have.property('message', 'Permission denied');
+
+        done();
+      });
+    });
+
+    it('should require id', function(done) {
+      var self = this;
+
+      self.c1.acl.info({}, function(err) {
+        should(err).have.property('message', 'consul: acl.info: id required');
 
         done();
       });
@@ -158,6 +239,26 @@ describe('Acl', function() {
         });
       });
     });
+
+    it('should require token', function(done) {
+      var self = this;
+
+      self.c1.acl.clone(self.id, function(err) {
+        should(err).have.property('message', 'Permission denied');
+
+        done();
+      });
+    });
+
+    it('should require id', function(done) {
+      var self = this;
+
+      self.c1.acl.clone({}, function(err) {
+        should(err).have.property('message', 'consul: acl.clone: id required');
+
+        done();
+      });
+    });
   });
 
   describe('list', function() {
@@ -178,6 +279,16 @@ describe('Acl', function() {
             'Rules'
           );
         });
+
+        done();
+      });
+    });
+
+    it('should require token', function(done) {
+      var self = this;
+
+      self.c1.acl.list(function(err) {
+        should(err).have.property('message', 'Permission denied');
 
         done();
       });
