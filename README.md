@@ -25,33 +25,6 @@ See the official [HTTP API][consul-docs-api] docs for more information.
  * [Status](#status)
  * [Watch](#watch)
 
-<a name="callback"/>
-### Callback
-
-All callbacks have the following signature `function(err, data, res)`.
-
- * err (Error, optional): set if there was an error, otherwise falsy
- * data (Object, optional): response data if any, otherwise `undefined`
- * res (http.IncomingMessage, optional): HTTP response object with additional `body` property. This might not exist when `err` is set. The `body` property can be a decoded object, string, or Buffer.
-
-<a name="method-options"/>
-### Method Options
-
-These options will be passed along with any method call, although only certain endpoints support them. See the [HTTP API][consul-docs-api] for more information.
-
- * dc (String, optional): datacenter (defaults to local for agent)
- * wan (Boolean, default: false): return WAN members instead of LAN members
- * consistent (Boolean, default: false): require strong consistency
- * stale (Boolean, default: false): use whatever is available, can be arbitrarily stale
- * index (String, optional): used with `ModifyIndex` to block and wait for changes
- * wait (String, optional): limit how long to wait for changes (ex: `5m`), used with index
- * token (String, optional): ACL token
-
-These options work for all methods.
-
- * ctx (EventEmitter, optional): emit `cancel` to abort request
- * timeout (Number, optional): number of milliseconds before request is aborted
-
 <a name="init"/>
 ### consul([options])
 
@@ -69,6 +42,34 @@ Usage
 ``` javascript
 var consul = require('consul')();
 ```
+
+<a name="callback"/>
+### Callback
+
+All callbacks have the following signature `function(err, data, res)`.
+
+ * err (Error, optional): set if there was an error, otherwise falsy
+ * data (Object, optional): response data if any, otherwise `undefined`
+ * res (http.IncomingMessage, optional): HTTP response object with additional `body` property. This might not exist when `err` is set. The `body` property can be a decoded object, string, or Buffer.
+
+<a name="common-options"/>
+<a name="method-options"/>
+### Method Options
+
+These options will be passed along with any method call, although only certain endpoints support them. See the [HTTP API][consul-docs-api] for more information.
+
+ * dc (String, optional): datacenter (defaults to local for agent)
+ * wan (Boolean, default: false): return WAN members instead of LAN members
+ * consistent (Boolean, default: false): require strong consistency
+ * stale (Boolean, default: false): use whatever is available, can be arbitrarily stale
+ * index (String, optional): used with `ModifyIndex` to block and wait for changes
+ * wait (String, optional): limit how long to wait for changes (ex: `5m`), used with index
+ * token (String, optional): ACL token
+
+These options work for all methods.
+
+ * ctx (EventEmitter, optional): emit `cancel` to abort request
+ * timeout (Number, optional): number of milliseconds before request is aborted
 
 <a name="acl"/>
 ### consul.acl
