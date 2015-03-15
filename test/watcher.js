@@ -103,22 +103,6 @@ describe('Watcher', function() {
     async.series(jobs, done);
   });
 
-  it('should accept callback', function(done) {
-    var c = this.c1;
-
-    var key = 'test';
-
-    c.watch(c.kv.get, { key: key }, function(err, data) {
-      if (data && data.Value === 'test') {
-        done();
-      }
-    });
-
-    c.kv.set(key, 'test', function(err) {
-      if (err) throw err;
-    });
-  });
-
   it('should not retry on 400 errors', function(done) {
     var c = this.c1;
 
@@ -145,14 +129,6 @@ describe('Watcher', function() {
   });
 
   it('should require fn', function(done) {
-    this.c1.watch(null, {}, function(err) {
-      should(err).have.property('message', 'fn is required');
-
-      done();
-    });
-  });
-
-  it('should not retry on validation errors', function(done) {
     var watch = this.c1.watch(null, {});
 
     watch.on('error', function(err) {
