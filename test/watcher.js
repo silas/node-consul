@@ -38,11 +38,13 @@ describe('Watcher', function() {
     var count = 0;
 
     var changes = [];
+    var updateTimes = [];
     var errors = [];
 
     var watch = c.watch(c.kv.get, { key: key, wait: '1ms' });
 
     watch.on('change', function(data) {
+      updateTimes.push(watch.updateTime());
       changes.push(data);
     });
 
@@ -93,9 +95,27 @@ describe('Watcher', function() {
         undefined,
       ]);
 
+      watch.isRunning().should.be.true;
+
       watch.end();
+      watch.isRunning().should.be.false;
+
       watch._run();
+
+      watch.isRunning().should.be.false;
       watch.end();
+
+      next();
+    });
+
+    jobs.push(function(next) {
+      updateTimes.should.not.be.empty;
+
+      lodash.each(updateTimes, function(updateTime, i) {
+        if (i === 0) return;
+
+        updateTime.should.have.above(updateTimes[i - 1]);
+      });
 
       next();
     });
