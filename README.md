@@ -1476,13 +1476,13 @@ Result
 ```
 
 <a name="watch"/>
-### consul.watch(fn, opts, [callback])
+### consul.watch(method, opts)
 
 Watch an endpoint for changes.
 
 Options
 
- * fn (Function): method to watch
+ * method (Function): method to watch
  * opts (Object): method options
  * callback (Function, optional): change/error callback
 

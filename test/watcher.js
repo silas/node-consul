@@ -148,11 +148,11 @@ describe('Watcher', function() {
     );
   });
 
-  it('should require fn', function(done) {
+  it('should require method', function(done) {
     var watch = this.c1.watch(null, {});
 
     watch.on('error', function(err) {
-      should(err).have.property('message', 'fn is required');
+      should(err).have.property('message', 'method is required');
 
       done();
     });
@@ -163,7 +163,7 @@ describe('Watcher', function() {
 
     var todo = ['one', 'two', 'three'];
 
-    var fn = function(opts, callback) {
+    var method = function(opts, callback) {
       var err = new Error(todo.shift());
 
       if (err.message === 'one') {
@@ -176,7 +176,7 @@ describe('Watcher', function() {
     var oneErr, twoErr;
     var time = +new Date();
 
-    var watch = c.watch(fn, {});
+    var watch = c.watch(method, {});
 
     watch.on('error', function(err) {
       err.time = +new Date();
