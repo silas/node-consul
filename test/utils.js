@@ -90,4 +90,27 @@ describe('utils', function() {
       });
     });
   });
+
+  describe('parseDuration', function() {
+    it('should work', function() {
+      should(utils.parseDuration()).be.undefined;
+      should(utils.parseDuration(0)).equal(0);
+      should(utils.parseDuration(1000000)).equal(1);
+      should(utils.parseDuration('0')).equal(0);
+      should(utils.parseDuration('1000000')).equal(1);
+
+      should(utils.parseDuration('1ns')).equal(1e-6);
+      should(utils.parseDuration('1us')).equal(1e-3);
+      should(utils.parseDuration('1ms')).equal(1);
+      should(utils.parseDuration('1s')).equal(1e3);
+      should(utils.parseDuration('1m')).equal(6e4);
+      should(utils.parseDuration('1h')).equal(3.6e6);
+
+      should(utils.parseDuration('.5s')).equal(500);
+      should(utils.parseDuration('0.5s')).equal(500);
+      should(utils.parseDuration('1.s')).equal(1000);
+      should(utils.parseDuration('1.5s')).equal(1500);
+      should(utils.parseDuration('10.03m')).equal(601800);
+    });
+  });
 });
