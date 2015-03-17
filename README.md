@@ -1476,20 +1476,19 @@ Result
 ```
 
 <a name="watch"/>
-### consul.watch(method, opts)
+### consul.watch(options)
 
 Watch an endpoint for changes.
 
 Options
 
  * method (Function): method to watch
- * opts (Object): method options
- * callback (Function, optional): change/error callback
+ * options (Object): method options
 
 Usage
 
 ``` javascript
-var watch = consul.watch(consul.kv.get, { key: 'test' });
+var watch = consul.watch({ method: consul.kv.get, options: { key: 'test' });
 
 watch.on('change', function(data, res) {
   console.log('data:', data);

@@ -41,7 +41,10 @@ describe('Watcher', function() {
     var updateTimes = [];
     var errors = [];
 
-    var watch = c.watch(c.kv.get, { key: key, wait: '1ms' });
+    var watch = c.watch({
+      method: c.kv.get,
+      options: { key: key, wait: '1ms' },
+    });
 
     watch.on('change', function(data) {
       updateTimes.push(watch.updateTime());
@@ -128,7 +131,7 @@ describe('Watcher', function() {
 
     var errors = [];
 
-    var watch = c.watch(c.kv.get, {});
+    var watch = c.watch({ method: c.kv.get });
 
     watch.on('error', function(err) {
       errors.push(err);
@@ -149,7 +152,7 @@ describe('Watcher', function() {
   });
 
   it('should require method', function(done) {
-    var watch = this.c1.watch(null, {});
+    var watch = this.c1.watch();
 
     watch.on('error', function(err) {
       should(err).have.property('message', 'method is required');
@@ -176,7 +179,7 @@ describe('Watcher', function() {
     var oneErr, twoErr;
     var time = +new Date();
 
-    var watch = c.watch(method, {});
+    var watch = c.watch({ method: method });
 
     watch.on('error', function(err) {
       err.time = +new Date();
