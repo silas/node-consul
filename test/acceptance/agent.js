@@ -9,7 +9,8 @@ var lodash = require('lodash');
 var should = require('should');
 var uuid = require('node-uuid');
 
-var constants = require('../lib/constants');
+var constants = require('../../lib/constants');
+
 var helper = require('./helper');
 
 /**

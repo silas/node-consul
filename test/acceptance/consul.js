@@ -6,7 +6,7 @@
 
 require('should');
 
-var consul = require('../lib');
+var consul = require('../../lib');
 
 /**
  * Tests

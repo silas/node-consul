@@ -12,7 +12,7 @@ var path = require('path');
 var spawn = require('child_process').spawn;
 var temp = require('temp').track();
 
-var consul = require('../lib');
+var consul = require('../../lib');
 
 /**
  * Buffer to string

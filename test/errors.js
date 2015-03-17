@@ -8,11 +8,15 @@ var should = require('should');
 
 var errors = require('../lib/errors');
 
+var helper = require('./helper');
+
 /**
  * Tests
  */
 
 describe('errors', function() {
+  helper.setup(this);
+
   describe('Consul', function() {
     it('should work', function() {
       var msg = 'test message';
