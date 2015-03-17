@@ -170,6 +170,167 @@ describe('Agent', function() {
           done();
         });
       });
+
+      it('should require name', function(done) {
+        this.consul.agent.check.register({}, function(err) {
+          should(err).property('message', 'consul: agent.check.register: name required');
+
+          done();
+        });
+      });
+    });
+
+    describe('deregister', function() {
+      it('should work', function(done) {
+        this.nock
+          .get('/v1/agent/check/deregister/123')
+          .reply(200);
+
+        var opts = { id: '123' };
+
+        this.consul.agent.check.deregister(opts, function(err) {
+          should.not.exist(err);
+
+          done();
+        });
+      });
+
+      it('should work with just id', function(done) {
+        this.nock
+          .get('/v1/agent/check/deregister/123')
+          .reply(200);
+
+        this.consul.agent.check.deregister('123', function(err) {
+          should.not.exist(err);
+
+          done();
+        });
+      });
+
+      it('should require id', function(done) {
+        this.consul.agent.check.deregister({}, function(err) {
+          should(err).property('message', 'consul: agent.check.deregister: id required');
+
+          done();
+        });
+      });
+    });
+
+    describe('pass', function() {
+      it('should work', function(done) {
+        this.nock
+          .get('/v1/agent/check/pass/123?note=ok')
+          .reply(200);
+
+        var opts = {
+          id: '123',
+          note: 'ok',
+        };
+
+        this.consul.agent.check.pass(opts, function(err) {
+          should.not.exist(err);
+
+          done();
+        });
+      });
+
+      it('should work with just id', function(done) {
+        this.nock
+          .get('/v1/agent/check/pass/123')
+          .reply(200);
+
+        this.consul.agent.check.pass('123', function(err) {
+          should.not.exist(err);
+
+          done();
+        });
+      });
+
+      it('should require id', function(done) {
+        this.consul.agent.check.pass({}, function(err) {
+          should(err).property('message', 'consul: agent.check.pass: id required');
+
+          done();
+        });
+      });
+    });
+
+    describe('warn', function() {
+      it('should work', function(done) {
+        this.nock
+          .get('/v1/agent/check/warn/123?note=ify')
+          .reply(200);
+
+        var opts = {
+          id: '123',
+          note: 'ify',
+        };
+
+        this.consul.agent.check.warn(opts, function(err) {
+          should.not.exist(err);
+
+          done();
+        });
+      });
+
+      it('should work with just id', function(done) {
+        this.nock
+          .get('/v1/agent/check/warn/123')
+          .reply(200);
+
+        this.consul.agent.check.warn('123', function(err) {
+          should.not.exist(err);
+
+          done();
+        });
+      });
+
+      it('should require id', function(done) {
+        this.consul.agent.check.warn({}, function(err) {
+          should(err).property('message', 'consul: agent.check.warn: id required');
+
+          done();
+        });
+      });
+    });
+
+    describe('fail', function() {
+      it('should work', function(done) {
+        this.nock
+          .get('/v1/agent/check/fail/123?note=error')
+          .reply(200);
+
+        var opts = {
+          id: '123',
+          note: 'error',
+        };
+
+        this.consul.agent.check.fail(opts, function(err) {
+          should.not.exist(err);
+
+          done();
+        });
+      });
+
+      it('should work with just id', function(done) {
+        this.nock
+          .get('/v1/agent/check/fail/123')
+          .reply(200);
+
+        this.consul.agent.check.fail('123', function(err) {
+          should.not.exist(err);
+
+          done();
+        });
+      });
+
+      it('should require id', function(done) {
+        this.consul.agent.check.fail({}, function(err) {
+          should(err).property('message', 'consul: agent.check.fail: id required');
+
+          done();
+        });
+      });
     });
   });
 
