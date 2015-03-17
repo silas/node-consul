@@ -15,6 +15,164 @@ var helper = require('./helper');
 describe('Agent', function() {
   helper.setup(this);
 
+  describe('checks', function() {
+    it('should work', function(done) {
+      this.nock
+        .get('/v1/agent/checks')
+        .reply(200, [{ ok: true }]);
+
+      var opts = {};
+
+      this.consul.agent.checks(opts, function(err, data) {
+        should.not.exist(err);
+
+        should(data).eql([{ ok: true }]);
+
+        done();
+      });
+    });
+
+    it('should work with no arguments', function(done) {
+      this.nock
+        .get('/v1/agent/checks')
+        .reply(200, [{ ok: true }]);
+
+      this.consul.agent.checks(function(err, data) {
+        should.not.exist(err);
+
+        should(data).eql([{ ok: true }]);
+
+        done();
+      });
+    });
+  });
+
+  describe('check', function() {
+    describe('list', function() {
+      it('should work', function(done) {
+        this.nock
+          .get('/v1/agent/checks')
+          .reply(200, [{ ok: true }]);
+
+        var opts = {};
+
+        this.consul.agent.check.list(opts, function(err, data) {
+          should.not.exist(err);
+
+          should(data).eql([{ ok: true }]);
+
+          done();
+        });
+      });
+
+      it('should work with no arguments', function(done) {
+        this.nock
+          .get('/v1/agent/checks')
+          .reply(200, [{ ok: true }]);
+
+        this.consul.agent.check.list(function(err, data) {
+          should.not.exist(err);
+
+          should(data).eql([{ ok: true }]);
+
+          done();
+        });
+      });
+    });
+
+    describe('register', function() {
+      it('should work (http)', function(done) {
+        this.nock
+          .put('/v1/agent/check/register', {
+            ID: '123',
+            Name: 'test',
+            ServiceID: 'service',
+            HTTP: 'http://example.org/',
+            Interval: '5s',
+            Notes: 'http check',
+          })
+          .reply(200);
+
+        var opts = {
+          id: '123',
+          name: 'test',
+          service_id: 'service',
+          http: 'http://example.org/',
+          interval: '5s',
+          notes: 'http check',
+        };
+
+        this.consul.agent.check.register(opts, function(err) {
+          should.not.exist(err);
+
+          done();
+        });
+      });
+
+      it('should work (script)', function(done) {
+        this.nock
+          .put('/v1/agent/check/register', {
+            Name: 'test',
+            Script: 'true',
+            Interval: '5s',
+          })
+          .reply(200);
+
+        var opts = {
+          name: 'test',
+          script: 'true',
+          interval: '5s',
+        };
+
+        this.consul.agent.check.register(opts, function(err) {
+          should.not.exist(err);
+
+          done();
+        });
+      });
+
+      it('should work (ttl)', function(done) {
+        this.nock
+          .put('/v1/agent/check/register', {
+            ID: '123',
+            Name: 'test',
+            ServiceID: 'service',
+            TTL: '10s',
+            Notes: 'ttl check',
+          })
+          .reply(200);
+
+        var opts = {
+          id: '123',
+          name: 'test',
+          serviceid: 'service',
+          ttl: '10s',
+          notes: 'ttl check',
+        };
+
+        this.consul.agent.check.register(opts, function(err) {
+          should.not.exist(err);
+
+          done();
+        });
+      });
+
+      it('should require check', function(done) {
+        var opts = {
+          name: 'test',
+          serviceid: 'service',
+        };
+
+        this.consul.agent.check.register(opts, function(err) {
+          should(err).property('message',
+            'consul: agent.check.register: http or script and interval, or ttl required');
+
+          done();
+        });
+      });
+    });
+  });
+
   describe('members', function() {
     it('should work', function(done) {
       this.nock
