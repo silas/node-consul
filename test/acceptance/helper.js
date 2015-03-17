@@ -8,6 +8,7 @@ require('should');
 
 var async = require('async');
 var fs = require('fs');
+var lodash = require('lodash');
 var path = require('path');
 var spawn = require('child_process').spawn;
 var temp = require('temp').track();
@@ -256,5 +257,6 @@ function after(test, callback) {
  * Module Exports
  */
 
+exports.describe = process.env.ACCEPTANCE === 'true' ? describe : lodash.noop;
 exports.before = before;
 exports.after = after;

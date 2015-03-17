@@ -13,7 +13,7 @@ var helper = require('./helper');
  * Tests
  */
 
-describe('Event', function() {
+helper.describe('Event', function() {
   before(function(done) {
     helper.before(this, done);
   });

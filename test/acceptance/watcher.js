@@ -14,7 +14,7 @@ var helper = require('./helper');
  * Tests
  */
 
-describe('Watcher', function() {
+helper.describe('Watcher', function() {
   before(function(done) {
     helper.before(this, done);
   });

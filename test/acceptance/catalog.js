@@ -14,7 +14,7 @@ var helper = require('./helper');
  * Tests
  */
 
-describe('Catalog', function() {
+helper.describe('Catalog', function() {
   before(function(done) {
     var self = this;
 

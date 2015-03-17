@@ -13,7 +13,7 @@ var helper = require('./helper');
  * Tests
  */
 
-describe('Acl', function() {
+helper.describe('Acl', function() {
   before(function(done) {
     helper.before(this, done);
   });

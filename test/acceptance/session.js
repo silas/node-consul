@@ -12,7 +12,7 @@ var helper = require('./helper');
  * Tests
  */
 
-describe('Session', function() {
+helper.describe('Session', function() {
   before(function(done) {
     helper.before(this, done);
   });
