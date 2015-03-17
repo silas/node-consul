@@ -9,7 +9,6 @@
   "devDependencies": {
     "async": "^0.9.0",
     "debug": "^2.0.0",
-    "fixturefiles": "^0.1.0",
     "istanbul": "^0.3.6",
     "jscs": "^1.11.3",
     "jshint": "^2.5.5",

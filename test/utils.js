@@ -35,6 +35,31 @@ describe('utils', function() {
     });
   });
 
+  describe('bodyItem', function() {
+    it('should work', function() {
+      utils.bodyItem({ err: null, res: { body: ['body'] } }, function() {
+        should(arguments[0]).equal(false);
+        should(arguments[1]).equal(undefined);
+        should(arguments[2]).equal('body');
+        should(arguments[3]).eql({ body: ['body'] });
+      });
+
+      utils.bodyItem({ err: null, res: { body: [] } }, function() {
+        should(arguments[0]).equal(false);
+        should(arguments[1]).equal(undefined);
+        should(arguments[2]).equal(undefined);
+        should(arguments[3]).eql({ body: [] });
+      });
+
+      utils.bodyItem({ err: 'err', res: { body: ['body'] } }, function() {
+        should(arguments[0]).equal(false);
+        should(arguments[1]).equal('err');
+        should(arguments[2]).equal(undefined);
+        should(arguments[3]).eql({ body: ['body'] });
+      });
+    });
+  });
+
   describe('empty', function() {
     it('should work', function() {
       utils.empty({ err: null, res: 'res' }, function() {
