@@ -601,7 +601,8 @@ describe('Agent', function() {
 
       it('should require enable', function(done) {
         this.consul.agent.service.maintenance({ id: 123 }, function(err) {
-          should(err).have.property('message', 'consul: agent.service.maintenance: enable required');
+          should(err).have.property('message',
+            'consul: agent.service.maintenance: enable required');
           should(err).have.property('isValidation', true);
 
           done();
