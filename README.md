@@ -3,7 +3,6 @@
 This is a [Consul][consul] client.
 
  * [Documentation](#documentation)
- * [Development](#development)
  * [License](#license)
 
 ## Documentation
@@ -1501,7 +1500,7 @@ watch.on('error', function(err) {
 setTimeout(function() { watch.end(); }, 30 * 1000);
 ```
 
-## Development
+## Acceptance Tests
 
  1. Install [Consul][download] into your `PATH`.
  1. Attach required IPs
@@ -1520,7 +1519,7 @@ setTimeout(function() { watch.end(); }, 30 * 1000);
  1. Run tests
 
     ``` console
-    $ npm test
+    $ npm run acceptance
     ```
 
 ## License
