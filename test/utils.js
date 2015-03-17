@@ -8,11 +8,33 @@ var should = require('should');
 
 var utils = require('../lib/utils');
 
+var helper = require('./helper');
+
 /**
  * Tests
  */
 
 describe('utils', function() {
+  helper.setup(this);
+
+  describe('body', function() {
+    it('should work', function() {
+      utils.body({ err: null, res: { body: 'body' } }, function() {
+        should(arguments[0]).equal(false);
+        should(arguments[1]).equal(undefined);
+        should(arguments[2]).equal('body');
+        should(arguments[3]).eql({ body: 'body' });
+      });
+
+      utils.body({ err: 'err', res: { body: 'body' } }, function() {
+        should(arguments[0]).equal(false);
+        should(arguments[1]).equal('err');
+        should(arguments[2]).equal(undefined);
+        should(arguments[3]).eql({ body: 'body' });
+      });
+    });
+  });
+
   describe('empty', function() {
     it('should work', function() {
       utils.empty({ err: null, res: 'res' }, function() {
@@ -36,37 +58,34 @@ describe('utils', function() {
       utils.normalizeKeys().should.eql({});
 
       var Obj = function() {
-        this.one_two = 'onetwo';
+        this.onetwo = 'onetwo';
+        this.TWO_ONE = 'twoone';
+        this.Value = 'value';
       };
-      Obj.prototype.hello = function() {
-        this.MyValue = 'myvalue';
-      };
+      Obj.prototype.fail = 'yes';
 
       var obj = new Obj();
-
-      obj.hello();
-      obj.TWO_ONE = 'twoone';
-      obj.Value = 'value';
 
       utils.normalizeKeys(obj).should.eql({
         onetwo: 'onetwo',
         twoone: 'twoone',
         value: 'value',
-        myvalue: 'myvalue',
       });
     });
   });
 
   describe('options', function() {
     it('should work', function() {
-      var test = function(opts) {
-        var req = {};
+      var test = function(opts, req) {
+        if (req === undefined) req = {};
         utils.options(req, opts);
         return req;
       };
 
+      test().should.eql({ query: {} });
       test({}).should.eql({ query: {} });
       test({ stale: true }).should.eql({ query: { stale: '1' } });
+      test({}, { query: { hello: 'world' } }).should.eql({ query: { hello: 'world' } });
       test({
         dc: 'dc1',
         wan: true,
@@ -91,9 +110,40 @@ describe('utils', function() {
     });
   });
 
+  describe('decode', function() {
+    it('should work', function() {
+      should(utils.decode(null)).equal(null);
+      should(utils.decode()).equal(undefined);
+      should(utils.decode('')).equal('');
+      should(utils.decode('aGVsbG8gd29ybGQ=')).equal('hello world');
+      should(utils.decode('aGVsbG8gd29ybGQ=', {})).equal('hello world');
+      should(utils.decode('aGVsbG8gd29ybGQ=', { buffer: true })).eql(new Buffer('hello world'));
+    });
+  });
+
+  describe('clone', function() {
+    it('should work', function() {
+      var src = { hello: 'world' };
+      var dst = utils.clone(src);
+
+      dst.should.eql({ hello: 'world' });
+      dst.should.not.equal(src);
+
+      var Obj = function() {
+        this.hello = 'world';
+      };
+      Obj.prototype.fail = 'yes';
+
+      src = new Obj();
+      dst = utils.clone(src);
+
+      dst.should.eql({ hello: 'world' });
+      dst.should.not.equal(src);
+    });
+  });
+
   describe('parseDuration', function() {
     it('should work', function() {
-      should(utils.parseDuration()).be.undefined;
       should(utils.parseDuration(0)).equal(0);
       should(utils.parseDuration(1000000)).equal(1);
       should(utils.parseDuration('0')).equal(0);
@@ -111,6 +161,12 @@ describe('utils', function() {
       should(utils.parseDuration('1.s')).equal(1000);
       should(utils.parseDuration('1.5s')).equal(1500);
       should(utils.parseDuration('10.03m')).equal(601800);
+
+      should(utils.parseDuration()).be.undefined;
+      should(utils.parseDuration('')).be.undefined;
+      should(utils.parseDuration('.')).be.undefined;
+      should(utils.parseDuration('10x')).be.undefined;
+      should(utils.parseDuration('.ms')).be.undefined;
     });
   });
 });
