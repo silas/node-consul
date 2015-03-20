@@ -151,16 +151,6 @@ helper.describe('Watcher', function() {
     );
   });
 
-  it('should require method', function(done) {
-    var watch = this.c1.watch();
-
-    watch.on('error', function(err) {
-      should(err).have.property('message', 'method is required');
-
-      done();
-    });
-  });
-
   it('should exponential retry', function(done) {
     var c = this.c1;
 
