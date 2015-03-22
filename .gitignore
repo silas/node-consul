@@ -5,6 +5,6 @@
 .rock.yml
 config
 coverage
-example.js
+example*.js
 node_modules
 tmp
