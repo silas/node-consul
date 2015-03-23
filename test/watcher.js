@@ -35,7 +35,7 @@ describe('Watcher', function() {
       options: { key: 'key1' },
     });
 
-    watch._delay = function() { return 1; };
+    watch._wait = function() { return 1; };
 
     var errors = [];
     var list = [];
@@ -90,19 +90,19 @@ describe('Watcher', function() {
     });
   });
 
-  describe('delay', function() {
+  describe('wait', function() {
     it('should work', function() {
       var watch = this.consul.watch();
       watch.on('error', function() {});
 
-      should(watch._delay()).equal(200);
-      should(watch._delay()).equal(400);
-      should(watch._delay()).equal(800);
-      should(watch._delay()).equal(1600);
-      should(watch._delay()).equal(3200);
+      should(watch._wait()).equal(200);
+      should(watch._wait()).equal(400);
+      should(watch._wait()).equal(800);
+      should(watch._wait()).equal(1600);
+      should(watch._wait()).equal(3200);
 
       for (var i = 0; i < 100; i++) {
-        should(watch._delay()).be.below(25601);
+        should(watch._wait()).be.below(25601);
       }
     });
   });
