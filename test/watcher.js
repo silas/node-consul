@@ -35,16 +35,25 @@ describe('Watcher', function() {
       options: { key: 'key1' },
     });
 
+    should(watch.isRunning()).be.true;
+    should(watch.updateTime()).be.undefined;
+
+    // make tests run fast
     watch._wait = function() { return 1; };
 
     var errors = [];
     var list = [];
+    var called = {};
 
     watch.on('error', function(err) {
+      called.error = true;
+
       errors.push(err);
     });
 
     watch.on('cancel', function() {
+      called.cancel = true;
+
       should(list).eql([1, 4, 5]);
 
       watch._run();
@@ -52,14 +61,11 @@ describe('Watcher', function() {
 
       watch.end();
       should(watch.isRunning()).be.false;
-
-      done();
     });
 
-    should(watch.isRunning()).be.true;
-    should(watch.updateTime()).be.undefined;
-
     watch.on('change', function(data, res) {
+      called.change = true;
+
       list.push(data.n);
 
       switch (res.headers['x-consul-index']) {
@@ -79,6 +85,14 @@ describe('Watcher', function() {
         default:
           break;
       }
+    });
+
+    watch.on('end', function() {
+      called.should.have.property('cancel', true);
+      called.should.have.property('change', true);
+      called.should.have.property('error', true);
+
+      done();
     });
   });
 
