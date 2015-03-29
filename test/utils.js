@@ -248,15 +248,5 @@ describe('utils', function() {
 
       self.ctx.emit('cancel');
     });
-
-    it('should remove cancel listener', function(done) {
-      var self = this;
-
-      utils.setIntervalContext(function() {
-        should(self.ctx.listeners('cancel')).have.length(0);
-
-        done();
-      }, self.ctx, 0);
-    });
   });
 });
