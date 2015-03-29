@@ -12,7 +12,7 @@ var helper = require('./helper');
  * Tests
  */
 
-describe('Watcher', function() {
+describe('Watch', function() {
   helper.setup(this);
 
   it('should work', function(done) {
