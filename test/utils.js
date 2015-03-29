@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 
+var events = require('events');
 var should = require('should');
 
 var utils = require('../lib/utils');
@@ -192,6 +193,38 @@ describe('utils', function() {
       should(utils.parseDuration('.')).be.undefined;
       should(utils.parseDuration('10x')).be.undefined;
       should(utils.parseDuration('.ms')).be.undefined;
+    });
+  });
+
+  describe('setTimeoutContext', function() {
+    beforeEach(function() {
+      this.ctx = new events.EventEmitter();
+    });
+
+    it('should cancel timeout', function(done) {
+      var self = this;
+
+      utils.setTimeoutContext(function() {
+        throw new Error('should have been canceled');
+      }, self.ctx, 10);
+
+      self.ctx.on('cancel', function() {
+        should(self.ctx.listeners('cancel')).have.length(1);
+
+        done();
+      });
+
+      self.ctx.emit('cancel');
+    });
+
+    it('should remove cancel listener', function(done) {
+      var self = this;
+
+      utils.setTimeoutContext(function() {
+        should(self.ctx.listeners('cancel')).have.length(0);
+
+        done();
+      }, self.ctx, 0);
     });
   });
 });

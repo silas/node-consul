@@ -98,7 +98,7 @@ describe('Watcher', function() {
 
   it('should require method', function(done) {
     this.consul.watch().on('error', function(err) {
-      should(err).have.property('message', 'method is required');
+      should(err).have.property('message', 'method required');
 
       done();
     });
