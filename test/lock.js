@@ -4,9 +4,11 @@
  * Module dependencies.
  */
 
-var async = require('async');
 var events = require('events');
+var lodash = require('lodash');
 var should = require('should');
+
+var consul = require('../lib');
 
 var helper = require('./helper');
 
@@ -42,7 +44,7 @@ describe('Lock', function() {
   });
 
   describe('constructor', function() {
-    it('should require valid options', function(done) {
+    it('should require valid options', function() {
       var self = this;
 
       var checks = [
@@ -53,18 +55,11 @@ describe('Lock', function() {
         { opts: { key: true }, message: 'key must be a string' },
       ];
 
-      async.each(checks, function(check, next) {
-        var lock = self.consul.lock(check.opts);
-
-        var error;
-        lock.once('error', function(err) { error = err; });
-
-        lock.on('end', function() {
-          should(error).have.property('message', check.message);
-
-          next();
-        });
-      }, done);
+      lodash.each(checks, function(check) {
+        should(function() {
+          self.consul.lock(check.opts);
+        }).throw(check.message);
+      });
     });
   });
 
@@ -88,28 +83,24 @@ describe('Lock', function() {
       this.lock.acquire();
     });
 
-    it('should error for activate lock', function(done) {
-      this.lock.once('error', function(err) {
-        should(err).have.property('message', 'lock in use');
+    it('should error for activate lock', function() {
+      var self = this;
 
-        done();
-      });
-
-      this.lock.acquire();
+      should(function() {
+        self.lock.acquire();
+      }).throw('lock in use');
     });
   });
 
   describe('release', function() {
-    it('should require activate lock', function(done) {
-      delete this.lock._ctx;
+    it('should require activate lock', function() {
+      var self = this;
 
-      this.lock.once('error', function(err) {
-        should(err).have.property('message', 'no lock in use');
+      delete self.lock._ctx;
 
-        done();
-      });
-
-      this.lock.release();
+      should(function() {
+        self.lock.release();
+      }).throw('no lock in use');
     });
   });
 
@@ -304,17 +295,36 @@ describe('Lock', function() {
     });
 
     it('should timeout when session ttl set', function(done) {
-      this.nock
+      var self = this;
+
+      self.nock
         .get('/v1/kv/test?index=0&wait=5ms')
         .reply(200, [], { 'X-Consul-Index': '5' })
         .get('/v1/kv/test?index=5&wait=5ms')
-        .reply(500);
+        .reply(500)
+        .get('/v1/kv/test?index=5&wait=5ms')
+        .reply(200, [], { 'X-Consul-Index': '10' })
+        .get('/v1/kv/test?index=10&wait=5ms')
+        .delay(1000)
+        .reply(200, [], { 'X-Consul-Index': '15' });
 
-      this.lock.on('end', function() {
+      self.ctx.session = { ttl: '10ms' };
+
+      self.sinon.stub(consul.Watch.prototype, '_wait', function() {
+        return 0;
+      });
+
+      var monitor;
+
+      self.lock.on('end', function() {
+        should(monitor._options).have.property('index', 10);
+
         done();
       });
 
-      this.lock._monitor(this.ctx);
+      self.lock._monitor(self.ctx);
+
+      monitor = self.ctx.monitor;
     });
   });
 

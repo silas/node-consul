@@ -4,6 +4,7 @@
  * Module dependencies.
  */
 
+var lodash = require('lodash');
 var should = require('should');
 
 var helper = require('./helper');
@@ -96,18 +97,17 @@ describe('Watch', function() {
     });
   });
 
-  it('should require method', function(done) {
-    this.consul.watch().on('error', function(err) {
-      should(err).have.property('message', 'method required');
+  it('should require method', function() {
+    var self = this;
 
-      done();
-    });
+    should(function() {
+      self.consul.watch({});
+    }).throw('method required');
   });
 
   describe('wait', function() {
     it('should work', function() {
-      var watch = this.consul.watch();
-      watch.on('error', function() {});
+      var watch = this.consul.watch({ key: 'test', method: lodash.noop });
 
       should(watch._wait()).equal(200);
       should(watch._wait()).equal(400);

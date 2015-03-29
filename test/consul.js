@@ -4,6 +4,10 @@
  * Module dependencies.
  */
 
+var lodash = require('lodash');
+
+var consul = require('../lib');
+
 var helper = require('./helper');
 
 /**
@@ -42,6 +46,105 @@ describe('Consul', function() {
       port: '8502',
       hostname: 'example.org',
       path: '/proxy/v1',
+    });
+  });
+
+  describe('walk', function() {
+    it('should work', function() {
+      var setup = function(tree, depth, data) {
+        data = data || [];
+
+        var prefix = lodash.repeat(' ', depth);
+
+        data.push(prefix + tree.name);
+
+        lodash.each(tree.methods, function(method) {
+          data.push(prefix + ' - ' + method.name + ' (' + method.type + ')');
+        });
+
+        lodash.each(tree.objects, function(tree) {
+          setup(tree, depth + 1, data);
+        });
+
+        return data;
+      };
+
+      setup(consul.walk(), 0).should.eql([
+        'Consul',
+        ' - lock (eventemitter)',
+        ' - watch (eventemitter)',
+        ' - walk (sync)',
+        ' Acl',
+        '  - create (callback)',
+        '  - update (callback)',
+        '  - destroy (callback)',
+        '  - info (callback)',
+        '  - get (callback)',
+        '  - clone (callback)',
+        '  - list (callback)',
+        ' Agent',
+        '  - checks (callback)',
+        '  - services (callback)',
+        '  - members (callback)',
+        '  - self (callback)',
+        '  - maintenance (callback)',
+        '  - join (callback)',
+        '  - forceLeave (callback)',
+        '  Check',
+        '   - list (callback)',
+        '   - register (callback)',
+        '   - deregister (callback)',
+        '   - pass (callback)',
+        '   - warn (callback)',
+        '   - fail (callback)',
+        '  Service',
+        '   - list (callback)',
+        '   - register (callback)',
+        '   - deregister (callback)',
+        '   - maintenance (callback)',
+        ' Catalog',
+        '  - datacenters (callback)',
+        '  - nodes (callback)',
+        '  - services (callback)',
+        '  Node',
+        '   - list (callback)',
+        '   - services (callback)',
+        '  Service',
+        '   - list (callback)',
+        '   - nodes (callback)',
+        ' Event',
+        '  - fire (callback)',
+        '  - list (callback)',
+        ' Health',
+        '  - node (callback)',
+        '  - checks (callback)',
+        '  - service (callback)',
+        '  - state (callback)',
+        ' Kv',
+        '  - get (callback)',
+        '  - keys (callback)',
+        '  - set (callback)',
+        '  - del (callback)',
+        '  - delete (callback)',
+        ' Lock',
+        '  - acquire (sync)',
+        '  - release (sync)',
+        ' Session',
+        '  - create (callback)',
+        '  - destroy (callback)',
+        '  - info (callback)',
+        '  - get (callback)',
+        '  - node (callback)',
+        '  - list (callback)',
+        '  - renew (callback)',
+        ' Status',
+        '  - leader (callback)',
+        '  - peers (callback)',
+        ' Watch',
+        '  - isRunning (sync)',
+        '  - updateTime (sync)',
+        '  - end (sync)',
+      ]);
     });
   });
 });

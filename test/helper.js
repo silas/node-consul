@@ -7,6 +7,7 @@
 require('should');
 
 var nock = require('nock');
+var sinon = require('sinon');
 
 var consul = require('../lib');
 
@@ -20,6 +21,8 @@ function setup(scope) {
 
   beforeEach.call(scope, function() {
     var self = this;
+
+    self.sinon = sinon.sandbox.create();
 
     nock.disableNetConnect();
 
@@ -41,6 +44,8 @@ function setup(scope) {
   });
 
   afterEach.call(scope, function() {
+    this.sinon.restore();
+
     nock.cleanAll();
   });
 }

@@ -54,8 +54,9 @@ helper.describe('Lock', function() {
           if (enabled && i !== n) {
             should(locks).not.have.property(i, enabled);
           }
-          lock.release();
         });
+
+        lock.release();
       });
 
       lock.on('release', function() {
