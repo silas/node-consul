@@ -227,4 +227,36 @@ describe('utils', function() {
       }, self.ctx, 0);
     });
   });
+
+  describe('setIntervalContext', function() {
+    beforeEach(function() {
+      this.ctx = new events.EventEmitter();
+    });
+
+    it('should cancel timeout', function(done) {
+      var self = this;
+
+      utils.setIntervalContext(function() {
+        throw new Error('should have been canceled');
+      }, self.ctx, 10);
+
+      self.ctx.on('cancel', function() {
+        should(self.ctx.listeners('cancel')).have.length(1);
+
+        done();
+      });
+
+      self.ctx.emit('cancel');
+    });
+
+    it('should remove cancel listener', function(done) {
+      var self = this;
+
+      utils.setIntervalContext(function() {
+        should(self.ctx.listeners('cancel')).have.length(0);
+
+        done();
+      }, self.ctx, 0);
+    });
+  });
 });
