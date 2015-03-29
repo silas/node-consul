@@ -20,6 +20,7 @@ See the official [HTTP API][consul-docs-api] docs for more information.
  * [Event](#event)
  * [Health](#health)
  * [KV](#kv)
+ * [Lock](#lock)
  * [Session](#session)
  * [Status](#status)
  * [Watch](#watch)
@@ -1227,6 +1228,51 @@ Usage
 consul.kv.del('hello', function(err) {
   if (err) throw err;
 });
+```
+
+<a name="lock"/>
+### consul.lock(options)
+
+Lock a key using the method described in the [leader election](https://www.consul.io/docs/guides/leader-election.html) guide.
+
+Options
+
+ * key (String): lock key
+ * value (String|Buffer, optional): lock value
+ * session (Object|String, optional): session options
+
+Usage
+
+``` javascript
+var lock = consul.lock({ key: 'test' });
+
+lock.on('acquire', function() {
+  console.log('lock acquired');
+
+  lock.release();
+});
+
+lock.on('release', function() {
+  console.log('lock released');
+});
+
+lock.on('error', function() {
+  console.log('lock error:', err);
+});
+
+lock.on('end', function(err) {
+  console.log('lock released or there was a permanent failure');
+});
+
+lock.acquire();
+```
+
+Result
+
+```
+lock acquired
+lock released
+lock released or there was a permanent failure
 ```
 
 <a name="session"/>
