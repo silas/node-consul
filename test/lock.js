@@ -290,6 +290,8 @@ describe('Lock', function() {
         .get('/v1/kv/test?index=7&wait=5ms')
         .reply(200, [{ Session: 'abc' }], { 'X-Consul-Index': '10' });
 
+      this.ctx.session.ttl = '15s';
+
       this.lock.on('end', function() { done(); });
       this.lock._monitor(this.ctx);
     });
