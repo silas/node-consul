@@ -22,8 +22,8 @@
   },
   "scripts": {
     "cover": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --recursive && open coverage/lcov-report/index.html",
-    "test": "./node_modules/.bin/jshint lib test && ./node_modules/.bin/jscs lib test && ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --recursive --check-leaks && istanbul check-coverage --statements 100 --functions 100 --branches 100 --lines 100",
-    "acceptance": "ACCEPTANCE=true ./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- test/acceptance --recursive --check-leaks --timeout 15000"
+    "test": "./node_modules/.bin/jshint lib test && ./node_modules/.bin/jscs lib test && ./node_modules/.bin/istanbul cover --report text ./node_modules/.bin/_mocha -- --recursive --check-leaks && istanbul check-coverage --statements 100 --functions 100 --branches 100 --lines 100",
+    "acceptance": "ACCEPTANCE=true ./node_modules/.bin/istanbul cover --report text ./node_modules/.bin/_mocha -- test/acceptance --recursive --check-leaks --timeout 15000"
   },
   "keywords": [
     "consul"
