@@ -530,6 +530,7 @@ Mark a test as passing.
 Options
 
  * id (String): check ID
+ * note (String, optional): human readable message
 
 Usage
 
@@ -547,6 +548,7 @@ Mark a test as warning.
 Options
 
  * id (String): check ID
+ * note (String, optional): human readable message
 
 Usage
 
@@ -564,6 +566,7 @@ Mark a test as critical.
 Options
 
  * id (String): check ID
+ * note (String, optional): human readable message
 
 Usage
 
