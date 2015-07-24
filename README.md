@@ -1236,6 +1236,8 @@ consul.kv.del('hello', function(err) {
 <a name="lock"/>
 ### consul.lock(options)
 
+**Experimental**
+
 Lock a key using the method described in the [leader election](https://www.consul.io/docs/guides/leader-election.html) guide.
 
 Options
@@ -1526,11 +1528,12 @@ Result
 ### consul.watch(options)
 
 Watch an endpoint for changes. 
-The watch relies on blocking queries, adding the 'index' and 'wait' get parameters as per [Consul's http api documentation](https://www.consul.io/docs/agent/http.html)
 
-If a blocking query is dropped due to a consul crash or disconnection, watch will attempt to reinitiate the blocking query with logarithmic backoff.
+The watch relies on blocking queries, adding the `index` and `wait` parameters as per [Consul's documentation](https://www.consul.io/docs/agent/http.html)
 
-Upon reconnect, unlike the first call to watch() in which the latest x-consul-index is unknown, the last known x-consul-index will be reused, thus not calling the 'change' callback unless it has been incremented since.
+If a blocking query is dropped due to a Consul crash or disconnect, watch will attempt to reinitiate the blocking query with logarithmic backoff.
+
+Upon reconnect, unlike the first call to watch() in which the latest `x-consul-index` is unknown, the last known `x-consul-index` will be reused, thus not emitting the `change` event unless it has been incremented since.
 
 Options
 
