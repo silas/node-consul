@@ -1236,7 +1236,7 @@ consul.kv.del('hello', function(err) {
 <a name="lock"/>
 ### consul.lock(options)
 
-**Experimental**
+_Experimental_
 
 Lock a key using the method described in the [leader election](https://www.consul.io/docs/guides/leader-election.html) guide.
 
