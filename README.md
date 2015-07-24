@@ -1525,7 +1525,12 @@ Result
 <a name="watch"/>
 ### consul.watch(options)
 
-Watch an endpoint for changes.
+Watch an endpoint for changes. 
+The watch relies on blocking queries, adding the 'index' and 'wait' get parameters as per [Consul's http api documentation](https://www.consul.io/docs/agent/http.html)
+
+If a blocking query is dropped due to a consul crash or disconnection, watch will attempt to reinitiate the blocking query with logarithmic backoff.
+
+Upon reconnect, unlike the first call to watch() in which the latest x-consul-index is unknown, the last known x-consul-index will be reused, thus not calling the 'change' callback unless it has been incremented since.
 
 Options
 
