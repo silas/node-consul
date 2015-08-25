@@ -1559,7 +1559,12 @@ setTimeout(function() { watch.end(); }, 30 * 1000);
 
 ## Acceptance Tests
 
- 1. Install [Consul][download] into your `PATH`.
+ 1. Install [Consul][download] into your `PATH`
+
+    ``` console
+    $ brew install consul
+    ```
+
  1. Attach required IPs
 
     ``` console
