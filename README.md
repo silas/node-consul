@@ -36,6 +36,7 @@ Options
  * port (String, default: 8500): agent HTTP(S) port
  * secure (Boolean, default: false): enable HTTPS
  * ca (String[], optional): array of strings or Buffers of trusted certificates in PEM format
+ * defaults (Object, optional): default options for method calls
 
 Usage
 

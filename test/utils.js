@@ -100,6 +100,19 @@ describe('utils', function() {
     });
   });
 
+  describe('defaults', function() {
+    it('should work', function() {
+      utils.defaults().should.eql({});
+      utils.defaults({}).should.eql({});
+      utils.defaults({}, {}).should.eql({});
+      utils.defaults({}, { hello: 'world' }).should.eql({ hello: 'world' });
+      utils.defaults({ hello: 'world' }, {}).should.eql({ hello: 'world' });
+      utils.defaults({ hello: 'world' }, { hello: 'test' }).should.eql({ hello: 'world' });
+      utils.defaults({ hello: null }, { hello: 'test' }).should.eql({ hello: null });
+      utils.defaults({ hello: undefined }, { hello: 'test' }).should.eql({ hello: undefined });
+    });
+  });
+
   describe('options', function() {
     it('should work', function() {
       var test = function(opts, req) {

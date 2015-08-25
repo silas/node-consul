@@ -18,6 +18,21 @@ describe('Consul', function() {
   helper.setup(this);
 
   it('should work', function() {
+    helper.consul().should.not.have.property('_defaults');
+
+    helper.consul({ defaults: { foo: 'bar' } }).should.not.have.property('_defaults');
+
+    helper.consul({ defaults: { token: '123' } }).should.have.property('_defaults').eql({
+      token: '123',
+    });
+
+    helper.consul({
+      defaults: { token: '123', dc: 'test', foo: 'bar' },
+    }).should.have.property('_defaults').eql({
+      token: '123',
+      dc: 'test',
+    });
+
     helper.consul()._opts.baseUrl.should.eql({
       protocol: 'http:',
       auth: null,
