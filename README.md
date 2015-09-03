@@ -491,6 +491,7 @@ Options
  * internal (String): interval to run check, requires script (ex: `15s`)
  * ttl (String): time to live before check must be updated, instead of script and interval (ex: `60s`)
  * notes (String, optional): human readable description of check
+ * status (String, optional): initial service status
 
 Usage
 
@@ -629,6 +630,7 @@ Options
   * internal (String): interval to run check, requires script (ex: `15s`)
   * ttl (String): time to live before check must be updated, instead of script and interval (ex: `60s`)
   * notes (String, optional): human readable description of check
+  * status (String, optional): initial service status
 
 Usage
 

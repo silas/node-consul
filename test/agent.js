@@ -90,6 +90,7 @@ describe('Agent', function() {
             HTTP: 'http://example.org/',
             Interval: '5s',
             Notes: 'http check',
+            Status: 'critical',
           })
           .reply(200);
 
@@ -100,6 +101,7 @@ describe('Agent', function() {
           http: 'http://example.org/',
           interval: '5s',
           notes: 'http check',
+          status: 'critical',
         };
 
         this.consul.agent.check.register(opts, function(err) {
@@ -410,6 +412,7 @@ describe('Agent', function() {
               HTTP: 'http://example.org/',
               Interval: '5s',
               Notes: 'http service check',
+              Status: 'critical',
             },
             Address: '10.0.0.1',
             Port: 80,
@@ -424,6 +427,7 @@ describe('Agent', function() {
             http: 'http://example.org/',
             interval: '5s',
             notes: 'http service check',
+            status: 'critical',
           },
           address: '10.0.0.1',
           port: 80,
