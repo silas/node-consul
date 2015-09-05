@@ -1,6 +1,6 @@
 {
   "name": "consul",
-  "version": "0.17.0",
+  "version": "0.18.0",
   "description": "Consul client",
   "main": "./lib",
   "dependencies": {
@@ -10,7 +10,7 @@
     "async": "^1.4.0",
     "debug": "^2.1.3",
     "istanbul": "^0.3.8",
-    "jscs": "^1.11.3",
+    "jscs": "^2.1.1",
     "jshint": "^2.5.5",
     "lodash": "^3.5.0",
     "mocha": "^2.2.1",
@@ -21,9 +21,9 @@
     "temp": "^0.8.1"
   },
   "scripts": {
-    "cover": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha -- --recursive && open coverage/lcov-report/index.html",
-    "test": "./node_modules/.bin/jshint lib test && ./node_modules/.bin/jscs lib test && ./node_modules/.bin/istanbul cover --report text ./node_modules/.bin/_mocha -- --recursive --check-leaks && istanbul check-coverage --statements 100 --functions 100 --branches 100 --lines 100",
-    "acceptance": "ACCEPTANCE=true ./node_modules/.bin/istanbul cover --report text ./node_modules/.bin/_mocha -- test/acceptance --recursive --check-leaks --timeout 15000"
+    "cover": "istanbul cover _mocha -- --recursive && open coverage/lcov-report/index.html",
+    "test": "jshint lib test && jscs lib test && istanbul cover --report text _mocha -- --recursive --check-leaks && istanbul check-coverage --statements 100 --functions 100 --branches 100 --lines 100",
+    "acceptance": "ACCEPTANCE=true istanbul cover --report text _mocha -- test/acceptance --recursive --check-leaks --timeout 15000"
   },
   "keywords": [
     "consul"
