@@ -494,6 +494,34 @@ describe('Agent', function() {
         });
       });
 
+      it('should work with multiple checks', function(done) {
+        this.nock
+          .put('/v1/agent/service/register', {
+            ID: '123',
+            Name: 'service',
+            Checks: [
+              { TTL: '10s' },
+              { HTTP: 'http://127.0.0.1:8000', Interval: '60s' },
+            ],
+          })
+          .reply(200);
+
+        var opts = {
+          id: '123',
+          name: 'service',
+          checks: [
+            { ttl: '10s' },
+            { http: 'http://127.0.0.1:8000', interval: '60s' },
+          ],
+        };
+
+        this.consul.agent.service.register(opts, function(err) {
+          should.not.exist(err);
+
+          done();
+        });
+      });
+
       it('should work with only name', function(done) {
         this.nock
           .put('/v1/agent/service/register', { Name: 'service' })

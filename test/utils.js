@@ -262,4 +262,46 @@ describe('utils', function() {
       self.ctx.emit('cancel');
     });
   });
+
+  describe('createCheck', function() {
+    it('should work', function() {
+      should(utils.createCheck({
+        ID: 'id',
+        name: 'name',
+        service_id: 'service',
+        http: 'http://127.0.0.1:8000',
+        interval: '60s',
+        notes: 'Just a note.',
+        status: 'passing',
+      })).eql({
+        ID: 'id',
+        Name: 'name',
+        ServiceID: 'service',
+        HTTP: 'http://127.0.0.1:8000',
+        Interval: '60s',
+        Notes: 'Just a note.',
+        Status: 'passing',
+      });
+
+      should(utils.createCheck({
+        script: '/usr/bin/true',
+        interval: '30s',
+      })).eql({
+        Script: '/usr/bin/true',
+        Interval: '30s',
+      });
+
+      should(utils.createCheck({
+        ttl: '15s',
+      })).eql({
+        TTL: '15s',
+      });
+    });
+
+    it('should require script, http, or ttl', function() {
+      should(function() {
+        utils.createCheck();
+      }).throw('http or script and interval, or ttl required');
+    });
+  });
 });

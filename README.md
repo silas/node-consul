@@ -488,7 +488,7 @@ Options
  * serviceid (String, optional): service ID, associate check with existing service
  * http (String): url to test, 2xx passes, 429 warns, and all others fail
  * script (String): path to check script, requires interval
- * internal (String): interval to run check, requires script (ex: `15s`)
+ * interval (String): interval to run check, requires script (ex: `15s`)
  * ttl (String): time to live before check must be updated, instead of script and interval (ex: `60s`)
  * notes (String, optional): human readable description of check
  * status (String, optional): initial service status
@@ -626,11 +626,13 @@ Options
  * id (String, optional): service ID
  * tags (String[], optional): service tags
  * check (Object, optional): service check
+  * http (String): URL endpoint, requires interval
   * script (String): path to check script, requires interval
   * internal (String): interval to run check, requires script (ex: `15s`)
-  * ttl (String): time to live before check must be updated, instead of script and interval (ex: `60s`)
+  * ttl (String): time to live before check must be updated, instead of http/script and interval (ex: `60s`)
   * notes (String, optional): human readable description of check
   * status (String, optional): initial service status
+ * checks (Object[], optional): service checks (see `check` above)
 
 Usage
 
