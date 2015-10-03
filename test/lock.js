@@ -30,7 +30,7 @@ describe('Lock', function() {
     var ctx = new events.EventEmitter();
     ctx.key = 'test';
     ctx.lockWaitTime = '15s';
-    ctx.lockWaitTimeout = 15100;
+    ctx.lockWaitTimeout = 16000;
     ctx.lockRetryTime = 5000;
     ctx.index = 0;
     ctx.session = { id: 'session123', ttl: '15s' };
@@ -72,7 +72,7 @@ describe('Lock', function() {
         ctx.should.have.property('index', 0);
         ctx.should.have.property('end', false);
         ctx.should.have.property('lockWaitTime', '15s');
-        ctx.should.have.property('lockWaitTimeout', 15100);
+        ctx.should.have.property('lockWaitTimeout', 16000);
         ctx.should.have.property('lockRetryTime', 5000);
         ctx.should.have.property('state', 'session');
         ctx.should.have.property('value', null);
