@@ -625,6 +625,8 @@ Options
  * name (String): service name
  * id (String, optional): service ID
  * tags (String[], optional): service tags
+ * address (String, optional): service IP address
+ * port (Integer, optional): service port
  * check (Object, optional): service check
   * http (String): URL endpoint, requires interval
   * script (String): path to check script, requires interval
