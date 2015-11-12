@@ -630,7 +630,7 @@ Options
  * check (Object, optional): service check
   * http (String): URL endpoint, requires interval
   * script (String): path to check script, requires interval
-  * internal (String): interval to run check, requires script (ex: `15s`)
+  * interval (String): interval to run check, requires script (ex: `15s`)
   * ttl (String): time to live before check must be updated, instead of http/script and interval (ex: `60s`)
   * notes (String, optional): human readable description of check
   * status (String, optional): initial service status
