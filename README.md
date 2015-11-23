@@ -1253,6 +1253,14 @@ Options
  * value (String|Buffer, optional): lock value
  * session (Object|String, optional): session options
 
+Events
+
+ * `acquire`: lock successfully acquired
+ * `error`: lock related errors
+ * `retry`: lock retry attempt
+ * `release`: lock gracefully released (not always emitted)
+ * `end`: lock lost (always emitted)
+
 Usage
 
 ``` javascript
