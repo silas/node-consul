@@ -1256,10 +1256,10 @@ Options
 Events
 
  * `acquire`: lock successfully acquired
- * `error`: lock related errors
+ * `error`: lock related error
  * `retry`: lock retry attempt
  * `release`: lock gracefully released (not always emitted)
- * `end`: lock lost (always emitted)
+ * `end`: lock ended (always emitted)
 
 Usage
 
