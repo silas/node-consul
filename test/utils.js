@@ -304,4 +304,18 @@ describe('utils', function() {
       }).throw('http or script and interval, or ttl required');
     });
   });
+
+  describe('hasIndexChanged', function() {
+    it('should work', function() {
+      utils.hasIndexChanged().should.equal(false);
+      utils.hasIndexChanged('a').should.equal(false);
+      utils.hasIndexChanged('1').should.equal(true);
+      utils.hasIndexChanged('1', 'a').should.equal(true);
+      utils.hasIndexChanged('10', '1').should.equal(true);
+      utils.hasIndexChanged('1', '10').should.equal(false);
+      utils.hasIndexChanged('0', '1').should.equal(false);
+      utils.hasIndexChanged('1', '1').should.equal(false);
+      utils.hasIndexChanged('2', '1').should.equal(true);
+    });
+  });
 });

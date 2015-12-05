@@ -69,7 +69,7 @@ describe('Lock', function() {
 
       this.lock._run = function(ctx) {
         ctx.should.have.property('key', 'test');
-        ctx.should.have.property('index', 0);
+        ctx.should.have.property('index', '0');
         ctx.should.have.property('end', false);
         ctx.should.have.property('lockWaitTime', '15s');
         ctx.should.have.property('lockWaitTimeout', 16000);
@@ -319,7 +319,7 @@ describe('Lock', function() {
       var monitor;
 
       self.lock.on('end', function() {
-        should(monitor._options).have.property('index', 10);
+        should(monitor._options).have.property('index', '10');
 
         done();
       });
