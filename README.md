@@ -829,7 +829,7 @@ Lists the nodes in a given service.
 
 Options
 
- * service (String): service ID
+ * service (String): service name
  * dc (String, optional): datacenter (defaults to local for agent)
  * tag (String, optional): filter by tag
 
@@ -995,7 +995,7 @@ Returns the checks of a service.
 
 Options
 
- * service (String): service ID
+ * service (String): service name
  * dc (String, optional): datacenter (defaults to local for agent)
 
 Usage
@@ -1030,7 +1030,7 @@ Returns the nodes and health info of a service.
 
 Options
 
- * service (String): service ID
+ * service (String): service name
  * dc (String, optional): datacenter (defaults to local for agent)
  * tag (String, optional): filter by tag
  * passing (Boolean, optional): restrict to passing checks
