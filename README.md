@@ -25,7 +25,7 @@ See the official [HTTP API][consul-docs-api] docs for more information.
  * [Status](#status)
  * [Watch](#watch)
 
-<a name="init"/>
+<a name="init"></a>
 ### consul([options])
 
 Initialize a new Consul client.
@@ -45,7 +45,7 @@ Usage
 var consul = require('consul')();
 ```
 
-<a name="callback"/>
+<a name="callback"></a>
 ### Callback
 
 All callback methods have the following signature `function(err, data, res)`.
@@ -54,7 +54,7 @@ All callback methods have the following signature `function(err, data, res)`.
  * data (Object, optional): response data if any, otherwise `undefined`
  * res (http.IncomingMessage, optional): HTTP response object with additional `body` property. This might not exist when `err` is set. The `body` property can be a decoded object, string, or Buffer.
 
-<a name="common-method-options"/>
+<a name="common-method-options"></a>
 ### Common Method Options
 
 These options will be passed along with any method call, although only certain endpoints support them. See the [HTTP API][consul-docs-api] for more information.
@@ -72,7 +72,7 @@ These options work for all methods.
  * ctx (EventEmitter, optional): emit `cancel` to abort request
  * timeout (Number, optional): number of milliseconds before request is aborted
 
-<a name="acl"/>
+<a name="acl"></a>
 ### consul.acl
 
  * [create](#acl-create)
@@ -82,7 +82,7 @@ These options work for all methods.
  * [clone](#acl-clone)
  * [list](#acl-list)
 
-<a name="acl-create"/>
+<a name="acl-create"></a>
 ### consul.acl.create([options], callback)
 
 Creates a new token with policy.
@@ -109,7 +109,7 @@ Result
 }
 ```
 
-<a name="acl-update"/>
+<a name="acl-update"></a>
 ### consul.acl.update(options, callback)
 
 Update the policy of a token.
@@ -129,7 +129,7 @@ consul.acl.update({ id: '63e1d82e-f718-eb92-3b7d-61f0c71d45b4', name: 'test' }, 
 });
 ```
 
-<a name="acl-destroy"/>
+<a name="acl-destroy"></a>
 ### consul.acl.destroy(options, callback)
 
 Destroys a given token.
@@ -146,7 +146,7 @@ consul.acl.destroy('b1f4c10e-b61b-e1de-de95-218c9fefdd3e', function(err) {
 });
 ```
 
-<a name="acl-get"/>
+<a name="acl-get"></a>
 ### consul.acl.get(options, callback)
 
 Queries the policy of a given token.
@@ -176,7 +176,7 @@ Result
 }
 ```
 
-<a name="acl-clone"/>
+<a name="acl-clone"></a>
 ### consul.acl.clone(options, callback)
 
 Creates a new token by cloning an existing token.
@@ -201,7 +201,7 @@ Result
 }
 ```
 
-<a name="acl-list"/>
+<a name="acl-list"></a>
 ### consul.acl.list([options], callback)
 
 Lists all the active tokens.
@@ -237,7 +237,7 @@ Result
 ]
 ```
 
-<a name="agent"/>
+<a name="agent"></a>
 ### consul.agent
 
  * [check](#agent-check)
@@ -248,7 +248,7 @@ Result
  * [join](#agent-join)
  * [forceLeave](#agent-force-leave)
 
-<a name="agent-members"/>
+<a name="agent-members"></a>
 ### consul.agent.members([options], callback)
 
 Returns the members as seen by the consul agent.
@@ -294,7 +294,7 @@ Result
 ]
 ```
 
-<a name="agent-self"/>
+<a name="agent-self"></a>
 ### consul.agent.self(callback)
 
 Returns the agent node configuration.
@@ -384,7 +384,7 @@ Result
 }
 ```
 
-<a name="agent-maintenance"/>
+<a name="agent-maintenance"></a>
 ### consul.agent.maintenance(options, callback)
 
 Set node maintenance mode.
@@ -402,7 +402,7 @@ consul.agent.maintenance(true, function(err) {
 });
 ```
 
-<a name="agent-join"/>
+<a name="agent-join"></a>
 ### consul.agent.join(options, callback)
 
 Trigger agent to join a node.
@@ -420,7 +420,7 @@ consul.agent.join('127.0.0.2', function(err) {
 });
 ```
 
-<a name="agent-force-leave"/>
+<a name="agent-force-leave"></a>
 ### consul.agent.forceLeave(options, callback)
 
 Force remove node.
@@ -437,7 +437,7 @@ consul.agent.forceLeave('node2', function(err) {
 });
 ```
 
-<a name="agent-check"/>
+<a name="agent-check"></a>
 ### consul.agent.check
 
  * [list](#agent-check-list)
@@ -447,7 +447,7 @@ consul.agent.forceLeave('node2', function(err) {
  * [warn](#agent-check-warn)
  * [fail](#agent-check-fail)
 
-<a name="agent-check-list"/>
+<a name="agent-check-list"></a>
 ### consul.agent.check.list(callback)
 
 Returns the checks the agent is managing.
@@ -477,7 +477,7 @@ Result
 }
 ```
 
-<a name="agent-check-register"/>
+<a name="agent-check-register"></a>
 ### consul.agent.check.register(options, callback)
 
 Registers a new check.
@@ -508,7 +508,7 @@ consul.agent.check.register(check, function(err) {
 });
 ```
 
-<a name="agent-check-deregister"/>
+<a name="agent-check-deregister"></a>
 ### consul.agent.check.deregister(options, callback)
 
 Deregister a check.
@@ -525,7 +525,7 @@ consul.agent.check.deregister('example', function(err) {
 });
 ```
 
-<a name="agent-check-pass"/>
+<a name="agent-check-pass"></a>
 ### consul.agent.check.pass(options, callback)
 
 Mark a test as passing.
@@ -543,7 +543,7 @@ consul.agent.check.pass('example', function(err) {
 });
 ```
 
-<a name="agent-check-warn"/>
+<a name="agent-check-warn"></a>
 ### consul.agent.check.warn(options, callback)
 
 Mark a test as warning.
@@ -561,7 +561,7 @@ consul.agent.check.warn('example', function(err) {
 });
 ```
 
-<a name="agent-check-fail"/>
+<a name="agent-check-fail"></a>
 ### consul.agent.check.fail(options, callback)
 
 Mark a test as critical.
@@ -579,7 +579,7 @@ consul.agent.check.fail('example', function(err) {
 });
 ```
 
-<a name="agent-service"/>
+<a name="agent-service"></a>
 ### consul.agent.service
 
  * [list](#agent-service-list)
@@ -587,7 +587,7 @@ consul.agent.check.fail('example', function(err) {
  * [deregister](#agent-service-deregister)
  * [maintenance](#agent-service-maintenance)
 
-<a name="agent-service-list"/>
+<a name="agent-service-list"></a>
 ### consul.agent.service.list(callback)
 
 Returns the services the agent is managing.
@@ -616,7 +616,7 @@ Result
 }
 ```
 
-<a name="agent-service-register"/>
+<a name="agent-service-register"></a>
 ### consul.agent.service.register(options, callback)
 
 Registers a new service.
@@ -645,7 +645,7 @@ consul.agent.service.register('example', function(err) {
 });
 ```
 
-<a name="agent-service-deregister"/>
+<a name="agent-service-deregister"></a>
 ### consul.agent.service.deregister(options, callback)
 
 Deregister a service.
@@ -662,7 +662,7 @@ consul.agent.service.deregister('example', function(err) {
 });
 ```
 
-<a name="agent-service-maintenance"/>
+<a name="agent-service-maintenance"></a>
 ### consul.agent.service.maintenance(options, callback)
 
 Set service maintenance mode.
@@ -681,14 +681,14 @@ consul.agent.service.maintenance({ id: 'example', enable: true }, function(err) 
 });
 ```
 
-<a name="catalog"/>
+<a name="catalog"></a>
 ### consul.catalog
 
  * [node](#catalog-node)
  * [service](#catalog-service)
  * [datacenters](#catalog-datacenters)
 
-<a name="catalog-datacenters"/>
+<a name="catalog-datacenters"></a>
 ### consul.catalog.datacenters(callback)
 
 Lists known datacenters.
@@ -709,13 +709,13 @@ Result
 ]
 ```
 
-<a name="catalog-node"/>
+<a name="catalog-node"></a>
 ### consul.catalog.node
 
  * [list](#catalog-node-list)
  * [services](#catalog-node-services)
 
-<a name="catalog-node-list"/>
+<a name="catalog-node-list"></a>
 ### consul.catalog.node.list([options], callback)
 
 Lists nodes in a given datacenter.
@@ -743,7 +743,7 @@ Result
 ]
 ```
 
-<a name="catalog-node-services"/>
+<a name="catalog-node-services"></a>
 ### consul.catalog.node.services(options, callback)
 
 Lists the services provided by a node.
@@ -788,13 +788,13 @@ Result
 }
 ```
 
-<a name="catalog-service"/>
+<a name="catalog-service"></a>
 ### consul.catalog.service
 
  * [list](#catalog-service-list)
  * [nodes](#catalog-service-nodes)
 
-<a name="catalog-service-list"/>
+<a name="catalog-service-list"></a>
 ### consul.catalog.service.list([options], callback)
 
 Lists services in a given datacenter.
@@ -823,7 +823,7 @@ Result
 }
 ```
 
-<a name="catalog-service-nodes"/>
+<a name="catalog-service-nodes"></a>
 ### consul.catalog.service.nodes(options, callback)
 
 Lists the nodes in a given service.
@@ -860,13 +860,13 @@ Result
 ]
 ```
 
-<a name="event"/>
+<a name="event"></a>
 ### consul.event
 
  * [fire](#event-fire)
  * [list](#event-list)
 
-<a name="event-fire"/>
+<a name="event-fire"></a>
 ### consul.event.fire(options, callback)
 
 Fires a new user event.
@@ -902,7 +902,7 @@ Result
 }
 ```
 
-<a name="event-list"/>
+<a name="event-list"></a>
 ### consul.event.list([options], callback)
 
 Lists the most recent events an agent has seen.
@@ -936,7 +936,7 @@ Result
 ]
 ```
 
-<a name="health"/>
+<a name="health"></a>
 ### consul.health
 
  * [node](#health-node)
@@ -944,7 +944,7 @@ Result
  * [service](#health-service)
  * [state](#health-state)
 
-<a name="health-node"/>
+<a name="health-node"></a>
 ### consul.health.node(options, callback)
 
 Returns the health info of a node.
@@ -989,7 +989,7 @@ Result
 ]
 ```
 
-<a name="health-checks"/>
+<a name="health-checks"></a>
 ### consul.health.checks(options, callback)
 
 Returns the checks of a service.
@@ -1024,7 +1024,7 @@ Result
 ]
 ```
 
-<a name="health-service"/>
+<a name="health-service"></a>
 ### consul.health.service(options, callback)
 
 Returns the nodes and health info of a service.
@@ -1085,7 +1085,7 @@ Result
 ]
 ```
 
-<a name="health-state"/>
+<a name="health-state"></a>
 ### consul.health.state(options, callback)
 
 Returns the checks in a given state.
@@ -1120,7 +1120,7 @@ Result
 ]
 ```
 
-<a name="kv"/>
+<a name="kv"></a>
 ### consul.kv
 
  * [get](#kv-get)
@@ -1128,7 +1128,7 @@ Result
  * [set](#kv-set)
  * [del](#kv-del)
 
-<a name="kv-get"/>
+<a name="kv-get"></a>
 ### consul.kv.get(options, callback)
 
 Return key/value (kv) pair(s).
@@ -1164,7 +1164,7 @@ Result
 }
 ```
 
-<a name="kv-keys"/>
+<a name="kv-keys"></a>
 ### consul.kv.keys(options, callback)
 
 Return keys for a given prefix.
@@ -1192,7 +1192,7 @@ Result
 ]
 ```
 
-<a name="kv-set"/>
+<a name="kv-set"></a>
 ### consul.kv.set(options, callback)
 
 Set key/value (kv) pair.
@@ -1221,7 +1221,7 @@ Result
 true
 ```
 
-<a name="kv-del"/>
+<a name="kv-del"></a>
 ### consul.kv.del(options, callback)
 
 Delete key/value (kv) pair(s).
@@ -1241,7 +1241,7 @@ consul.kv.del('hello', function(err) {
 });
 ```
 
-<a name="lock"/>
+<a name="lock"></a>
 ### consul.lock(options)
 
 _Experimental_
@@ -1296,7 +1296,7 @@ lock released
 lock released or there was a permanent failure
 ```
 
-<a name="session"/>
+<a name="session"></a>
 ### consul.session
 
  * [create](#session-create)
@@ -1306,7 +1306,7 @@ lock released or there was a permanent failure
  * [list](#session-list)
  * [renew](#session-renew)
 
-<a name="session-create"/>
+<a name="session-create"></a>
 ### consul.session.create([options], callback)
 
 Create a new session.
@@ -1337,7 +1337,7 @@ Result
 }
 ```
 
-<a name="session-destroy"/>
+<a name="session-destroy"></a>
 ### consul.session.destroy(options, callback)
 
 Destroy a given session.
@@ -1355,7 +1355,7 @@ consul.session.destroy('a0f5dc05-84c3-5f5a-1d88-05b875e524e1', function(err) {
 });
 ```
 
-<a name="session-get"/>
+<a name="session-get"></a>
 ### consul.session.get(options, callback)
 
 Queries a given session.
@@ -1388,7 +1388,7 @@ Result
 }
 ```
 
-<a name="session-node"/>
+<a name="session-node"></a>
 ### consul.session.node(options, callback)
 
 Lists sessions belonging to a node.
@@ -1423,7 +1423,7 @@ Result
 ]
 ```
 
-<a name="session-list"/>
+<a name="session-list"></a>
 ### consul.session.list([options], callback)
 
 Lists all the active sessions.
@@ -1457,7 +1457,7 @@ Result
 ]
 ```
 
-<a name="session-renew"/>
+<a name="session-renew"></a>
 ### consul.session.renew(options, callback)
 
 Renew a given session.
@@ -1494,13 +1494,13 @@ Result
 ]
 ```
 
-<a name="status"/>
+<a name="status"></a>
 ### consul.status
 
  * [leader](#status-leader)
  * [peers](#status-peers)
 
-<a name="status-leader"/>
+<a name="status-leader"></a>
 ### consul.status.leader(callback)
 
 Returns the current Raft leader.
@@ -1519,7 +1519,7 @@ Result
 "127.0.0.1:8300"
 ```
 
-<a name="status-peers"/>
+<a name="status-peers"></a>
 ### consul.status.peers(callback)
 
 Returns the current Raft peer set.
@@ -1540,7 +1540,7 @@ Result
 ]
 ```
 
-<a name="watch"/>
+<a name="watch"></a>
 ### consul.watch(options)
 
 Watch an endpoint for changes. 
@@ -1572,7 +1572,7 @@ watch.on('error', function(err) {
 setTimeout(function() { watch.end(); }, 30 * 1000);
 ```
 
-<a name="promisify"/>
+<a name="promisify"></a>
 ### Promisify
 
 _Experimental_
