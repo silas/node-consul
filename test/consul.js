@@ -4,7 +4,9 @@
  * Module dependencies.
  */
 
+var bluebird = require('bluebird');
 var lodash = require('lodash');
+var should = require('should');
 
 var consul = require('../lib');
 
@@ -62,6 +64,10 @@ describe('Consul', function() {
       hostname: 'example.org',
       path: '/proxy/v1',
     });
+
+    should(function() {
+      helper.consul({ promisify: true });
+    }).throw('promisify must be a function');
   });
 
   describe('walk', function() {
@@ -160,6 +166,66 @@ describe('Consul', function() {
         '  - updateTime (sync)',
         '  - end (sync)',
       ]);
+    });
+  });
+
+  describe('_promisify', function() {
+    before(function() {
+      this.client = helper.consul({ promisify: bluebird.fromCallback });
+    });
+
+    describe('callback', function() {
+      it('should work', function(done) {
+        this.nock
+          .get('/v1/status/leader')
+          .reply(200, { ok: true });
+
+        this.client.status.leader(function(err, data) {
+          should.not.exist(err);
+
+          should(data).eql({ ok: true });
+
+          done();
+        });
+      });
+
+      it('should get error', function(done) {
+        this.nock
+          .get('/v1/status/leader')
+          .reply(500);
+
+        this.client.status.leader(function(err) {
+          should(err).have.property('message', 'internal server error');
+
+          done();
+        });
+      });
+    });
+
+    describe('promise', function() {
+      it('should work', function(done) {
+        this.nock
+          .get('/v1/status/leader')
+          .reply(200, { ok: true });
+
+        this.client.status.leader().then(function(data) {
+          should(data).eql({ ok: true });
+
+          done();
+        });
+      });
+
+      it('should get error', function(done) {
+        this.nock
+          .get('/v1/status/leader')
+          .reply(500);
+
+        this.client.status.leader().catch(function(err) {
+          should(err).have.property('message', 'internal server error');
+
+          done();
+        });
+      });
     });
   });
 });

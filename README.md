@@ -37,6 +37,7 @@ Options
  * secure (Boolean, default: false): enable HTTPS
  * ca (String[], optional): array of strings or Buffers of trusted certificates in PEM format
  * defaults (Object, optional): default options for method calls
+ * promisify (Function, optional): wrap callback methods to return a Promise, see [promisify](#promisify)
 
 Usage
 
@@ -53,8 +54,8 @@ All callback methods have the following signature `function(err, data, res)`.
  * data (Object, optional): response data if any, otherwise `undefined`
  * res (http.IncomingMessage, optional): HTTP response object with additional `body` property. This might not exist when `err` is set. The `body` property can be a decoded object, string, or Buffer.
 
-<a name="callback-method-options"/>
-### Callback Method Options
+<a name="common-method-options"/>
+### Common Method Options
 
 These options will be passed along with any method call, although only certain endpoints support them. See the [HTTP API][consul-docs-api] for more information.
 
@@ -1569,6 +1570,24 @@ watch.on('error', function(err) {
 });
 
 setTimeout(function() { watch.end(); }, 30 * 1000);
+```
+
+<a name="promisify"/>
+### Promisify
+
+_Experimental_
+
+Wrap callback methods using the `promisify` option in [Consul](#init).
+
+``` javascript
+var bluebird = require('bluebird');
+var consul = require('consul')({ promisify: bluebird.fromCallback });
+
+consul.kv.set('test', 'hello world').then(function() {
+  consul.kv.keys().then(function(data) {
+    console.log('data:', data);
+  });
+});
 ```
 
 ## Acceptance Tests
