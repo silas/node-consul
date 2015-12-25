@@ -12,6 +12,7 @@ See the official [HTTP API][consul-docs-api] docs for more information.
  * [Consul](#init)
   * [Callback](#callback)
   * [Promise](#promise)
+  * [Common Method Options](#common-method-options)
  * [ACL](#acl)
  * [Agent](#agent)
   * [Check](#agent-check)
