@@ -12,7 +12,7 @@ See the official [HTTP API][consul-docs-api] docs for more information.
  * [Consul](#init)
   * [Callback](#callback)
   * [Promise](#promise)
-  * [Common Method Options](#common-method-options)
+  * [Common Options](#common-options)
  * [ACL](#acl)
  * [Agent](#agent)
   * [Check](#agent-check)
@@ -64,8 +64,8 @@ Promise support can be enabled by setting `promisify` to `true` in Node `>= 0.12
 
 If you need access to the `res` object you can create a custom wrapper ([see example below](#promise-wrapper).
 
-<a name="common-method-options"></a>
-### Common Method Options
+<a name="common-options"></a>
+### Common Options
 
 These options will be passed along with any method call, although only certain endpoints support them. See the [HTTP API][consul-docs-api] for more information.
 
