@@ -10,16 +10,16 @@ This is a [Consul][consul] client.
 See the official [HTTP API][consul-docs-api] docs for more information.
 
  * [Consul](#init)
-  * [Callback](#callback)
-  * [Promise](#promise)
-  * [Common Options](#common-options)
+   * [Callback](#callback)
+   * [Promise](#promise)
+   * [Common Options](#common-options)
  * [ACL](#acl)
  * [Agent](#agent)
-  * [Check](#agent-check)
-  * [Service](#agent-service)
+   * [Check](#agent-check)
+   * [Service](#agent-service)
  * [Catalog](#catalog)
-  * [Node](#catalog-node)
-  * [Service](#catalog-service)
+   * [Node](#catalog-node)
+   * [Service](#catalog-service)
  * [Event](#event)
  * [Health](#health)
  * [KV](#kv)
@@ -62,7 +62,7 @@ All callback methods have the following signature `function(err, data, res)`.
 
 Promise support can be enabled by setting `promisify` to `true` in Node `>= 0.12` or passing a wrapper (ex: `bluebird.fromCallback`) in older versions.
 
-If you need access to the `res` object you can create a custom wrapper ([see example below](#promise-wrapper).
+If you need access to the `res` object you can create a custom wrapper ([see example below](#promise-wrapper)).
 
 <a name="common-options"></a>
 ### Common Options
@@ -639,12 +639,12 @@ Options
  * address (String, optional): service IP address
  * port (Integer, optional): service port
  * check (Object, optional): service check
-  * http (String): URL endpoint, requires interval
-  * script (String): path to check script, requires interval
-  * interval (String): interval to run check, requires script (ex: `15s`)
-  * ttl (String): time to live before check must be updated, instead of http/script and interval (ex: `60s`)
-  * notes (String, optional): human readable description of check
-  * status (String, optional): initial service status
+   * http (String): URL endpoint, requires interval
+   * script (String): path to check script, requires interval
+   * interval (String): interval to run check, requires script (ex: `15s`)
+   * ttl (String): time to live before check must be updated, instead of http/script and interval (ex: `60s`)
+   * notes (String, optional): human readable description of check
+   * status (String, optional): initial service status
  * checks (Object[], optional): service checks (see `check` above)
 
 Usage
