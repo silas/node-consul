@@ -37,7 +37,7 @@ Options
  * secure (Boolean, default: false): enable HTTPS
  * ca (String[], optional): array of strings or Buffers of trusted certificates in PEM format
  * defaults (Object, optional): default options for method calls
- * promisify (Function, optional): wrap callback methods to return a Promise, see [promisify](#promisify)
+ * promisify (Boolean|Function, optional): convert callback methods to Promises
 
 Usage
 
@@ -53,6 +53,13 @@ All callback methods have the following signature `function(err, data, res)`.
  * err (Error, optional): set if there was an error, otherwise falsy
  * data (Object, optional): response data if any, otherwise `undefined`
  * res (http.IncomingMessage, optional): HTTP response object with additional `body` property. This might not exist when `err` is set. The `body` property can be a decoded object, string, or Buffer.
+
+<a name="promise"></a>
+### Promise
+
+Promise support can be enabled by setting `promisify` to `true` in Node `>= 0.12` or passing a wrapper (ex: `bluebird.fromCallback`) in older versions.
+
+If you need access to the `res` object you can create a custom wrapper ([see example below](#promise-wrapper).
 
 <a name="common-method-options"></a>
 ### Common Method Options
@@ -1572,20 +1579,34 @@ watch.on('error', function(err) {
 setTimeout(function() { watch.end(); }, 30 * 1000);
 ```
 
-<a name="promisify"></a>
-### Promisify
-
-_Experimental_
-
-Wrap callback methods using the `promisify` option in [Consul](#init).
+<a name="promise-wrapper"></a>
+### Promise Wrapper
 
 ``` javascript
-var bluebird = require('bluebird');
-var consul = require('consul')({ promisify: bluebird.fromCallback });
+var Bluebird = require('bluebird');
+
+function fromCallback(fn) {
+  return new Bluebird(function(resolve, reject) {
+    try {
+      return fn(function(err, data, res) {
+        if (err) {
+          err.res = res;
+          return reject(err);
+        }
+        return resolve([data, res]);
+      });
+    } catch (err) {
+      return reject(err);
+    }
+  });
+}
+
+var consul = require('consul')({ promisify: fromCallback });
 
 consul.kv.set('test', 'hello world').then(function() {
-  consul.kv.keys().then(function(data) {
+  consul.kv.keys().spread(function(data, res) {
     console.log('data:', data);
+    console.log('headers:', res.headers);
   });
 });
 ```

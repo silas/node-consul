@@ -6,6 +6,7 @@
 
 var bluebird = require('bluebird');
 var lodash = require('lodash');
+var papi = require('papi');
 var should = require('should');
 
 var consul = require('../lib');
@@ -64,10 +65,6 @@ describe('Consul', function() {
       hostname: 'example.org',
       path: '/proxy/v1',
     });
-
-    should(function() {
-      helper.consul({ promisify: true });
-    }).throw('promisify must be a function');
   });
 
   describe('walk', function() {
@@ -146,7 +143,7 @@ describe('Consul', function() {
         '  - keys (callback)',
         '  - set (callback)',
         '  - del (callback)',
-        '  - delete (callback)',
+        '  - delete (alias)',
         ' Lock',
         '  - acquire (sync)',
         '  - release (sync)',
@@ -169,9 +166,31 @@ describe('Consul', function() {
     });
   });
 
-  describe('_promisify', function() {
+  describe('promisify', function() {
     before(function() {
       this.client = helper.consul({ promisify: bluebird.fromCallback });
+    });
+
+    it('should prefix error message', function() {
+      this.sinon.stub(papi.tools, 'promisify', function() {
+        throw new Error('test');
+      });
+
+      should(function() {
+        helper.consul({ promisify: true });
+      }).throw('promisify: test');
+    });
+
+    describe('default', function() {
+      it('should work', function() {
+        if (GLOBAL.Promise) {
+          helper.consul({ promisify: true });
+        } else {
+          should(function() {
+            helper.consul({ promisify: true });
+          }).throw('promisify: wrapper required');
+        }
+      });
     });
 
     describe('callback', function() {
