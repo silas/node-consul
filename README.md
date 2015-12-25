@@ -40,7 +40,7 @@ Options
  * secure (Boolean, default: false): enable HTTPS
  * ca (String[], optional): array of strings or Buffers of trusted certificates in PEM format
  * defaults (Object, optional): default options for method calls
- * promisify (Boolean|Function, optional): convert callback methods to Promises
+ * promisify (Boolean|Function, optional): convert callback methods to promises
 
 Usage
 
