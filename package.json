@@ -29,7 +29,13 @@
   "keywords": [
     "consul"
   ],
-  "repository": "https://github.com/silas/node-consul.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/silas/node-consul.git"
+  },
+  "bugs": {
+    "url": "https://github.com/silas/node-consul/issues"
+  },
   "author": "Silas Sewell <silas@sewell.org>",
   "license": "MIT"
 }

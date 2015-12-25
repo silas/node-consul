@@ -2,7 +2,7 @@
 .jscs.json
 .jshintrc
 .npmignore
-.rock.yml
+.travis.yml
 config
 coverage
 example*.js
