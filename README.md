@@ -10,6 +10,8 @@ This is a [Consul][consul] client.
 See the official [HTTP API][consul-docs-api] docs for more information.
 
  * [Consul](#init)
+  * [Callback](#callback)
+  * [Promise](#promise)
  * [ACL](#acl)
  * [Agent](#agent)
   * [Check](#agent-check)
