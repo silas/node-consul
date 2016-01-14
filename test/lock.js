@@ -396,7 +396,7 @@ describe('Lock', function() {
         .get('/v1/kv/test?index=0&wait=5ms')
         .reply(200, [{ Flags: FLAGS_OUT, Session: 'abc' }], { 'X-Consul-Index': '5' })
         .get('/v1/kv/test?index=5&wait=5ms')
-        .reply(200, [{ Flags: FLAGS_OUT, Session: 'abc' }], { 'X-Consul-Index': 'x' })
+        .reply(200, [{ Flags: FLAGS_OUT, Session: 'abc' }], {})
         .get('/v1/kv/test?index=5&wait=5ms')
         .reply(200, [{ Flags: FLAGS_OUT }], { 'X-Consul-Index': '10' })
         .put('/v1/kv/test?flags=' + FLAGS_IN + '&acquire=session123')

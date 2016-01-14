@@ -308,14 +308,15 @@ describe('utils', function() {
   describe('hasIndexChanged', function() {
     it('should work', function() {
       utils.hasIndexChanged().should.equal(false);
-      utils.hasIndexChanged('a').should.equal(false);
+      utils.hasIndexChanged('').should.equal(false);
       utils.hasIndexChanged('1').should.equal(true);
-      utils.hasIndexChanged('1', 'a').should.equal(true);
+      utils.hasIndexChanged('1', '').should.equal(true);
       utils.hasIndexChanged('10', '1').should.equal(true);
-      utils.hasIndexChanged('1', '10').should.equal(false);
-      utils.hasIndexChanged('0', '1').should.equal(false);
+      utils.hasIndexChanged('0', '1').should.equal(true);
       utils.hasIndexChanged('1', '1').should.equal(false);
+      utils.hasIndexChanged('1', '0').should.equal(true);
       utils.hasIndexChanged('2', '1').should.equal(true);
+      utils.hasIndexChanged('2', '2').should.equal(false);
     });
   });
 });
