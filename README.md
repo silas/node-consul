@@ -499,6 +499,8 @@ Options
  * serviceid (String, optional): service ID, associate check with existing service
  * http (String): url to test, 2xx passes, 429 warns, and all others fail
  * script (String): path to check script, requires interval
+ * dockercontainerid (String, optional): Docker container ID to run script
+ * shell (String, optional): shell in which to run script (currently only supported with Docker)
  * interval (String): interval to run check, requires script (ex: `15s`)
  * ttl (String): time to live before check must be updated, instead of script and interval (ex: `60s`)
  * notes (String, optional): human readable description of check

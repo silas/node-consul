@@ -286,9 +286,13 @@ describe('utils', function() {
       should(utils.createCheck({
         script: '/usr/bin/true',
         interval: '30s',
+        shell: '/bin/sh',
+        dockercontainerid: '123',
       })).eql({
         Script: '/usr/bin/true',
         Interval: '30s',
+        Shell: '/bin/sh',
+        DockerContainerID: '123',
       });
 
       should(utils.createCheck({
