@@ -284,6 +284,24 @@ describe('utils', function() {
       });
 
       should(utils.createCheck({
+        ID: 'id',
+        name: 'name',
+        service_id: 'service',
+        tcp: 'localhost:22',
+        interval: '10s',
+        notes: 'SSH TCP on port 22',
+        status: 'passing',
+      })).eql({
+        ID: 'id',
+        Name: 'name',
+        ServiceID: 'service',
+        TCP: 'localhost:22',
+        Interval: '10s',
+        Notes: 'SSH TCP on port 22',
+        Status: 'passing',
+      });
+
+      should(utils.createCheck({
         script: '/usr/bin/true',
         interval: '30s',
         shell: '/bin/sh',

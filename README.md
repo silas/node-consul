@@ -498,6 +498,7 @@ Options
  * id (String, optional): check ID
  * serviceid (String, optional): service ID, associate check with existing service
  * http (String): url to test, 2xx passes, 429 warns, and all others fail
+ * tcp (String): host:port to test, passes if connection is established, fails otherwise
  * script (String): path to check script, requires interval
  * dockercontainerid (String, optional): Docker container ID to run script
  * shell (String, optional): shell in which to run script (currently only supported with Docker)
