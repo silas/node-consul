@@ -71,7 +71,7 @@ helper.describe('Session', function() {
       this.c1.session.get(this.id, function(err, session) {
         should.not.exist(err);
 
-        session.should.have.keys(
+        session.should.have.properties(
           'CreateIndex',
           'ID',
           'Name',
@@ -96,7 +96,7 @@ helper.describe('Session', function() {
         sessions.length.should.be.above(0);
 
         sessions.forEach(function(session) {
-          session.should.have.keys(
+          session.should.have.properties(
             'CreateIndex',
             'ID',
             'Name',
@@ -133,7 +133,7 @@ helper.describe('Session', function() {
         sessions.length.should.be.above(0);
 
         sessions.forEach(function(session) {
-          session.should.have.keys(
+          session.should.have.properties(
             'CreateIndex',
             'ID',
             'Name',
@@ -161,7 +161,7 @@ helper.describe('Session', function() {
 
         renew.should.not.be.empty;
 
-        should(renew[0]).keys(
+        should(renew[0]).properties(
           'CreateIndex',
           'ID',
           'Name',
