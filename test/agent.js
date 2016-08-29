@@ -167,14 +167,19 @@ describe('Agent', function() {
 
         this.consul.agent.check.register(opts, function(err) {
           should(err).property('message',
-            'consul: agent.check.register: http or script and interval, or ttl required');
+            'consul: agent.check.register: http/tcp/script and interval, or ttl required');
 
           done();
         });
       });
 
       it('should require name', function(done) {
-        this.consul.agent.check.register({}, function(err) {
+        var opts = {
+          http: 'http://localhost:5000/health',
+          interval: '10s',
+        };
+
+        this.consul.agent.check.register(opts, function(err) {
           should(err).property('message', 'consul: agent.check.register: name required');
 
           done();
@@ -542,7 +547,7 @@ describe('Agent', function() {
 
         this.consul.agent.service.register(opts, function(err) {
           should(err).property('message',
-            'consul: agent.service.register: http or script and interval, or ttl required');
+            'consul: agent.service.register: http/tcp/script and interval, or ttl required');
 
           done();
         });
