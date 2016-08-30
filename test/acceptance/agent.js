@@ -47,7 +47,7 @@ helper.describe('Agent', function() {
         should.not.exist(err);
 
         should(data).be.instanceOf(Object);
-        data.should.have.keys('Config', 'Member');
+        data.should.have.properties('Config', 'Member');
 
         data.Config.Bootstrap.should.be.true;
         data.Config.Server.should.be.true;

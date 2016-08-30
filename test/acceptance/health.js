@@ -116,12 +116,12 @@ helper.describe('Health', function() {
 
         data[0].should.have.properties('Node', 'Service', 'Checks');
 
-        data[0].Node.should.eql({
+        data[0].Node.should.match({
           Node: 'node1',
           Address: '127.0.0.1',
         });
 
-        data[0].Service.should.eql({
+        data[0].Service.should.match({
           ID: self.service,
           Service: self.service,
           Tags: null,
@@ -129,11 +129,11 @@ helper.describe('Health', function() {
           Port: 0,
         });
 
-        var checks = data[0].Checks.map(function(c) { return c.CheckID; });
+        var checks = data[0].Checks.map(function(c) { return c.CheckID; }).sort();
 
         checks.should.eql([
-          'service:' + self.service,
           'serfHealth',
+          'service:' + self.service,
         ]);
 
         done();

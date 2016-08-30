@@ -85,7 +85,7 @@ helper.describe('Catalog', function() {
         this.c1.catalog.node.list(function(err, data) {
           should.not.exist(err);
 
-          should(data).eql([
+          should(data).match([
             { Node: 'node1', Address: '127.0.0.1' },
           ]);
 
@@ -97,7 +97,7 @@ helper.describe('Catalog', function() {
         this.c1.catalog.nodes('dc1', function(err, data) {
           should.not.exist(err);
 
-          should(data).eql([
+          should(data).match([
             { Node: 'node1', Address: '127.0.0.1' },
           ]);
 
