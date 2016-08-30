@@ -270,6 +270,7 @@ describe('utils', function() {
         name: 'name',
         service_id: 'service',
         http: 'http://127.0.0.1:8000',
+        timeout: '30s',
         interval: '60s',
         notes: 'Just a note.',
         status: 'passing',
@@ -278,6 +279,7 @@ describe('utils', function() {
         Name: 'name',
         ServiceID: 'service',
         HTTP: 'http://127.0.0.1:8000',
+        Timeout: '30s',
         Interval: '60s',
         Notes: 'Just a note.',
         Status: 'passing',
@@ -291,6 +293,7 @@ describe('utils', function() {
         interval: '10s',
         notes: 'SSH TCP on port 22',
         status: 'passing',
+        deregistercriticalserviceafter: '1h',
       })).eql({
         ID: 'id',
         Name: 'name',
@@ -299,9 +302,14 @@ describe('utils', function() {
         Interval: '10s',
         Notes: 'SSH TCP on port 22',
         Status: 'passing',
+        DeregisterCriticalServiceAfter: '1h',
       });
+    });
+  });
 
-      should(utils.createCheck({
+  describe('createServiceCheck', function() {
+    it('should work', function() {
+      should(utils.createServiceCheck({
         script: '/usr/bin/true',
         interval: '30s',
         shell: '/bin/sh',
@@ -313,17 +321,17 @@ describe('utils', function() {
         DockerContainerID: '123',
       });
 
-      should(utils.createCheck({
+      should(utils.createServiceCheck({
         ttl: '15s',
       })).eql({
         TTL: '15s',
       });
     });
 
-    it('should require script, http, or ttl', function() {
+    it('should require script, http, tcp, or ttl', function() {
       should(function() {
         utils.createCheck();
-      }).throw('http or script and interval, or ttl required');
+      }).throw('http/tcp/script and interval, or ttl required');
     });
   });
 

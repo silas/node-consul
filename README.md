@@ -503,9 +503,12 @@ Options
  * dockercontainerid (String, optional): Docker container ID to run script
  * shell (String, optional): shell in which to run script (currently only supported with Docker)
  * interval (String): interval to run check, requires script (ex: `15s`)
- * ttl (String): time to live before check must be updated, instead of script and interval (ex: `60s`)
+ * timeout (String, optional): timeout for the check (ex: `10s`)
+ * ttl (String): time to live before check must be updated, instead of http/tcp/script and interval (ex: `60s`)
  * notes (String, optional): human readable description of check
  * status (String, optional): initial service status
+ * deregistercriticalserviceafter (String, optional, Consul 0.7+): timeout after
+ which to automatically deregister service if check remains in critical state
 
 Usage
 
@@ -643,11 +646,17 @@ Options
  * port (Integer, optional): service port
  * check (Object, optional): service check
    * http (String): URL endpoint, requires interval
+   * tcp (String): host:port to test, passes if connection is established, fails otherwise
    * script (String): path to check script, requires interval
+   * dockercontainerid (String, optional): Docker container ID to run script
+   * shell (String, optional): shell in which to run script (currently only supported with Docker)
    * interval (String): interval to run check, requires script (ex: `15s`)
-   * ttl (String): time to live before check must be updated, instead of http/script and interval (ex: `60s`)
+   * timeout (String, optional): timeout for the check (ex: `10s`)
+   * ttl (String): time to live before check must be updated, instead of http/tcp/script and interval (ex: `60s`)
    * notes (String, optional): human readable description of check
    * status (String, optional): initial service status
+   * deregistercriticalserviceafter (String, optional, Consul 0.7+): timeout after
+   which to automatically deregister service if check remains in critical state
  * checks (Object[], optional): service checks (see `check` above)
 
 Usage
