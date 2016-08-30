@@ -110,6 +110,12 @@ describe('utils', function() {
       utils.defaults({ hello: 'world' }, { hello: 'test' }).should.eql({ hello: 'world' });
       utils.defaults({ hello: null }, { hello: 'test' }).should.eql({ hello: null });
       utils.defaults({ hello: undefined }, { hello: 'test' }).should.eql({ hello: undefined });
+      utils.defaults(
+        { one: 1 },
+        { two: 2, one: 'nope' },
+        { three: 3, two: 'nope' },
+        { three: 'nope' }
+      ).should.eql({ one: 1, two: 2, three: 3 });
     });
   });
 

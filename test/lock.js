@@ -391,6 +391,7 @@ describe('Lock', function() {
         .put('/v1/session/create', {
           Name: 'Consul API Lock',
           TTL: '15s',
+          Node: 'node1',
         })
         .reply(200, { ID: 'session123' })
         .get('/v1/kv/test?index=0&wait=5ms')
@@ -414,6 +415,7 @@ describe('Lock', function() {
         key: 'test',
         lockWaitTime: '5ms',
         lockRetryTime: '1ms',
+        session: { node: 'node1' },
       });
 
       var acquire = 0;
