@@ -67,6 +67,17 @@ describe('Consul', function() {
     });
   });
 
+  it('should not mutate options', function() {
+    var opts = { test: 'opts' };
+    var client = helper.consul(opts);
+
+    client._opts.should.not.exactly(opts);
+    client._opts.should.containEql({ test: 'opts' });
+    client._opts.test = 'fail';
+
+    opts.should.eql({ test: 'opts' });
+  });
+
   describe('walk', function() {
     it('should work', function() {
       var setup = function(tree, depth, data) {

@@ -1,10 +1,10 @@
 {
   "name": "consul",
-  "version": "0.25.0",
+  "version": "0.26.0",
   "description": "Consul client",
   "main": "./lib",
   "dependencies": {
-    "papi": "^0.25.0"
+    "papi": "^0.27.0"
   },
   "devDependencies": {
     "async": "^1.4.0",
