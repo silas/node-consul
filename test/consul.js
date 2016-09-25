@@ -65,6 +65,13 @@ describe('Consul', function() {
       hostname: 'example.org',
       path: '/proxy/v1',
     });
+
+  });
+
+  it('should create new opts object', function() {
+    var opts = {};
+
+    helper.consul(opts)._opts.should.not.exactly(opts);
   });
 
   describe('walk', function() {
