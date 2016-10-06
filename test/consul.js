@@ -103,6 +103,7 @@ describe('Consul', function() {
         ' - lock (eventemitter)',
         ' - watch (eventemitter)',
         ' - walk (sync)',
+        ' - parseQueryMeta (sync)',
         ' Acl',
         '  - create (callback)',
         '  - update (callback)',
@@ -174,6 +175,27 @@ describe('Consul', function() {
         '  - updateTime (sync)',
         '  - end (sync)',
       ]);
+    });
+  });
+
+  describe('parseQueryMeta', function() {
+    it('should work', function() {
+      consul.parseQueryMeta().should.eql({});
+      consul.parseQueryMeta({}).should.eql({});
+      consul.parseQueryMeta({ headers: {} }).should.eql({});
+      consul.parseQueryMeta({
+        headers: {
+          'x-consul-index': '5',
+          'x-consul-lastcontact': '100',
+          'x-consul-knownleader': 'true',
+          'x-consul-translate-addresses': 'true',
+        },
+      }).should.eql({
+        LastIndex: '5',
+        LastContact: 100,
+        KnownLeader: true,
+        AddressTranslationEnabled: true,
+      });
     });
   });
 
