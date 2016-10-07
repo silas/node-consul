@@ -1525,7 +1525,7 @@ consul.query.destroy('422b14b9-874b-4520-bd2e-e149a42b0066', function(err) {
 ```
 
 <a name="query-execute"></a>
-### consul.query.destroy(options, callback)
+### consul.query.execute(options, callback)
 
 Execute prepared query.
 
@@ -1543,7 +1543,7 @@ consul.query.execute('6119cabf-c052-48fe-9f07-711762e52931', function(err) {
 
 Result
 
-```
+``` json
 {
   "Service": "redis",
   "Nodes": [
