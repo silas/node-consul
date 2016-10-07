@@ -24,6 +24,7 @@ See the official [HTTP API][consul-docs-api] docs for more information.
  * [Health](#health)
  * [KV](#kv)
  * [Lock](#lock)
+ * [Query](#query)
  * [Session](#session)
  * [Status](#status)
  * [Watch](#watch)
@@ -1318,6 +1319,338 @@ lock released
 lock released or there was a permanent failure
 ```
 
+<a name="query"></a>
+### consul.query
+
+ * [list](#query-list)
+ * [create](#query-create)
+ * [update](#query-update)
+ * [get](#query-get)
+ * [destroy](#query-destroy)
+ * [execute](#query-execute)
+ * [explain](#query-explain)
+
+<a name="query-list"></a>
+### consul.query.list(callback)
+
+List prepared query.
+
+Usage
+
+``` javascript
+consul.query.list(function(err, result) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+[
+  {
+    "ID": "422b14b9-874b-4520-bd2e-e149a42b0066",
+    "Name": "redis",
+    "Session": "",
+    "Token": "",
+    "Template": {
+      "Type": "",
+      "Regexp":""
+    },
+    "Service": {
+      "Service": "redis",
+      "Failover": {
+        "NearestN": 3,
+        "Datacenters": [
+          "dc1",
+          "dc2"
+        ]
+      },
+      "OnlyPassing": false,
+      "Tags": [
+        "master",
+        "!experimental"
+      ]
+    },
+    "DNS": {
+      "TTL": "10s"
+    },
+    "RaftIndex": {
+      "CreateIndex": 23,
+      "ModifyIndex": 42
+    }
+  }
+]
+```
+
+<a name="query-create"></a>
+### consul.query.create(options, callback)
+
+Create a new prepared query.
+
+Options
+
+ * name (String, optional): name that can be used to execute a query instead of using its ID
+ * session (String, optional): provides a way to automatically remove a prepared query when the given session is invalidated
+ * token (String, optional): captured ACL Token that is reused as the ACL Token every time the query is executed
+ * near (String, optional): allows specifying a particular node to sort near based on distance sorting using Network Coordinates
+ * service.service (String, required): name of the service to query
+ * service.failover.nearestn (Number, optional): when set the query will be forwarded to up to nearest N other datacenters based on their estimated network round trip time using Network Coordinates from the WAN gossip pool
+ * service.failover.datacenters (String[], optional): fixed list of remote datacenters to forward the query to if there are no healthy nodes in the local datacenter
+ * service.onlypassing (Boolean, default: false): filter results to only nodes with a passing state
+ * service.tags (String[], optional): list of service tags to filter the query results
+ * ttl.dns (String, optional, ex: `10s`): controls how the TTL is set when query results are served over DNS
+
+Usage
+
+``` javascript
+var opts = {
+  name: 'redis',
+  service: {
+    service: 'redis'
+    onlypassing: true
+  },
+};
+
+consul.query.create(opts, function(err, result) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+{
+  "ID": "422b14b9-874b-4520-bd2e-e149a42b0066"
+}
+```
+
+<a name="query-update"></a>
+### consul.query.update(options, callback)
+
+Update existing prepared query.
+
+Options
+
+ * query (String, required): ID of the query
+
+And all [create options][query-create].
+
+Usage
+
+``` javascript
+var opts = {
+  query: '422b14b9-874b-4520-bd2e-e149a42b0066',
+  name: 'redis',
+  service: {
+    service: 'redis'
+    onlypassing: false
+  },
+};
+
+consul.query.update(opts, function(err, result) {
+  if (err) throw err;
+});
+```
+
+<a name="query-get"></a>
+### consul.query.get(options, callback)
+
+Get prepared query.
+
+Options
+
+ * query (String, required): ID of the query
+
+Usage
+
+``` javascript
+consul.query.get('6119cabf-c052-48fe-9f07-711762e52931', function(err, result) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+{
+  "ID": "6119cabf-c052-48fe-9f07-711762e52931",
+  "Name": "redis",
+  "Session": "",
+  "Token": "",
+  "Template": {
+    "Type": "",
+    "Regexp":""
+  },
+  "Service": {
+    "Service": "redis",
+    "Failover": {
+      "NearestN": 3,
+      "Datacenters": [
+        "dc1",
+        "dc2"
+      ]
+    },
+    "OnlyPassing": false,
+    "Tags": [
+      "master",
+      "!experimental"
+    ]
+  },
+  "DNS": {
+    "TTL": "10s"
+  },
+  "RaftIndex": {
+    "CreateIndex": 23,
+    "ModifyIndex": 42
+  }
+}
+```
+
+
+<a name="query-destroy"></a>
+### consul.query.destroy(options, callback)
+
+Delete prepared query.
+
+Options
+
+ * query (String, required): ID of the query
+
+Usage
+
+``` javascript
+consul.query.destroy('422b14b9-874b-4520-bd2e-e149a42b0066', function(err) {
+  if (err) throw err;
+});
+```
+
+<a name="query-execute"></a>
+### consul.query.destroy(options, callback)
+
+Execute prepared query.
+
+Options
+
+ * query (String, required): ID of the query
+
+Usage
+
+``` javascript
+consul.query.execute('6119cabf-c052-48fe-9f07-711762e52931', function(err) {
+  if (err) throw err;
+});
+```
+
+Result
+
+```
+{
+  "Service": "redis",
+  "Nodes": [
+    {
+      "Node": {
+        "Node": "foobar",
+        "Address": "10.1.10.12",
+        "TaggedAddresses": {
+          "lan": "10.1.10.12",
+          "wan": "10.1.10.12"
+        }
+      },
+      "Service": {
+        "ID": "redis",
+        "Service": "redis",
+        "Tags": null,
+        "Port": 8000
+      },
+      "Checks": [
+        {
+          "Node": "foobar",
+          "CheckID": "service:redis",
+          "Name": "Service 'redis' check",
+          "Status": "passing",
+          "Notes": "",
+          "Output": "",
+          "ServiceID": "redis",
+          "ServiceName": "redis"
+        },
+        {
+          "Node": "foobar",
+          "CheckID": "serfHealth",
+          "Name": "Serf Health Status",
+          "Status": "passing",
+          "Notes": "",
+          "Output": "",
+          "ServiceID": "",
+          "ServiceName": ""
+        }
+      ],
+      "DNS": {
+        "TTL": "10s"
+      },
+      "Datacenter": "dc3",
+      "Failovers": 2
+    }
+  ]
+}
+```
+
+<a name="query-explain"></a>
+### consul.query.explain(options, callback)
+
+Explain prepared query.
+
+Options
+
+ * query (String, required): ID of the query
+
+Usage
+
+``` javascript
+consul.query.explain('422b14b9-874b-4520-bd2e-e149a42b0066', function(err, result) {
+  if (err) throw err;
+  console.log(result);
+});
+```
+
+Result
+
+``` json
+{
+  "Query": {
+    "ID": "422b14b9-874b-4520-bd2e-e149a42b0066",
+    "Name": "redis",
+    "Session": "",
+    "Token": "",
+    "Template": {
+      "Type": "",
+      "Regexp":""
+    },
+    "Service": {
+      "Service": "redis",
+      "Failover": {
+        "NearestN": 3,
+        "Datacenters": [
+          "dc1",
+          "dc2"
+        ]
+      },
+      "OnlyPassing": false,
+      "Tags": [
+        "master",
+        "!experimental"
+      ]
+    },
+    "DNS": {
+      "TTL": "10s"
+    },
+    "RaftIndex": {
+      "CreateIndex": 23,
+      "ModifyIndex": 42
+    }
+  }
+}
+```
+
 <a name="session"></a>
 ### consul.session
 
@@ -1656,6 +1989,10 @@ consul.kv.set('test', 'hello world').then(function() {
 ## License
 
 This work is licensed under the MIT License (see the LICENSE file).
+
+Parts of the Documentation were copied from the official
+[Consul website][consul-docs-api], see the NOTICE file for license
+information.
 
 [consul]: http://www.consul.io/
 [consul-docs-api]: http://www.consul.io/docs/agent/http.html

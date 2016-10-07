@@ -144,18 +144,6 @@ describe('Session', function() {
       });
     });
 
-    it('should handle error', function(done) {
-      this.nock
-        .get('/v1/session/info/123')
-        .reply(500);
-
-      this.consul.session.info('123', function(err) {
-        should(err).have.property('message', 'consul: session.info: internal server error');
-
-        done();
-      });
-    });
-
     it('should require ID', function(done) {
       this.consul.session.info({}, function(err) {
         should(err).have.property('message', 'consul: session.info: id required');
