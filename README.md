@@ -1914,7 +1914,7 @@ Options
 Usage
 
 ``` javascript
-var watch = consul.watch({ method: consul.kv.get, options: { key: 'test' });
+var watch = consul.watch({ method: consul.kv.get, options: { key: 'test' }});
 
 watch.on('change', function(data, res) {
   console.log('data:', data);
