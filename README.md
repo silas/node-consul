@@ -1675,7 +1675,7 @@ Options
  * node (String, optional): node with which to associate session (defaults to connected agent)
  * checks (String[], optional): checks to associate with session
  * behavior (String, enum: release, delete; default: release): controls the behavior when a session is invalidated
- * ttl (String, optional, valid: `10s`-`3600s`): interval session must be renewed
+ * ttl (String, optional, valid: `10s`-`86400s`): interval session must be renewed
 
 Usage
 
