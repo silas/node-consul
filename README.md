@@ -1277,6 +1277,8 @@ Options
  * key (String): lock key
  * value (String|Buffer, optional): lock value
  * session (Object|String, optional): session options
+ * lockwaittime (Object|String, optional): specifies how long the lock kv.get request should wait for aqquiring a lock before giving up. default value is 15s
+ * lockwaittimeout (Object|String, optional): specifies a timeout for the lock kv.get http request. This must be higher than lockwaittime (e.g. '1s'). default value is lockwaittime + 1000 which might be a bit sensitive for bad latency between the client and Consul server. 
 
 Events
 
