@@ -1899,7 +1899,7 @@ Result
 <a name="watch"></a>
 ### consul.watch(options)
 
-Watch an endpoint for changes. 
+Watch an endpoint for changes.
 
 The watch relies on blocking queries, adding the `index` and `wait` parameters as per [Consul's documentation](https://www.consul.io/docs/agent/http.html)
 
