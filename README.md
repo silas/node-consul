@@ -1058,6 +1058,8 @@ Options
  * service (String): service name
  * dc (String, optional): datacenter (defaults to local for agent)
  * tag (String, optional): filter by tag
+ * near (String, optional): Specifies a node name to sort the node list in ascending order based on the estimated round trip time from that node. Passing near:"_agent" will use the agent's node for the sort
+ * meta (String, optional): Specifies a desired node metadata key/value pair of the form key:value.
  * passing (Boolean, optional): restrict to passing checks
 
 Usage
