@@ -192,7 +192,7 @@ describe('Agent', function() {
     describe('deregister', function() {
       it('should work', function(done) {
         this.nock
-          .get('/v1/agent/check/deregister/123')
+          .put('/v1/agent/check/deregister/123')
           .reply(200);
 
         var opts = { id: '123' };
@@ -206,7 +206,7 @@ describe('Agent', function() {
 
       it('should work with just id', function(done) {
         this.nock
-          .get('/v1/agent/check/deregister/123')
+          .put('/v1/agent/check/deregister/123')
           .reply(200);
 
         this.consul.agent.check.deregister('123', function(err) {
