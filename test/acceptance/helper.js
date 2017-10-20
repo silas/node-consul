@@ -84,6 +84,8 @@ Cluster.prototype.spawn = function(opts, callback) {
     var config = {
       acl_datacenter: 'dc1',
       acl_master_token: 'root',
+      acl_agent_master_token: 'agent_master',
+      enable_script_checks: true,
     };
 
     var filePath = path.join(results.dirPath, 'config.json');
@@ -130,7 +132,8 @@ Cluster.prototype.spawn = function(opts, callback) {
 
   jobs.connected = ['process', function(cb, results) {
     var log = debugBuffer('consul:' + opts.bind);
-    var client = consul({ host: opts.bind });
+    var token = opts.bootstrap ? 'root' : 'agent_master';
+    var client = consul({ host: opts.bind, defaults: { token: token } });
 
     client.on('log', log);
 
@@ -183,7 +186,7 @@ Cluster.prototype.setup = function(callback) {
     jobs['node' + i] = function(cb) {
       var opts = {
         node: node,
-        dc: 'dc1',
+        datacenter: 'dc1',
         bind: '127.0.0.' + i,
         client: '127.0.0.' + i,
       };
@@ -237,7 +240,7 @@ function before(test, callback) {
     var client;
 
     for (var i = 1; i <= 3; i++) {
-      client = test['c' + i] = consul({ host: '127.0.0.' + i });
+      client = test['c' + i] = consul({ host: '127.0.0.' + i, defaults: { token: 'root' } });
       client.on('log', debugBuffer('consul:' + '127.0.0.' + i));
     }
 

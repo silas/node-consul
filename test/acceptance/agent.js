@@ -49,7 +49,6 @@ helper.describe('Agent', function() {
         should(data).be.instanceOf(Object);
         data.should.have.properties('Config', 'Member');
 
-        data.Config.Bootstrap.should.be.true;
         data.Config.Server.should.be.true;
         data.Config.Datacenter.should.eql('dc1');
         data.Config.NodeName.should.eql('node1');
@@ -158,7 +157,7 @@ helper.describe('Agent', function() {
       });
 
       jobs.push(function(cb) {
-        self.c2.agent.join(joinAddr, function(err) {
+        self.c2.agent.join({ address: joinAddr, token: 'agent_master' }, function(err) {
           should.not.exist(err);
 
           cb();
@@ -297,9 +296,15 @@ helper.describe('Agent', function() {
     });
 
     afterEach(function(done) {
+      var self = this;
+
       async.map(
-        this.deregister,
-        this.c1.agent.check.deregister.bind(this.c1.agent.check),
+        self.deregister,
+        function(check, cb) {
+          self.c1.agent.check.deregister(check, function() {
+            cb();
+          });
+        },
         done
       );
     });
@@ -466,12 +471,14 @@ helper.describe('Agent', function() {
         self.c1.agent.services(function(err, services) {
           if (err) return cb(err);
 
-          services = lodash.filter(services, function(service) {
-            return service && service.ID !== 'consul';
-          });
+          var ids = lodash(services)
+            .values()
+            .filter(function(service) { return service && service.ID !== 'consul'; })
+            .map('ID')
+            .value();
 
           async.map(
-            Object.keys(services),
+            ids,
             self.c1.agent.service.deregister.bind(self.c1.agent.service),
             cb
           );
@@ -487,9 +494,13 @@ helper.describe('Agent', function() {
     });
 
     afterEach(function(done) {
+      var self = this;
+
       async.map(
-        this.deregister,
-        this.c1.agent.service.deregister.bind(this.c1.agent.service),
+        self.deregister,
+        function(service, cb) {
+          self.c1.agent.service.deregister(service, function() { cb(); });
+        },
         done
       );
     });

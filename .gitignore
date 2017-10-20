@@ -7,4 +7,5 @@ config
 coverage
 example*.js
 node_modules
+package-lock.json
 tmp

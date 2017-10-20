@@ -121,13 +121,10 @@ helper.describe('Health', function() {
           Address: '127.0.0.1',
         });
 
-        data[0].Service.should.match({
-          ID: self.service,
-          Service: self.service,
-          Tags: null,
-          Address: '',
-          Port: 0,
-        });
+        data[0].Service.should.have.properties('ID', 'Service', 'Tags');
+
+        data[0].Service.ID.should.equal(self.service);
+        data[0].Service.Service.should.equal(self.service);
 
         var checks = data[0].Checks.map(function(c) { return c.CheckID; }).sort();
 

@@ -69,8 +69,8 @@ helper.describe('Acl', function() {
     it('should require token', function(done) {
       var self = this;
 
-      self.c1.acl.create(function(err) {
-        should(err).have.property('message', 'Permission denied');
+      self.c1.acl.create({ token: 'test' }, function(err) {
+        should(err).have.property('message', 'ACL not found');
 
         done();
       });
@@ -107,7 +107,7 @@ helper.describe('Acl', function() {
     it('should require token', function(done) {
       var self = this;
 
-      self.c1.acl.destroy({ id: self.id }, function(err) {
+      self.c1.acl.destroy({ id: self.id, token: '' }, function(err) {
         should(err).have.property('message', 'Permission denied');
 
         done();
@@ -144,7 +144,7 @@ helper.describe('Acl', function() {
     it('should require token', function(done) {
       var self = this;
 
-      self.c1.acl.destroy(self.id, function(err) {
+      self.c1.acl.destroy({ id: self.id, token: '' }, function(err) {
         should(err).have.property('message', 'Permission denied');
 
         done();
@@ -189,7 +189,7 @@ helper.describe('Acl', function() {
     it('should require token', function(done) {
       var self = this;
 
-      self.c1.acl.get(self.id, function(err) {
+      self.c1.acl.get({ id: self.id, token: '' }, function(err) {
         should.not.exist(err);
 
         // TODO: should this be denied?
@@ -243,7 +243,7 @@ helper.describe('Acl', function() {
     it('should require token', function(done) {
       var self = this;
 
-      self.c1.acl.clone(self.id, function(err) {
+      self.c1.acl.clone({ id: self.id, token: '' }, function(err) {
         should(err).have.property('message', 'Permission denied');
 
         done();
@@ -287,7 +287,7 @@ helper.describe('Acl', function() {
     it('should require token', function(done) {
       var self = this;
 
-      self.c1.acl.list(function(err) {
+      self.c1.acl.list({ token: '' }, function(err) {
         should(err).have.property('message', 'Permission denied');
 
         done();

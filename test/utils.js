@@ -127,10 +127,16 @@ describe('utils', function() {
         return req;
       };
 
-      test().should.eql({ query: {} });
-      test({}).should.eql({ query: {} });
-      test({ stale: true }).should.eql({ query: { stale: '1' } });
-      test({}, { query: { hello: 'world' } }).should.eql({ query: { hello: 'world' } });
+      test().should.eql({ headers: {}, query: {} });
+      test({}).should.eql({ headers: {}, query: {} });
+      test({ stale: true }).should.eql({ headers: {}, query: { stale: '1' } });
+      test({}, {
+        headers: { hello: 'headers' },
+        query: { hello: 'query' }
+      }).should.eql({
+        headers: { hello: 'headers' },
+        query: { hello: 'query' }
+      });
       test({
         dc: 'dc1',
         wan: true,
@@ -143,13 +149,15 @@ describe('utils', function() {
         ctx: 'ctx',
         timeout: 20,
       }).should.eql({
+        headers: {
+          'x-consul-token': 'token1',
+        },
         query: {
           dc: 'dc1',
           wan: '1',
           consistent: '1',
           index: 10,
           wait: '10s',
-          token: 'token1',
           near: '_agent',
           'node-meta': ['a:b', 'c:d'],
         },

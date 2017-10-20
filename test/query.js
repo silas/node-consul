@@ -18,8 +18,8 @@ describe('Query', function() {
   describe('list', function() {
     it('should work', function(done) {
       this.nock
-        .get('/v1/query?token=token1')
-        .reply(200, { ok: true });
+        .get('/v1/query')
+        .reply(200, { ok: true }, { 'x-consul-token': 'token1' });
 
       this.consul.query.list({ token: 'token1' }, function(err, data) {
         should.not.exist(err);

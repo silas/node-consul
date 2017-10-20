@@ -34,7 +34,7 @@ helper.describe('Session', function() {
   });
 
   afterEach(function(done) {
-    this.c1.session.destroy(this.id, done);
+    this.c1.session.destroy(this.id, function() { done(); });
   });
 
   describe('create', function() {
