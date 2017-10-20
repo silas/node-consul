@@ -88,12 +88,34 @@ These options work for all methods.
 <a name="acl"></a>
 ### consul.acl
 
+ * [bootstrap](#acl-bootstrap)
  * [create](#acl-create)
  * [update](#acl-update)
  * [destroy](#acl-destroy)
  * [get](#acl-get)
  * [clone](#acl-clone)
  * [list](#acl-list)
+
+<a name="acl-bootstrap"></a>
+### consul.acl.bootstrap(callback)
+
+Creates one-time management token if not configured.
+
+Usage
+
+``` javascript
+consul.acl.bootstrap(function(err, result) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+{
+  "ID": "adf4238a-882b-9ddc-4a9d-5b6758e4159e"
+}
+```
 
 <a name="acl-create"></a>
 ### consul.acl.create([options], callback)

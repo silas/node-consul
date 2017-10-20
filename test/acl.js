@@ -15,6 +15,38 @@ var helper = require('./helper');
 describe('Acl', function() {
   helper.setup(this);
 
+  describe('bootstrap', function() {
+    it('should work', function(done) {
+      this.nock
+        .put('/v1/acl/bootstrap')
+        .reply(200, { ok: true });
+
+      var opts = {};
+
+      this.consul.acl.bootstrap(opts, function(err, data) {
+        should.not.exist(err);
+
+        should(data).eql({ ok: true });
+
+        done();
+      });
+    });
+
+    it('should work with no arguments', function(done) {
+      this.nock
+        .put('/v1/acl/bootstrap')
+        .reply(200, { ok: true });
+
+      this.consul.acl.bootstrap(function(err, data) {
+        should.not.exist(err);
+
+        should(data).eql({ ok: true });
+
+        done();
+      });
+    });
+  });
+
   describe('create', function() {
     it('should work', function(done) {
       this.nock

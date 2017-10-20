@@ -105,6 +105,7 @@ describe('Consul', function() {
         ' - walk (sync)',
         ' - parseQueryMeta (sync)',
         ' Acl',
+        '  - bootstrap (callback)',
         '  - create (callback)',
         '  - update (callback)',
         '  - destroy (callback)',
