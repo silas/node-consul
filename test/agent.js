@@ -192,7 +192,7 @@ describe('Agent', function() {
     describe('deregister', function() {
       it('should work', function(done) {
         this.nock
-          .get('/v1/agent/check/deregister/123')
+          .put('/v1/agent/check/deregister/123')
           .reply(200);
 
         var opts = { id: '123' };
@@ -206,7 +206,7 @@ describe('Agent', function() {
 
       it('should work with just id', function(done) {
         this.nock
-          .get('/v1/agent/check/deregister/123')
+          .put('/v1/agent/check/deregister/123')
           .reply(200);
 
         this.consul.agent.check.deregister('123', function(err) {
@@ -228,7 +228,7 @@ describe('Agent', function() {
     describe('pass', function() {
       it('should work', function(done) {
         this.nock
-          .get('/v1/agent/check/pass/123?note=ok')
+          .put('/v1/agent/check/pass/123?note=ok')
           .reply(200);
 
         var opts = {
@@ -245,7 +245,7 @@ describe('Agent', function() {
 
       it('should work with just id', function(done) {
         this.nock
-          .get('/v1/agent/check/pass/123')
+          .put('/v1/agent/check/pass/123')
           .reply(200);
 
         this.consul.agent.check.pass('123', function(err) {
@@ -267,7 +267,7 @@ describe('Agent', function() {
     describe('warn', function() {
       it('should work', function(done) {
         this.nock
-          .get('/v1/agent/check/warn/123?note=ify')
+          .put('/v1/agent/check/warn/123?note=ify')
           .reply(200);
 
         var opts = {
@@ -284,7 +284,7 @@ describe('Agent', function() {
 
       it('should work with just id', function(done) {
         this.nock
-          .get('/v1/agent/check/warn/123')
+          .put('/v1/agent/check/warn/123')
           .reply(200);
 
         this.consul.agent.check.warn('123', function(err) {
@@ -306,7 +306,7 @@ describe('Agent', function() {
     describe('fail', function() {
       it('should work', function(done) {
         this.nock
-          .get('/v1/agent/check/fail/123?note=error')
+          .put('/v1/agent/check/fail/123?note=error')
           .reply(200);
 
         var opts = {
@@ -323,7 +323,7 @@ describe('Agent', function() {
 
       it('should work with just id', function(done) {
         this.nock
-          .get('/v1/agent/check/fail/123')
+          .put('/v1/agent/check/fail/123')
           .reply(200);
 
         this.consul.agent.check.fail('123', function(err) {
@@ -567,7 +567,7 @@ describe('Agent', function() {
     describe('deregister', function() {
       it('should work', function(done) {
         this.nock
-          .get('/v1/agent/service/deregister/123')
+          .put('/v1/agent/service/deregister/123')
           .reply(200);
 
         var opts = { id: '123' };
@@ -581,7 +581,7 @@ describe('Agent', function() {
 
       it('should work with just id', function(done) {
         this.nock
-          .get('/v1/agent/service/deregister/123')
+          .put('/v1/agent/service/deregister/123')
           .reply(200);
 
         this.consul.agent.service.deregister('123', function(err) {
@@ -754,7 +754,7 @@ describe('Agent', function() {
   describe('join', function() {
     it('should work', function(done) {
       this.nock
-        .get('/v1/agent/join/127.0.0.2')
+        .put('/v1/agent/join/127.0.0.2')
         .reply(200);
 
       var opts = { address: '127.0.0.2' };
@@ -768,7 +768,7 @@ describe('Agent', function() {
 
     it('should work with just address', function(done) {
       this.nock
-        .get('/v1/agent/join/127.0.0.2')
+        .put('/v1/agent/join/127.0.0.2')
         .reply(200);
 
       this.consul.agent.join('127.0.0.2', function(err) {
@@ -791,7 +791,7 @@ describe('Agent', function() {
   describe('forceLeave', function() {
     it('should work', function(done) {
       this.nock
-        .get('/v1/agent/force-leave/node')
+        .put('/v1/agent/force-leave/node')
         .reply(200);
 
       var opts = { node: 'node' };
@@ -805,7 +805,7 @@ describe('Agent', function() {
 
     it('should work with just address', function(done) {
       this.nock
-        .get('/v1/agent/force-leave/node')
+        .put('/v1/agent/force-leave/node')
         .reply(200);
 
       this.consul.agent.forceLeave('node', function(err) {
