@@ -77,6 +77,8 @@ These options will be passed along with any method call, although only certain e
  * index (String, optional): used with `ModifyIndex` to block and wait for changes
  * wait (String, optional): limit how long to wait for changes (ex: `5m`), used with index
  * token (String, optional): ACL token
+ * near (String, optional): used to sort the node list in ascending order based on the estimated round trip time from that node
+ * node-meta (String[], optional): used to specify a desired node metadata key/value pair of the form key:value
 
 These options work for all methods.
 

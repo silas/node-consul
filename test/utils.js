@@ -138,6 +138,8 @@ describe('utils', function() {
         index: 10,
         wait: '10s',
         token: 'token1',
+        near: '_agent',
+        'node-meta': ['a:b', 'c:d'],
         ctx: 'ctx',
         timeout: 20,
       }).should.eql({
@@ -148,6 +150,8 @@ describe('utils', function() {
           index: 10,
           wait: '10s',
           token: 'token1',
+          near: '_agent',
+          'node-meta': ['a:b', 'c:d'],
         },
         ctx: 'ctx',
         timeout: 20,
