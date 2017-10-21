@@ -305,6 +305,7 @@ Result
  * [check](#agent-check)
  * [service](#agent-service)
  * [members](#agent-members)
+ * [reload](#agent-reload)
  * [self](#agent-self)
  * [maintenance](#agent-maintenance)
  * [join](#agent-join)
@@ -354,6 +355,19 @@ Result
     "DelegateCur": 4
   }
 ]
+```
+
+<a name="agent-reload"></a>
+### consul.agent.reload([options], callback)
+
+Reload agent configuration.
+
+Usage
+
+``` javascript
+consul.agent.reload(function(err, result) {
+  if (err) throw err;
+});
 ```
 
 <a name="agent-self"></a>

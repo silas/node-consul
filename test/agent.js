@@ -682,6 +682,32 @@ describe('Agent', function() {
     });
   });
 
+  describe('reload', function() {
+    it('should work', function(done) {
+      this.nock
+        .put('/v1/agent/reload')
+        .reply(200);
+
+      this.consul.agent.reload({}, function(err) {
+        should.not.exist(err);
+
+        done();
+      });
+    });
+
+    it('should work with no arguments', function(done) {
+      this.nock
+        .put('/v1/agent/reload')
+        .reply(200);
+
+      this.consul.agent.reload(function(err) {
+        should.not.exist(err);
+
+        done();
+      });
+    });
+  });
+
   describe('self', function() {
     it('should work', function(done) {
       this.nock

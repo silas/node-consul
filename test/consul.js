@@ -118,6 +118,7 @@ describe('Consul', function() {
         '  - checks (callback)',
         '  - services (callback)',
         '  - members (callback)',
+        '  - reload (callback)',
         '  - self (callback)',
         '  - maintenance (callback)',
         '  - join (callback)',
