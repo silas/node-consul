@@ -12,7 +12,7 @@ See the official [HTTP API][consul-docs-api] docs for more information.
  * [Consul](#init)
    * [Callback](#callback)
    * [Promise](#promise)
-   * [Common Options](#common-options)
+   * [Common Method Call Options](#common-options)
  * [ACL](#acl)
  * [Agent](#agent)
    * [Check](#agent-check)
@@ -40,7 +40,7 @@ Options
  * port (Integer, default: 8500): agent HTTP(S) port
  * secure (Boolean, default: false): enable HTTPS
  * ca (String[], optional): array of strings or Buffers of trusted certificates in PEM format
- * defaults (Object, optional): default options for method calls
+ * defaults (Object, optional): common method call options that will be included with every call (ex: set default `token`), these options can be override on a per call basis
  * promisify (Boolean|Function, optional): convert callback methods to promises
 
 Usage
@@ -66,9 +66,9 @@ Promise support can be enabled by setting `promisify` to `true` in Node `>= 0.12
 If you need access to the `res` object you can create a custom wrapper ([see example below](#promise-wrapper)).
 
 <a name="common-options"></a>
-### Common Options
+### Common Method Call Options
 
-These options will be passed along with any method call, although only certain endpoints support them. See the [HTTP API][consul-docs-api] for more information.
+These options can be included with any method call, although only certain endpoints support them. See the [HTTP API][consul-docs-api] for more information.
 
  * dc (String, optional): datacenter (defaults to local for agent)
  * wan (Boolean, default: false): return WAN members instead of LAN members
