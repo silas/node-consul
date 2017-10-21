@@ -95,6 +95,7 @@ These options work for all methods.
  * [get](#acl-get)
  * [clone](#acl-clone)
  * [list](#acl-list)
+ * [replication](#acl-replication)
 
 <a name="acl-bootstrap"></a>
 ### consul.acl.bootstrap(callback)
@@ -270,6 +271,32 @@ Result
     "Rules": ""
   }
 ]
+```
+
+<a name="acl-replication"></a>
+### consul.acl.replication([options], callback)
+
+Get the status of the ACL replication process in the datacenter.
+
+Usage
+
+``` javascript
+consul.acl.replication(function(err, result) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+{
+  "Enabled": true,
+  "Running": true,
+  "SourceDatacenter": "dc1",
+  "ReplicatedIndex": 1976,
+  "LastSuccess": "2016-08-05T06:28:58Z",
+  "LastError": "2016-08-05T06:28:28Z"
+}
 ```
 
 <a name="agent"></a>

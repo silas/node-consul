@@ -286,12 +286,42 @@ describe('Acl', function() {
       });
     });
 
-    it('should work with string ID', function(done) {
+    it('should work with no arguments', function(done) {
       this.nock
         .get('/v1/acl/list')
         .reply(200, [{ ok: true }]);
 
       this.consul.acl.list(function(err, data) {
+        should.not.exist(err);
+
+        should(data).eql([{ ok: true }]);
+
+        done();
+      });
+    });
+  });
+
+  describe('replication', function() {
+    it('should work', function(done) {
+      this.nock
+        .get('/v1/acl/replication?dc=dc1')
+        .reply(200, [{ ok: true }]);
+
+      this.consul.acl.replication({ dc: 'dc1' }, function(err, data) {
+        should.not.exist(err);
+
+        should(data).eql([{ ok: true }]);
+
+        done();
+      });
+    });
+
+    it('should work with no arguments', function(done) {
+      this.nock
+        .get('/v1/acl/replication')
+        .reply(200, [{ ok: true }]);
+
+      this.consul.acl.replication(function(err, data) {
         should.not.exist(err);
 
         should(data).eql([{ ok: true }]);

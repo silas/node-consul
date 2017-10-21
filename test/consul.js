@@ -113,6 +113,7 @@ describe('Consul', function() {
         '  - get (callback)',
         '  - clone (callback)',
         '  - list (callback)',
+        '  - replication (callback)',
         ' Agent',
         '  - checks (callback)',
         '  - services (callback)',
