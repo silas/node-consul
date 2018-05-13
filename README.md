@@ -566,7 +566,8 @@ Options
  * http (String): url to test, 2xx passes, 429 warns, and all others fail
  * tlsskipverify (Boolean, default: false): skip HTTPS verification
  * tcp (String): host:port to test, passes if connection is established, fails otherwise
- * script (String): path to check script, requires interval
+ * args (String[]): path to check script, requires interval
+ * script (String): path to check script, requires interval (DEPRECATED)
  * dockercontainerid (String, optional): Docker container ID to run script
  * shell (String, optional): shell in which to run script (currently only supported with Docker)
  * interval (String): interval to run check, requires script (ex: `15s`)

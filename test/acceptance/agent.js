@@ -599,8 +599,9 @@ helper.describe('Agent', function() {
           var opts = {
             name: name,
             check: {
-              script: 'true',
+              args: ['sh', '-c', 'true'],
               interval: '30s',
+              timeout: '1s',
               notes: notes,
             },
           };
