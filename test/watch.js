@@ -97,6 +97,36 @@ describe('Watch', function() {
     });
   });
 
+  it('should use maxAttempts', function(done) {
+    this.nock
+      .get('/v1/kv/key1?index=0&wait=30s')
+      .reply(500)
+      .get('/v1/kv/key1?index=0&wait=30s')
+      .reply(500);
+
+    var watch = this.consul.watch({
+      method: this.consul.kv.get,
+      options: { key: 'key1' },
+      backoffFactor: 0,
+      maxAttempts: 2,
+    });
+
+    should(watch.isRunning()).be.true;
+    should(watch.updateTime()).be.undefined;
+
+    var errors = [];
+
+    watch.on('error', function(err) {
+      errors.push(err);
+    });
+
+    watch.on('end', function() {
+      should(errors).have.length(3);
+
+      done();
+    });
+  });
+
   it('should require method', function() {
     var self = this;
 
@@ -116,7 +146,26 @@ describe('Watch', function() {
       should(watch._wait()).equal(3200);
 
       for (var i = 0; i < 100; i++) {
-        should(watch._wait()).be.below(25601);
+        should(watch._wait()).be.below(30001);
+      }
+    });
+
+    it('should use custom backoff settings', function() {
+      var watch = this.consul.watch({
+        key: 'test',
+        method: lodash.noop,
+        backoffFactor: 500,
+        backoffMax: 20000
+      });
+
+      should(watch._wait()).equal(1000);
+      should(watch._wait()).equal(2000);
+      should(watch._wait()).equal(4000);
+      should(watch._wait()).equal(8000);
+      should(watch._wait()).equal(16000);
+
+      for (var i = 0; i < 100; i++) {
+        should(watch._wait()).be.below(20001);
       }
     });
   });

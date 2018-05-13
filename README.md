@@ -1976,6 +1976,9 @@ Options
 
  * method (Function): method to watch
  * options (Object): method options
+ * backoffFactor (Integer, default: 100): backoff factor in milliseconds to apply between attempts (`backoffFactor * (2 ^ retry attempt)`)
+ * backoffMax (Integer, default: 30000): maximum backoff time in milliseconds to wait between attempts
+ * maxAttempts (Integer): maximum number of retry attempts to make before giving up
 
 Usage
 
