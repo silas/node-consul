@@ -328,6 +328,16 @@ describe('utils', function() {
   describe('createServiceCheck', function() {
     it('should work', function() {
       should(utils.createServiceCheck({
+        args: ['/usr/bin/true'],
+        interval: '30s',
+        timeout: '5s',
+      })).eql({
+        Args: ['/usr/bin/true'],
+        Interval: '30s',
+        Timeout: '5s',
+      });
+
+      should(utils.createServiceCheck({
         script: '/usr/bin/true',
         interval: '30s',
         shell: '/bin/sh',

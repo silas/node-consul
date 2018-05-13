@@ -305,8 +305,9 @@ helper.describe('Kv', function() {
       var c = this.c1;
       var key = this.key;
 
-      c.kv.del(key, function(err) {
+      c.kv.del(key, function(err, data) {
         should.not.exist(err);
+        should(data).equal(true);
 
         c.kv.get(key, function(err, data) {
           should.not.exist(err);

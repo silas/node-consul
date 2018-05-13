@@ -231,12 +231,13 @@ describe('Kv', function() {
     it('should work', function(done) {
       this.nock
         .delete('/v1/kv/key1?cas=1')
-        .reply(200);
+        .reply(200, true);
 
       var opts = { key: 'key1', cas: 1 };
 
-      this.consul.kv.del(opts, function(err) {
+      this.consul.kv.del(opts, function(err, result) {
         should.not.exist(err);
+        should(result).equal(true);
 
         done();
       });
