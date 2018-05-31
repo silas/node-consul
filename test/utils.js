@@ -359,7 +359,7 @@ describe('utils', function() {
     it('should require script, http, tcp, or ttl', function() {
       should(function() {
         utils.createCheck();
-      }).throw('http/tcp/script and interval, or ttl required');
+      }).throw('http/tcp/script/args and interval, or ttl, or gRPC required');
     });
   });
 
