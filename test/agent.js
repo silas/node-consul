@@ -169,8 +169,7 @@ describe('Agent', function() {
 
         this.consul.agent.check.register(opts, function(err) {
           should(err).property('message',
-            'consul: agent.check.register: ' +
-            'http/tcp/script/args and interval, or ttl, or gRPC required'
+            'consul: agent.check.register: args/grpc/http/tcp and interval, or ttl'
           );
 
           done();
@@ -503,36 +502,6 @@ describe('Agent', function() {
         });
       });
 
-      it('should work (gRPC)', function(done) {
-        this.nock
-          .put('/v1/agent/service/register', {
-            ID: '123',
-            Name: 'service',
-            Check: {
-              GRPC: 'localhost:50051',
-              Interval: '5s',
-              Notes: 'gRPC service check',
-            },
-          })
-          .reply(200);
-
-        var opts = {
-          id: '123',
-          name: 'service',
-          check: {
-            grpc: 'localhost:50051',
-            interval: '5s',
-            notes: 'gRPC service check',
-          },
-        };
-
-        this.consul.agent.service.register(opts, function(err) {
-          should.not.exist(err);
-
-          done();
-        });
-      });
-
       it('should work with multiple checks', function(done) {
         this.nock
           .put('/v1/agent/service/register', {
@@ -581,8 +550,7 @@ describe('Agent', function() {
 
         this.consul.agent.service.register(opts, function(err) {
           should(err).property('message',
-            'consul: agent.service.register: ' +
-            'http/tcp/script/args and interval, or ttl, or gRPC required'
+            'consul: agent.service.register: args/grpc/http/tcp and interval, or ttl'
           );
 
           done();

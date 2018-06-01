@@ -350,16 +350,34 @@ describe('utils', function() {
       });
 
       should(utils.createServiceCheck({
+        grpc: 'localhost:50051',
+        interval: '5s',
+      })).eql({
+        GRPC: 'localhost:50051',
+        Interval: '5s',
+      });
+
+      should(utils.createServiceCheck({
+        grpc: 'localhost:50051',
+        grpcusetls: true,
+        interval: '10s',
+      })).eql({
+        GRPC: 'localhost:50051',
+        GRPCUseTLS: true,
+        Interval: '10s',
+      });
+
+      should(utils.createServiceCheck({
         ttl: '15s',
       })).eql({
         TTL: '15s',
       });
     });
 
-    it('should require script, http, tcp, or ttl', function() {
+    it('should require args, grpc, http, tcp and interval, or ttl', function() {
       should(function() {
         utils.createCheck();
-      }).throw('http/tcp/script/args and interval, or ttl, or gRPC required');
+      }).throw('args/grpc/http/tcp and interval, or ttl');
     });
   });
 

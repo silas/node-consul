@@ -569,6 +569,8 @@ Options
  * args (String[]): path to check script, requires interval
  * script (String): path to check script, requires interval (DEPRECATED)
  * dockercontainerid (String, optional): Docker container ID to run script
+ * grpc (String, optional): gRPC endpoint (ex: `127.0.0.1:12345`)
+ * grpcusetls (Boolean, optional): enable TLS for gRPC check
  * shell (String, optional): shell in which to run script (currently only supported with Docker)
  * interval (String): interval to run check, requires script (ex: `15s`)
  * timeout (String, optional): timeout for the check (ex: `10s`)
