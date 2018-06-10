@@ -393,22 +393,31 @@ describe('Lock', function() {
           TTL: '15s',
           Node: 'node1',
         })
+        .matchHeader('x-consul-token', '123')
         .reply(200, { ID: 'session123' })
         .get('/v1/kv/test?index=0&wait=5ms')
+        .matchHeader('x-consul-token', '123')
         .reply(200, [{ Flags: FLAGS_OUT, Session: 'abc' }], { 'X-Consul-Index': '5' })
         .get('/v1/kv/test?index=5&wait=5ms')
+        .matchHeader('x-consul-token', '123')
         .reply(200, [{ Flags: FLAGS_OUT, Session: 'abc' }], {})
         .get('/v1/kv/test?index=5&wait=5ms')
+        .matchHeader('x-consul-token', '123')
         .reply(200, [{ Flags: FLAGS_OUT }], { 'X-Consul-Index': '10' })
         .put('/v1/kv/test?flags=' + FLAGS_IN + '&acquire=session123')
+        .matchHeader('x-consul-token', '123')
         .reply(200, false)
         .get('/v1/kv/test?index=10&wait=5ms')
+        .matchHeader('x-consul-token', '123')
         .reply(200, [{ Flags: FLAGS_OUT }], { 'X-Consul-Index': '15' })
         .put('/v1/kv/test?flags=' + FLAGS_IN + '&acquire=session123')
+        .matchHeader('x-consul-token', '123')
         .reply(200, true)
         .get('/v1/kv/test?index=15&wait=5ms')
+        .matchHeader('x-consul-token', '123')
         .reply(200, [{ Flags: FLAGS_OUT }])
         .put('/v1/kv/test?flags=' + FLAGS_IN + '&release=session123')
+        .matchHeader('x-consul-token', '123')
         .reply(200, true);
 
       var lock = this.consul.lock({
@@ -416,6 +425,7 @@ describe('Lock', function() {
         lockWaitTime: '5ms',
         lockRetryTime: '1ms',
         session: { node: 'node1' },
+        token: '123',
       });
 
       var acquire = 0;
