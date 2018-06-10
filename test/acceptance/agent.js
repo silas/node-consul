@@ -85,7 +85,7 @@ helper.describe('Agent', function() {
         });
       };
 
-      jobs.enable = ['status', function(next) {
+      jobs.enable = ['status', function(results, next) {
         self.c1.agent.maintenance(true, function(err) {
           should.not.exist(err);
 
@@ -93,7 +93,7 @@ helper.describe('Agent', function() {
         });
       }];
 
-      jobs.enableStatus = ['enable', function(next) {
+      jobs.enableStatus = ['enable', function(results, next) {
         self.c1.agent.checks(function(err, checks) {
           should.not.exist(err);
 
@@ -104,7 +104,7 @@ helper.describe('Agent', function() {
         });
       }];
 
-      jobs.disable = ['enableStatus', function(next) {
+      jobs.disable = ['enableStatus', function(results, next) {
         self.c1.agent.maintenance({ enable: false }, function(err) {
           should.not.exist(err);
 
@@ -112,7 +112,7 @@ helper.describe('Agent', function() {
         });
       }];
 
-      jobs.disableStatus = ['disable', function(next) {
+      jobs.disableStatus = ['disable', function(results, next) {
         self.c1.agent.checks(function(err, checks) {
           should.not.exist(err);
 
@@ -195,11 +195,11 @@ helper.describe('Agent', function() {
         });
       };
 
-      jobs.forceLeave = ['ensureJoined', function(cb) {
+      jobs.forceLeave = ['ensureJoined', function(results, cb) {
         self.c1.agent.forceLeave('node2', cb);
       }];
 
-      jobs.after = ['forceLeave', function(cb) {
+      jobs.after = ['forceLeave', function(results, cb) {
         async.retry(
           100,
           function(cb) {
@@ -664,7 +664,7 @@ helper.describe('Agent', function() {
           });
         };
 
-        jobs.enable = ['status', function(next) {
+        jobs.enable = ['status', function(results, next) {
           var opts = {
             id: self.name,
             enable: true,
@@ -677,7 +677,7 @@ helper.describe('Agent', function() {
           });
         }];
 
-        jobs.enableStatus = ['enable', function(next) {
+        jobs.enableStatus = ['enable', function(results, next) {
           self.c1.agent.checks(function(err, checks) {
             should.not.exist(err);
 
@@ -688,7 +688,7 @@ helper.describe('Agent', function() {
           });
         }];
 
-        jobs.disable = ['enableStatus', function(next) {
+        jobs.disable = ['enableStatus', function(results, next) {
           var opts = {
             id: self.name,
             enable: false,
@@ -701,7 +701,7 @@ helper.describe('Agent', function() {
           });
         }];
 
-        jobs.disableStatus = ['disable', function(next) {
+        jobs.disableStatus = ['disable', function(results, next) {
           self.c1.agent.checks(function(err, checks) {
             should.not.exist(err);
 

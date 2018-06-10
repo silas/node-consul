@@ -137,10 +137,10 @@ helper.describe('Kv', function() {
         });
       };
 
-      jobs.wait = ['get', function(cb, result) {
+      jobs.wait = ['get', function(results, cb) {
         var opts = {
           key: key,
-          index: result.get.ModifyIndex,
+          index: results.get.ModifyIndex,
           wait: '3s'
         };
 
@@ -153,7 +153,7 @@ helper.describe('Kv', function() {
         });
       }];
 
-      jobs.update = ['get', function(cb) {
+      jobs.update = ['get', function(results, cb) {
         c.kv.set(key, update, function(err) {
           should.not.exist(err);
 

@@ -80,7 +80,7 @@ Cluster.prototype.spawn = function(opts, callback) {
     temp.mkdir({}, cb);
   };
 
-  jobs.configFile = ['dirPath', function(cb, results) {
+  jobs.configFile = ['dirPath', function(results, cb) {
     var config = {
       acl_datacenter: 'dc1',
       acl_master_token: 'root',
@@ -95,7 +95,7 @@ Cluster.prototype.spawn = function(opts, callback) {
     });
   }];
 
-  jobs.process = ['configFile', 'dirPath', function(cb, results) {
+  jobs.process = ['configFile', 'dirPath', function(results, cb) {
     args.push('-config-file');
     args.push(results.configFile);
 
@@ -130,7 +130,7 @@ Cluster.prototype.spawn = function(opts, callback) {
     cb(null, process);
   }];
 
-  jobs.connected = ['process', function(cb, results) {
+  jobs.connected = ['process', function(results, cb) {
     var log = debugBuffer('consul:' + opts.bind);
     var token = opts.bootstrap ? 'root' : 'agent_master';
     var client = consul({ host: opts.bind, defaults: { token: token } });
@@ -220,7 +220,7 @@ Cluster.prototype.teardown = function(callback) {
     cb();
   };
 
-  jobs.cleanup = ['kill', function(cb) {
+  jobs.cleanup = ['kill', function(results, cb) {
     temp.cleanup(cb);
   }];
 

@@ -312,7 +312,7 @@ describe('Lock', function() {
 
       self.ctx.session = { ttl: '10ms' };
 
-      self.sinon.stub(consul.Watch.prototype, '_wait', function() {
+      self.sinon.stub(consul.Watch.prototype, '_wait').callsFake(function() {
         return 0;
       });
 

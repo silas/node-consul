@@ -216,7 +216,7 @@ describe('Consul', function() {
     });
 
     it('should prefix error message', function() {
-      this.sinon.stub(papi.tools, 'promisify', function() {
+      this.sinon.stub(papi.tools, 'promisify').callsFake(function() {
         throw new Error('test');
       });
 

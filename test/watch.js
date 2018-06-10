@@ -206,13 +206,14 @@ describe('Watch', function() {
     });
   });
 
-  describe('err', function(done) {
-    it('should handle method throw', function() {
+  describe('err', function() {
+    it('should handle method throw', function(done) {
       var watch = this.consul.watch({
         method: function() { throw new Error('ok'); },
       });
 
       watch.on('error', function(err) {
+        watch.end();
         if (err.message === 'ok') {
           done();
         }

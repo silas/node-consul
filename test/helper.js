@@ -22,7 +22,7 @@ function setup(scope) {
   beforeEach.call(scope, function() {
     var self = this;
 
-    self.sinon = sinon.sandbox.create();
+    self.sinon = sinon.createSandbox();
 
     nock.disableNetConnect();
 
