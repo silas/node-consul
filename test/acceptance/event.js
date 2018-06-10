@@ -27,7 +27,7 @@ helper.describe('Event', function() {
 
     self.name = 'event-' + uuid.v4();
     self.payload = JSON.stringify({ hello: 'world' });
-    self.bufferPayload = new Buffer(self.payload);
+    self.bufferPayload = Buffer.from(self.payload);
 
     self.c1.event.fire(self.name, self.payload, function(err, event) {
       if (err) return done(err);

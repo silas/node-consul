@@ -80,7 +80,7 @@ helper.describe('Kv', function() {
       this.c1.kv.get({ key: key, raw: true }, function(err, data) {
         should.not.exist(err);
 
-        new Buffer(value).should.eql(data);
+        Buffer.from(value).should.eql(data);
 
         done();
       });

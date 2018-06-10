@@ -43,7 +43,7 @@ describe('Event', function() {
         .put('/v1/event/fire/name', 'test')
         .reply(200, { ok: true });
 
-      this.consul.event.fire('name', new Buffer('test'), function(err, data) {
+      this.consul.event.fire('name', Buffer.from('test'), function(err, data) {
         should.not.exist(err);
 
         should(data).eql({ ok: true });

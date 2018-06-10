@@ -174,7 +174,7 @@ describe('utils', function() {
       should(utils.decode('')).equal('');
       should(utils.decode('aGVsbG8gd29ybGQ=')).equal('hello world');
       should(utils.decode('aGVsbG8gd29ybGQ=', {})).equal('hello world');
-      should(utils.decode('aGVsbG8gd29ybGQ=', { buffer: true })).eql(new Buffer('hello world'));
+      should(utils.decode('aGVsbG8gd29ybGQ=', { buffer: true })).eql(Buffer.from('hello world'));
     });
   });
 

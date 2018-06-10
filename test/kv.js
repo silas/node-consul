@@ -45,7 +45,7 @@ describe('Kv', function() {
       this.consul.kv.get(opts, function(err, data) {
         should.not.exist(err);
 
-        should(data).eql(new Buffer('value1'));
+        should(data).eql(Buffer.from('value1'));
 
         done();
       });
