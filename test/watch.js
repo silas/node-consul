@@ -97,6 +97,42 @@ describe('Watch', function() {
     });
   });
 
+  it('should error when endpoint does not support watch', function(done) {
+    this.nock
+      .get('/v1/agent/members?index=0&wait=30s')
+      .reply(200, [{ n: 1 }]);
+
+    var watch = this.consul.watch({
+      method: this.consul.agent.members,
+    });
+
+    var errors = [];
+    var called = {};
+
+    watch.on('error', function(err) {
+      called.error = true;
+
+      errors.push(err);
+    });
+
+    watch.on('cancel', function() {
+      called.cancel = true;
+    });
+
+    watch.on('change', function() {
+      called.change = true;
+    });
+
+    watch.on('end', function() {
+      called.should.eql({ cancel: true, error: true });
+      should(errors).have.length(1);
+      errors[0].should.have.property('isValidation', true);
+      errors[0].should.have.property('message', 'Watch not supported');
+
+      done();
+    });
+  });
+
   it('should use maxAttempts', function(done) {
     this.nock
       .get('/v1/kv/key1?index=0&wait=30s')
