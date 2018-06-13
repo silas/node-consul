@@ -83,7 +83,7 @@ These options can be included with any method call, although only certain endpoi
 These options work for all methods.
 
  * ctx (EventEmitter, optional): emit `cancel` to abort request
- * timeout (Number, optional): number of milliseconds before request is aborted
+ * timeout (Number|String, optional): number of milliseconds before request is aborted (ex: `1000` or `1s`)
 
 <a name="acl"></a>
 ### consul.acl
@@ -1974,6 +1974,8 @@ The watch relies on blocking queries, adding the `index` and `wait` parameters a
 If a blocking query is dropped due to a Consul crash or disconnect, watch will attempt to reinitiate the blocking query with logarithmic backoff.
 
 Upon reconnect, unlike the first call to watch() in which the latest `x-consul-index` is unknown, the last known `x-consul-index` will be reused, thus not emitting the `change` event unless it has been incremented since.
+
+NOTE: If you specify an alternative options.timeout keep in mind that a small random amount of additional wait is added to all requests (wait / 16). The default timeout is currently set to (wait + wait * 0.1), you should use something similar to avoid issues.
 
 Options
 

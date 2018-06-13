@@ -164,6 +164,7 @@ describe('utils', function() {
         ctx: 'ctx',
         timeout: 20,
       });
+      test({ timeout: '10s' }).should.eql({ headers: {}, query: {}, timeout: 10000 });
     });
   });
 

@@ -171,6 +171,23 @@ describe('Watch', function() {
     }).throw('method required');
   });
 
+  it('should set timeout correctly', function() {
+    var self = this;
+
+    var test = function(options) {
+      var opts = { key: 'test', method: lodash.noop };
+      if (options) opts.options = options;
+      return self.consul.watch(opts)._options.timeout;
+    };
+
+    should(test()).equal(33000);
+    should(test({ timeout: 1000 })).equal(1000);
+    should(test({ timeout: '1s' })).equal('1s');
+    should(test({ wait: '60s' })).equal(66000);
+    should(test({ wait: '1s' })).equal(1500);
+    should(test({ wait: '33s' })).equal(36300);
+  });
+
   describe('wait', function() {
     it('should work', function() {
       var watch = this.consul.watch({ key: 'test', method: lodash.noop });
