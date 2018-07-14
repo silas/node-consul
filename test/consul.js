@@ -145,6 +145,8 @@ describe('Consul', function() {
         '  Service',
         '   - list (callback)',
         '   - nodes (callback)',
+        '  Connect',
+        '   - nodes (callback)',
         ' Event',
         '  - fire (callback)',
         '  - list (callback)',

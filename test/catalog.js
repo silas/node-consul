@@ -316,5 +316,29 @@ describe('Catalog', function() {
         });
       });
     });
+
+    describe('connect nodes', function() {
+      it('should work with just string', function(done) {
+        this.nock
+          .get('/v1/catalog/connect/service1')
+          .reply(200, [{ ok: true }]);
+
+        this.consul.catalog.connect.nodes('service1', function(err, data) {
+          should.not.exist(err);
+
+          should(data).eql([{ ok: true }]);
+
+          done();
+        });
+      });
+
+      it('should require service', function(done) {
+        this.consul.catalog.connect.nodes({}, function(err) {
+          should(err).property('message', 'consul: catalog.connect.nodes: service required');
+
+          done();
+        });
+      });
+    });
   });
 });
