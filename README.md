@@ -18,6 +18,7 @@ See the official [HTTP API][consul-docs-api] docs for more information.
    * [Check](#agent-check)
    * [Service](#agent-service)
  * [Catalog](#catalog)
+   * [Connect](#catalog-connect)
    * [Node](#catalog-node)
    * [Service](#catalog-service)
  * [Event](#event)
@@ -776,9 +777,10 @@ consul.agent.service.maintenance({ id: 'example', enable: true }, function(err) 
 <a name="catalog"></a>
 ### consul.catalog
 
+ * [datacenters](#catalog-datacenters)
+ * [connect](#catalog-connect)
  * [node](#catalog-node)
  * [service](#catalog-service)
- * [datacenters](#catalog-datacenters)
 
 <a name="catalog-datacenters"></a>
 ### consul.catalog.datacenters(callback)
@@ -798,6 +800,64 @@ Result
 ``` json
 [
   "dc1"
+]
+```
+
+<a name="catalog-connect"></a>
+### consul.catalog.connect
+
+ * [nodes](#catalog-connect-nodes)
+
+<a name="catalog-connect-nodes"></a>
+### consul.catalog.connect.nodes(options, callback)
+
+Lists the nodes for a given Connect-capable service.
+
+Options
+
+ * service (String): service name
+ * dc (String, optional): datacenter (defaults to local for agent)
+
+Usage
+
+``` javascript
+consul.catalog.connect.nodes('example', function(err, result) {
+  if (err) throw err;
+});
+```
+
+Result
+
+``` json
+[
+  {
+    "ID": "40e4a748-2192-161a-0510-9bf59fe950b5",
+    "Node": "foobar",
+    "Address": "192.168.10.10",
+    "Datacenter": "dc1",
+    "TaggedAddresses": {
+      "lan": "192.168.10.10",
+      "wan": "10.0.10.10"
+    },
+    "NodeMeta": {
+      "somekey": "somevalue"
+    },
+    "CreateIndex": 51,
+    "ModifyIndex": 51,
+    "ServiceAddress": "172.17.0.3",
+    "ServiceEnableTagOverride": false,
+    "ServiceID": "32a2a47f7992:nodea:5000",
+    "ServiceName": "foobar",
+    "ServiceKind": "connect-proxy",
+    "ServiceProxyDestination": "my-service",
+    "ServicePort": 5000,
+    "ServiceMeta": {
+        "foobar_meta_value": "baz"
+    },
+    "ServiceTags": [
+      "tacos"
+    ]
+  }
 ]
 ```
 
@@ -918,7 +978,7 @@ Result
 <a name="catalog-service-nodes"></a>
 ### consul.catalog.service.nodes(options, callback)
 
-Lists the nodes in a given service.
+Lists the nodes for a given service.
 
 Options
 

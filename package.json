@@ -4,7 +4,7 @@
   "description": "Consul client",
   "main": "./lib",
   "dependencies": {
-    "papi": "^0.28.0"
+    "papi": "^0.29.0"
   },
   "devDependencies": {
     "async": "^2.6.1",
@@ -18,7 +18,7 @@
     "nock": "^9.3.2",
     "node-uuid": "^1.4.3",
     "should": "^13.2.1",
-    "sinon": "^5.1.1",
+    "sinon": "^6.1.3",
     "temp": "^0.8.1"
   },
   "scripts": {
