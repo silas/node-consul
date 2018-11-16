@@ -1283,7 +1283,7 @@ Result
 <a name="kv-get"></a>
 ### consul.kv.get(options, callback)
 
-Return key/value (kv) pair(s).
+Return key/value (kv) pair(s) or `undefined` if key not found.
 
 Options
 
@@ -1300,6 +1300,7 @@ Usage
 ``` javascript
 consul.kv.get('hello', function(err, result) {
   if (err) throw err;
+  if (result === undefined) throw new Error('key not found');
 });
 ```
 
