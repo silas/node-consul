@@ -416,6 +416,7 @@ describe('Agent', function() {
             ID: '123',
             Name: 'service',
             Tags: ['web'],
+            Meta: {'defaultContext':'/nodeapi'},
             Check: {
               HTTP: 'http://example.org/',
               Interval: '5s',
@@ -431,6 +432,7 @@ describe('Agent', function() {
           id: '123',
           name: 'service',
           tags: ['web'],
+          Meta: {'defaultContext':'/nodeapi'},
           check: {
             http: 'http://example.org/',
             interval: '5s',
