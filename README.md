@@ -715,6 +715,7 @@ Options
  * tags (String[], optional): service tags
  * address (String, optional): service IP address
  * port (Integer, optional): service port
+ * meta (Object, optional): metadata linked to the service instance
  * check (Object, optional): service check
    * http (String): URL endpoint, requires interval
    * tcp (String): host:port to test, passes if connection is established, fails otherwise
@@ -2049,7 +2050,7 @@ Options
 Usage
 
 ``` javascript
-var watch = consul.watch({ 
+var watch = consul.watch({
   method: consul.kv.get,
   options: { key: 'test' },
   backoffFactor: 1000,
