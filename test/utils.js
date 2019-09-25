@@ -373,12 +373,25 @@ describe('utils', function() {
       })).eql({
         TTL: '15s',
       });
+
+      should(utils.createServiceCheck({
+        aliasnode: 'web1',
+      })).eql({
+        AliasNode: 'web1',
+      });
+
+      should(utils.createServiceCheck({
+        aliasservice: 'web',
+      })).eql({
+        AliasService: 'web',
+      });
     });
 
-    it('should require args, grpc, http, tcp and interval, or ttl', function() {
+    it('should require args, grpc, http, tcp and interval, ttl, or ' +
+       'aliasnode/aliasservice', function() {
       should(function() {
         utils.createCheck();
-      }).throw('args/grpc/http/tcp and interval, or ttl');
+      }).throw('args/grpc/http/tcp and interval, ttl, or aliasnode/aliasservice');
     });
   });
 

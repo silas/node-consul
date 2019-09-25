@@ -169,7 +169,8 @@ describe('Agent', function() {
 
         this.consul.agent.check.register(opts, function(err) {
           should(err).property('message',
-            'consul: agent.check.register: args/grpc/http/tcp and interval, or ttl'
+            'consul: agent.check.register: args/grpc/http/tcp and interval, ' +
+            'ttl, or aliasnode/aliasservice'
           );
 
           done();
@@ -552,7 +553,8 @@ describe('Agent', function() {
 
         this.consul.agent.service.register(opts, function(err) {
           should(err).property('message',
-            'consul: agent.service.register: args/grpc/http/tcp and interval, or ttl'
+            'consul: agent.service.register: args/grpc/http/tcp and interval, ' +
+            'ttl, or aliasnode/aliasservice'
           );
 
           done();

@@ -575,7 +575,9 @@ Options
  * shell (String, optional): shell in which to run script (currently only supported with Docker)
  * interval (String): interval to run check, requires script (ex: `15s`)
  * timeout (String, optional): timeout for the check (ex: `10s`)
- * ttl (String): time to live before check must be updated, instead of http/tcp/script and interval (ex: `60s`)
+ * ttl (String): time to live before check must be updated (ex: `60s`)
+ * aliasnode (String): ID of a node for an alias check (ex: `web1`)
+ * aliasservice (String): ID of a service for an alias check (ex: `web`)
  * notes (String, optional): human readable description of check
  * status (String, optional): initial service status
  * deregistercriticalserviceafter (String, optional, Consul 0.7+): timeout after
