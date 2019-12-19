@@ -581,7 +581,9 @@ Options
  * notes (String, optional): human readable description of check
  * status (String, optional): initial service status
  * deregistercriticalserviceafter (String, optional, Consul 0.7+): timeout after
- which to automatically deregister service if check remains in critical state
+ * connect (Object optional): "sidecars"  https://www.consul.io/docs/connect/registration/sidecar-service.html
+
+
 
 Usage
 
