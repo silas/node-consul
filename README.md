@@ -732,6 +732,8 @@ Options
    * deregistercriticalserviceafter (String, optional, Consul 0.7+): timeout after
    which to automatically deregister service if check remains in critical state
  * checks (Object[], optional): service checks (see `check` above)
+ * connect (Object, optional): specifies the [configuration](https://www.consul.io/api/agent/service.html#connect-structure) for Connect
+ * proxy (Object, optional): specifies the [configuration](https://www.consul.io/docs/connect/registration/service-registration.html) for a Connect proxy instance
 
 Usage
 
