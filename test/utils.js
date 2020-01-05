@@ -146,6 +146,7 @@ describe('utils', function() {
         token: 'token1',
         near: '_agent',
         'node-meta': ['a:b', 'c:d'],
+        filter: 'Meta.env == qa',
         ctx: 'ctx',
         timeout: 20,
       }).should.eql({
@@ -160,6 +161,7 @@ describe('utils', function() {
           wait: '10s',
           near: '_agent',
           'node-meta': ['a:b', 'c:d'],
+          filter: 'Meta.env == qa',
         },
         ctx: 'ctx',
         timeout: 20,
@@ -392,6 +394,182 @@ describe('utils', function() {
       should(function() {
         utils.createCheck();
       }).throw('args/grpc/http/tcp and interval, ttl, or aliasnode/aliasservice');
+    });
+  });
+
+  describe('createService', function() {
+    it('should work', function() {
+      should(utils.createService({
+        id: '123',
+        name: 'service',
+        tags: ['web'],
+        Meta: { defaultContext: '/nodeapi' },
+        check: {
+          http: 'http://example.org/',
+          interval: '5s',
+          notes: 'http service check',
+          status: 'critical',
+        },
+        address: '10.0.0.1',
+        port: 80,
+      })).eql({
+        ID: '123',
+        Name: 'service',
+        Tags: ['web'],
+        Meta: { defaultContext: '/nodeapi' },
+        Check: {
+          HTTP: 'http://example.org/',
+          Interval: '5s',
+          Notes: 'http service check',
+          Status: 'critical',
+        },
+        Address: '10.0.0.1',
+        Port: 80,
+      });
+
+      should(utils.createService({
+        name: 'service',
+        check: {
+          script: 'true',
+          interval: '5s',
+        },
+      })).eql({
+        Name: 'service',
+        Check: {
+          Script: 'true',
+          Interval: '5s',
+        },
+      });
+
+      should(utils.createService({
+        id: '123',
+        name: 'service',
+        check: {
+          ttl: '10s',
+          notes: 'ttl service check',
+        },
+      })).eql({
+        ID: '123',
+        Name: 'service',
+        Check: {
+          TTL: '10s',
+          Notes: 'ttl service check',
+        },
+      });
+
+      should(utils.createService({
+        id: '123',
+        name: 'service',
+        checks: [
+          { ttl: '10s' },
+          { http: 'http://127.0.0.1:8000', interval: '60s' },
+        ],
+      })).eql({
+        ID: '123',
+        Name: 'service',
+        Checks: [
+          { TTL: '10s' },
+          { HTTP: 'http://127.0.0.1:8000', Interval: '60s' },
+        ],
+      });
+
+      should(utils.createService({
+        connect: {
+          native: true,
+        },
+      })).eql({
+        Connect: {
+          Native: true,
+        },
+      });
+
+      should(utils.createService({
+        connect: {
+          sidecar_service: {
+            check: {
+              script: 'true',
+              interval: '5s',
+            },
+          },
+        },
+      })).eql({
+        Connect: {
+          SidecarService: {
+            Check: {
+              Script: 'true',
+              Interval: '5s',
+            },
+          },
+        },
+      });
+
+      should(utils.createService({
+        connect: {
+          sidecarservice: {
+            proxy: {
+              destinationservicename: 'test',
+            },
+          },
+        },
+      })).eql({
+        Connect: {
+          SidecarService: {
+            Proxy: {
+              DestinationServiceName: 'test',
+            },
+          },
+        },
+      });
+
+      should(utils.createService({
+        connect: {
+          proxy: {
+            destinationservicename: 'test',
+            destinationserviceid: '123',
+            LocalServiceAddress: '127.0.0.1',
+            localserviceport: 8080,
+            config: {},
+            upstreams: [],
+            meshgateway: {},
+            expose: {},
+          },
+        },
+      })).eql({
+        Connect: {
+          Proxy: {
+            DestinationServiceName: 'test',
+            DestinationServiceID: '123',
+            LocalServiceAddress: '127.0.0.1',
+            LocalServicePort: 8080,
+            Config: {},
+            Upstreams: [],
+            MeshGateway: {},
+            Expose: {},
+          },
+        },
+      });
+    });
+
+    it('should not allow nested sidecars', function() {
+      should(function() {
+        utils.createService({
+          connect: {
+            sidecar_service: {
+              connect: {
+                SidecarService: {},
+              },
+            },
+          },
+        });
+      }).throw('sidecarservice cannot be nested');
+    });
+
+    it('should require proxy destination service name', function() {
+      should(function() {
+        utils.createService({
+          proxy: {},
+        });
+      }).throw('destinationservicename required');
     });
   });
 

@@ -80,6 +80,7 @@ These options can be included with any method call, although only certain endpoi
  * token (String, optional): ACL token
  * near (String, optional): used to sort the node list in ascending order based on the estimated round trip time from that node
  * node-meta (String[], optional): used to specify a desired node metadata key/value pair of the form key:value
+ * filter (String, optional): used to [refine a data query](https://www.consul.io/api/features/filtering.html) for some API listing endpoints
 
 These options work for all methods.
 
@@ -732,6 +733,8 @@ Options
    * deregistercriticalserviceafter (String, optional, Consul 0.7+): timeout after
    which to automatically deregister service if check remains in critical state
  * checks (Object[], optional): service checks (see `check` above)
+ * connect (Object, optional): specifies the [configuration](https://www.consul.io/api/agent/service.html#connect-structure) for Connect
+ * proxy (Object, optional): specifies the [configuration](https://www.consul.io/docs/connect/registration/service-registration.html) for a Connect proxy instance
 
 Usage
 
