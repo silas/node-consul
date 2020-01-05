@@ -146,6 +146,7 @@ describe('utils', function() {
         token: 'token1',
         near: '_agent',
         'node-meta': ['a:b', 'c:d'],
+        filter: 'Meta.env == qa',
         ctx: 'ctx',
         timeout: 20,
       }).should.eql({
@@ -160,6 +161,7 @@ describe('utils', function() {
           wait: '10s',
           near: '_agent',
           'node-meta': ['a:b', 'c:d'],
+          filter: 'Meta.env == qa',
         },
         ctx: 'ctx',
         timeout: 20,

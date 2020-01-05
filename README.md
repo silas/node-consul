@@ -80,6 +80,7 @@ These options can be included with any method call, although only certain endpoi
  * token (String, optional): ACL token
  * near (String, optional): used to sort the node list in ascending order based on the estimated round trip time from that node
  * node-meta (String[], optional): used to specify a desired node metadata key/value pair of the form key:value
+ * filter (String, optional): used to [refine a data query](https://www.consul.io/api/features/filtering.html) for some API listing endpoints
 
 These options work for all methods.
 
