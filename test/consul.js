@@ -183,6 +183,8 @@ describe('Consul', function() {
         ' Status',
         '  - leader (callback)',
         '  - peers (callback)',
+        ' Transaction',
+        '  - create (callback)',
         ' Watch',
         '  - isRunning (sync)',
         '  - updateTime (sync)',

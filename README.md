@@ -28,6 +28,7 @@ See the official [HTTP API][consul-docs-api] docs for more information.
  * [Query](#query)
  * [Session](#session)
  * [Status](#status)
+ * [Transaction](#transaction)
  * [Watch](#watch)
 
 <a name="init"></a>
@@ -2029,6 +2030,31 @@ Result
 [
   "127.0.0.1:8300"
 ]
+```
+
+<a name="transaction"></a>
+### consul.transaction.create(operations, callback)
+
+operations: The body of the request should be a list of operations to perform inside the atomic transaction. Up to 64 operations may be present in a single transaction.
+
+Usage
+``` javascript
+consul.transaction.create([
+  {
+    {
+      KV: {
+        Verb: 'set',
+        Key: 'key1',
+        Value: Buffer.from('value1').toString('base64')
+      }
+    },{
+      KV: {
+        Verb: 'delete',
+        Key: 'key2'
+      }
+    }
+  }
+]);
 ```
 
 <a name="watch"></a>
