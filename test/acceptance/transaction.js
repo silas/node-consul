@@ -71,7 +71,7 @@ helper.describe('Transaction', function() {
             Value: Buffer.from(value2).toString('base64')
           }
         }
-      ], function(err, ok, msg) {
+      ], function(err, ok) {
         should.not.exist(err);
 
         ok.should.be.true;

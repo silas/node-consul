@@ -160,7 +160,7 @@ describe('Transaction', function() {
     it('should require a list of operations', function(done) {
       this.consul.transaction.create([], function(err) {
         should(err).have.property('message',
-          'consul: Transaction.create: at least two operations are required');
+          'consul: Transaction.create: operations must be an array with at least one item');
 
         done();
       });
