@@ -548,6 +548,48 @@ describe('utils', function() {
           },
         },
       });
+
+      should(utils.createService({
+        taggedaddresses: {},
+      })).eql({
+        TaggedAddresses: {},
+      });
+
+      should(utils.createService({
+        taggedaddresses: {
+          lan: {},
+          wan: {},
+        },
+      })).eql({
+        TaggedAddresses: {
+          lan: {},
+          wan: {},
+        },
+      });
+
+      should(utils.createService({
+        taggedaddresses: {
+          lan: {
+            address: '127.0.0.1',
+            port: 8080,
+          },
+          wan: {
+            address: '10.0.0.1',
+            port: 80,
+          },
+        },
+      })).eql({
+        TaggedAddresses: {
+          lan: {
+            Address: '127.0.0.1',
+            Port: 8080,
+          },
+          wan: {
+            Address: '10.0.0.1',
+            Port: 80,
+          },
+        },
+      });
     });
 
     it('should not allow nested sidecars', function() {
