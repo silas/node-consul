@@ -584,6 +584,10 @@ Options
  * status (String, optional): initial service status
  * deregistercriticalserviceafter (String, optional, Consul 0.7+): timeout after
  which to automatically deregister service if check remains in critical state
+ * successbeforepassing (Number, optional): number of consecutive successful
+ results required before check status transitions to passing
+ * failuresbeforecritical (Number, optional): number of consecutive unsuccessful
+ results required before check status transitions to critical
 
 Usage
 
