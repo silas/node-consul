@@ -295,6 +295,8 @@ describe('utils', function() {
         interval: '60s',
         notes: 'Just a note.',
         status: 'passing',
+        failuresbeforecritical: 1,
+        successBeforePassing: 2,
       })).eql({
         ID: 'id',
         Name: 'name',
@@ -304,6 +306,8 @@ describe('utils', function() {
         Interval: '60s',
         Notes: 'Just a note.',
         Status: 'passing',
+        FailuresBeforeCritical: 1,
+        SuccessBeforePassing: 2,
       });
 
       should(utils.createCheck({
