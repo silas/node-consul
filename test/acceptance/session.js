@@ -76,7 +76,7 @@ helper.describe('Session', function() {
           'ID',
           'Name',
           'Node',
-          'Checks',
+          'NodeChecks',
           'LockDelay',
           'Behavior',
           'TTL'
@@ -101,7 +101,7 @@ helper.describe('Session', function() {
             'ID',
             'Name',
             'Node',
-            'Checks',
+            'NodeChecks',
             'LockDelay',
             'Behavior',
             'TTL'
@@ -138,7 +138,7 @@ helper.describe('Session', function() {
             'ID',
             'Name',
             'Node',
-            'Checks',
+            'NodeChecks',
             'LockDelay',
             'Behavior',
             'TTL'
@@ -166,7 +166,7 @@ helper.describe('Session', function() {
           'ID',
           'Name',
           'Node',
-          'Checks',
+          'NodeChecks',
           'LockDelay',
           'Behavior',
           'TTL'

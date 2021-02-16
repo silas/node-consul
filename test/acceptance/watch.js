@@ -79,7 +79,7 @@ helper.describe('Watch', function() {
 
     jobs.push(function(next) {
       async.until(
-        function() { return changes.length === count + 1; },
+        function(next) { return next(null, changes.length === count + 1); },
         function(next) { setTimeout(next, 50); },
         next
       );
@@ -138,7 +138,7 @@ helper.describe('Watch', function() {
     });
 
     async.until(
-      function() { return errors.length === 1; },
+      function(next) { return next(null, errors.length === 1); },
       function(next) { setTimeout(next, 50); },
       function(err) {
         if (err) return done(err);
