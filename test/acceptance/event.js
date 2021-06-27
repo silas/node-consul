@@ -1,108 +1,66 @@
-'use strict';
+"use strict";
 
-/**
- * Module dependencies.
- */
+const should = require("should");
+const uuid = require("node-uuid");
 
-var should = require('should');
-var uuid = require('node-uuid');
+const helper = require("./helper");
 
-var helper = require('./helper');
-
-/**
- * Tests
- */
-
-helper.describe('Event', function() {
-  before(function(done) {
-    helper.before(this, done);
+helper.describe("Event", function () {
+  before(async function () {
+    await helper.before(this);
   });
 
-  after(function(done) {
-    helper.after(this, done);
+  after(async function () {
+    await helper.after(this);
   });
 
-  beforeEach(function(done) {
-    var self = this;
+  beforeEach(async function () {
+    this.name = "event-" + uuid.v4();
+    this.payload = JSON.stringify({ hello: "world" });
+    this.bufferPayload = Buffer.from(this.payload);
 
-    self.name = 'event-' + uuid.v4();
-    self.payload = JSON.stringify({ hello: 'world' });
-    self.bufferPayload = Buffer.from(self.payload);
+    this.event = await this.c1.event.fire(this.name, this.payload);
+  });
 
-    self.c1.event.fire(self.name, self.payload, function(err, event) {
-      if (err) return done(err);
-
-      self.event = event;
-
-      done();
+  describe("fire", function () {
+    it("should fire an event", async function () {
+      const event = await this.c1.event.fire("test");
+      should(event).have.keys(
+        "ID",
+        "Name",
+        "Payload",
+        "NodeFilter",
+        "ServiceFilter",
+        "TagFilter",
+        "Version",
+        "LTime"
+      );
+      should(event.Name).equal("test");
     });
   });
 
-  describe('fire', function() {
-    it('should fire an event', function(done) {
-      this.c1.event.fire('test', function(err, event) {
-        should.not.exist(err);
-
-        event.should.have.keys(
-          'ID',
-          'Name',
-          'Payload',
-          'NodeFilter',
-          'ServiceFilter',
-          'TagFilter',
-          'Version',
-          'LTime'
-        );
-
-        event.Name.should.equal('test');
-
-        done();
-      });
-    });
-  });
-
-  describe('list', function() {
-    it('should return events', function(done) {
-      var self = this;
-
-      self.c1.event.list(function(err, events) {
-        should.not.exist(err);
-
-        events.should.not.be.empty;
-
-        done();
-      });
+  describe("list", function () {
+    it("should return events", async function () {
+      const events = await this.c1.event.list();
+      should(events).not.be.empty();
     });
 
-    it('should return event with given name', function(done) {
-      var self = this;
-
-      self.c1.event.list(self.name, function(err, events) {
-        should.not.exist(err);
-
-        events.should.not.be.empty;
-        events.length.should.equal(1);
-
-        events[0].ID.should.equal(self.event.ID);
-        events[0].Name.should.equal(self.name);
-        events[0].Payload.should.equal(self.payload);
-
-        done();
-      });
+    it("should return event with given name", async function () {
+      const events = await this.c1.event.list(this.name);
+      should(events).not.be.empty();
+      should(events.length).equal(1);
+      should(events[0].ID).equal(this.event.ID);
+      should(events[0].Name).equal(this.name);
+      should(events[0].Payload).equal(this.payload);
     });
 
-    it('should return payload as buffer', function(done) {
-      var self = this;
-
-      self.c1.event.list({ name: self.name, buffer: true }, function(err, events) {
-        should.not.exist(err);
-
-        events.should.not.be.empty;
-
-        events[0].Payload.should.eql(self.bufferPayload);
-
-        done();
+    it("should return payload as buffer", async function () {
+      const events = await this.c1.event.list({
+        name: this.name,
+        buffer: true,
       });
+      should(events).not.be.empty();
+      should(events[0].Payload).eql(this.bufferPayload);
     });
   });
 });

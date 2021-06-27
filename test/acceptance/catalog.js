@@ -1,169 +1,95 @@
-'use strict';
+"use strict";
 
-/**
- * Module dependencies.
- */
+const async_ = require("async");
+const should = require("should");
+const uuid = require("node-uuid");
 
-var async = require('async');
-var should = require('should');
-var uuid = require('node-uuid');
+const helper = require("./helper");
 
-var helper = require('./helper');
+helper.describe("Catalog", function () {
+  before(async function () {
+    await helper.before(this);
 
-/**
- * Tests
- */
+    this.service = {
+      name: "service-" + uuid.v4(),
+      tag: "tag-" + uuid.v4(),
+    };
 
-helper.describe('Catalog', function() {
-  before(function(done) {
-    var self = this;
-
-    var jobs = [];
-
-    jobs.push(function(cb) {
-      helper.before(self, cb);
+    await this.c1.agent.service.register({
+      name: this.service.name,
+      tags: [this.service.tag],
     });
 
-    jobs.push(function(cb) {
-      self.service = {
-        name: 'service-' + uuid.v4(),
-        tag: 'tag-' + uuid.v4(),
-      };
+    await async_.retry({ times: 100, interval: 100 }, async () => {
+      const data = await this.c1.catalog.services();
 
-      var jobs = [];
+      if (!data || !data.hasOwnProperty(this.service.name)) {
+        throw new Error("Service not created: " + this.service.name);
+      }
+    });
+  });
 
-      jobs.push(function(cb) {
-        self.c1.agent.service.register({
-          name: self.service.name,
-          tags: [self.service.tag],
-        }, cb);
+  after(async function () {
+    await helper.after(this);
+  });
+
+  describe("datacenters", function () {
+    it("should return all known datacenters", async function () {
+      const data = await this.c1.catalog.datacenters();
+      should(data).eql(["dc1"]);
+    });
+  });
+
+  describe("node", function () {
+    describe("list", function () {
+      it("should return all nodes in the current dc", async function () {
+        const data = await this.c1.catalog.node.list();
+        should(data).match([{ Node: "node1", Address: "127.0.0.1" }]);
       });
 
-      jobs.push(function(cb) {
-        async.retry(
-          100,
-          function(cb) {
-            self.c1.catalog.services(function(err, data) {
-              if (!data || !data.hasOwnProperty(self.service.name)) {
-                err = new Error('Service not created: ' + self.service.name);
-              }
+      it("should return all nodes in specified dc", async function () {
+        const data = await this.c1.catalog.nodes("dc1");
+        should(data).match([{ Node: "node1", Address: "127.0.0.1" }]);
+      });
+    });
 
-              if (err) return setTimeout(function() { cb(err); }, 100);
+    describe("services", function () {
+      it("should return all services for a given node", async function () {
+        const data = await this.c1.catalog.node.services("node1");
 
-              cb(null, data);
-            });
-          },
-          cb
+        should.exist(data);
+        should.exist(data.Services);
+        should.exist(data.Services[this.service.name]);
+        should(data.Services[this.service.name]).have.properties(
+          "ID",
+          "Service",
+          "Tags"
         );
-      });
-
-      async.series(jobs, cb);
-    });
-
-    async.series(jobs, done);
-  });
-
-  after(function(done) {
-    helper.after(this, done);
-  });
-
-  describe('datacenters', function() {
-    it('should return all known datacenters', function(done) {
-      this.c1.catalog.datacenters(function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql(['dc1']);
-
-        done();
+        should(data.Services[this.service.name].Service).eql(this.service.name);
+        should(data.Services[this.service.name].Tags).eql([this.service.tag]);
       });
     });
   });
 
-  describe('node', function() {
-    describe('list', function() {
-      it('should return all nodes in the current dc', function(done) {
-        this.c1.catalog.node.list(function(err, data) {
-          should.not.exist(err);
-
-          should(data).match([
-            { Node: 'node1', Address: '127.0.0.1' },
-          ]);
-
-          done();
-        });
-      });
-
-      it('should return all nodes in specified dc', function(done) {
-        this.c1.catalog.nodes('dc1', function(err, data) {
-          should.not.exist(err);
-
-          should(data).match([
-            { Node: 'node1', Address: '127.0.0.1' },
-          ]);
-
-          done();
-        });
+  describe("service", function () {
+    describe("list", function () {
+      it("should return all services in the current dc", async function () {
+        const data = await this.c1.catalog.service.list();
+        const services = { consul: [] };
+        services[this.service.name] = [this.service.tag];
+        should(data).eql(services);
       });
     });
 
-    describe('services', function() {
-      it('should return all services for a given node', function(done) {
-        var self = this;
+    describe("nodes", function () {
+      it("should return all nodes for a given service", async function () {
+        const data = await this.c1.catalog.service.nodes(this.service.name);
+        should(data).be.instanceof(Array);
 
-        self.c1.catalog.node.services('node1', function(err, data) {
-          should.not.exist(err);
-
-          should.exist(data);
-          should.exist(data.Services);
-          should.exist(data.Services[self.service.name]);
-          data.Services[self.service.name].should.have.properties(
-            'ID',
-            'Service',
-            'Tags',
-            'Port'
-          );
-          data.Services[self.service.name].Service.should.eql(self.service.name);
-          data.Services[self.service.name].Tags.should.eql([self.service.tag]);
-
-          done();
+        const nodes = data.map(function (n) {
+          return n.Node;
         });
-      });
-    });
-  });
-
-  describe('service', function() {
-    describe('list', function() {
-      it('should return all services in the current dc', function(done) {
-        var self = this;
-
-        self.c1.catalog.service.list(function(err, data) {
-          should.not.exist(err);
-
-          var services = { consul: [] };
-          services[self.service.name] = [self.service.tag];
-
-          should(data).eql(services);
-
-          done();
-        });
-      });
-    });
-
-    describe('nodes', function() {
-      it('should return all nodes for a given service', function(done) {
-        var self = this;
-
-        self.c1.catalog.service.nodes(self.service.name, function(err, data) {
-          should.not.exist(err);
-
-          should(data).be.instanceof(Array);
-
-          data = data.map(function(n) { return n.Node; });
-
-          should(data).eql(['node1']);
-
-          done();
-        });
+        should(nodes).eql(["node1"]);
       });
     });
   });

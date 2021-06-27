@@ -1,179 +1,129 @@
-'use strict';
+"use strict";
 
-/**
- * Module dependencies.
- */
+const should = require("should");
 
-var should = require('should');
+const helper = require("./helper");
 
-var helper = require('./helper');
-
-/**
- * Tests
- */
-
-helper.describe('Session', function() {
-  before(function(done) {
-    helper.before(this, done);
+helper.describe("Session", function () {
+  before(async function () {
+    await helper.before(this);
   });
 
-  after(function(done) {
-    helper.after(this, done);
+  after(async function () {
+    await helper.after(this);
   });
 
-  beforeEach(function(done) {
-    var self = this;
+  beforeEach(async function () {
+    const session = this.c1.session.create();
+    this.id = session.ID;
+  });
 
-    self.c1.session.create(function(err, session) {
-      if (err) return done(err);
+  afterEach(async function () {
+    await this.c1.session.destroy(this.id);
+  });
 
-      self.id = session.ID;
-
-      done();
+  describe("create", function () {
+    it("should create session", async function () {
+      const session = await this.c1.session.create();
+      should(session).have.keys("ID");
     });
   });
 
-  afterEach(function(done) {
-    this.c1.session.destroy(this.id, function() { done(); });
-  });
+  describe("destroy", function () {
+    it("should destroy session", async function () {
+      await this.c1.session.destroy(this.id);
 
-  describe('create', function() {
-    it('should create session', function(done) {
-      this.c1.session.create(function(err, session) {
-        should.not.exist(err);
-
-        session.should.have.keys('ID');
-
-        done();
-      });
+      const session = await this.c1.session.get(this.id);
+      should.not.exist(session);
     });
   });
 
-  describe('destroy', function() {
-    it('should destroy session', function(done) {
-      var self = this;
+  describe("get", function () {
+    it("should return session information", async function () {
+      const session = await this.c1.session.get(this.id);
 
-      self.c1.session.destroy(self.id, function(err) {
-        should.not.exist(err);
-
-        self.c1.session.get(self.id, function(err, session) {
-          should.not.exist(err);
-          should.not.exist(session);
-
-          done();
-        });
-      });
+      should(session).have.properties(
+        "CreateIndex",
+        "ID",
+        "Name",
+        "Node",
+        "NodeChecks",
+        "LockDelay",
+        "Behavior",
+        "TTL"
+      );
     });
   });
 
-  describe('get', function() {
-    it('should return session information', function(done) {
-      this.c1.session.get(this.id, function(err, session) {
-        should.not.exist(err);
+  describe("node", function () {
+    it("should return sessions for node", async function () {
+      const sessions = await this.c1.session.node("node1");
 
-        session.should.have.properties(
-          'CreateIndex',
-          'ID',
-          'Name',
-          'Node',
-          'NodeChecks',
-          'LockDelay',
-          'Behavior',
-          'TTL'
+      should(sessions).be.an.instanceof(Array);
+      should(sessions.length).be.above(0);
+
+      sessions.forEach((session) => {
+        should(session).have.properties(
+          "CreateIndex",
+          "ID",
+          "Name",
+          "Node",
+          "NodeChecks",
+          "LockDelay",
+          "Behavior",
+          "TTL"
         );
-
-        done();
       });
+    });
+
+    it("should return an empty list when no node found", async function () {
+      const sessions = await this.c1.session.node("node");
+
+      should(sessions).be.an.instanceof(Array);
+      should(sessions.length).be.eql(0);
     });
   });
 
-  describe('node', function() {
-    it('should return sessions for node', function(done) {
-      this.c1.session.node('node1', function(err, sessions) {
-        should.not.exist(err);
+  describe("list", function () {
+    it("should return all sessions", async function () {
+      const sessions = await this.c1.session.list();
 
-        should(sessions).be.an.instanceof(Array);
-        sessions.length.should.be.above(0);
+      should(sessions).be.an.instanceof(Array);
+      should(sessions.length).be.above(0);
 
-        sessions.forEach(function(session) {
-          session.should.have.properties(
-            'CreateIndex',
-            'ID',
-            'Name',
-            'Node',
-            'NodeChecks',
-            'LockDelay',
-            'Behavior',
-            'TTL'
-          );
-        });
-
-        done();
-      });
-    });
-
-    it('should return an empty list when no node found', function(done) {
-      this.c1.session.node('node', function(err, sessions) {
-        should.not.exist(err);
-
-        should(sessions).be.an.instanceof(Array);
-        sessions.length.should.be.eql(0);
-
-        done();
-      });
-    });
-  });
-
-  describe('list', function() {
-    it('should return all sessions', function(done) {
-      this.c1.session.list(function(err, sessions) {
-        should.not.exist(err);
-
-        should(sessions).be.an.instanceof(Array);
-        sessions.length.should.be.above(0);
-
-        sessions.forEach(function(session) {
-          session.should.have.properties(
-            'CreateIndex',
-            'ID',
-            'Name',
-            'Node',
-            'NodeChecks',
-            'LockDelay',
-            'Behavior',
-            'TTL'
-          );
-        });
-
-        done();
-      });
-    });
-  });
-
-  describe('renew', function() {
-    it('should renew session', function(done) {
-      var self = this;
-
-      self.c1.session.renew(self.id, function(err, renew) {
-        should.not.exist(err);
-
-        should(renew).be.an.Array;
-
-        renew.should.not.be.empty;
-
-        should(renew[0]).properties(
-          'CreateIndex',
-          'ID',
-          'Name',
-          'Node',
-          'NodeChecks',
-          'LockDelay',
-          'Behavior',
-          'TTL'
+      sessions.forEach(function (session) {
+        should(session).have.properties(
+          "CreateIndex",
+          "ID",
+          "Name",
+          "Node",
+          "NodeChecks",
+          "LockDelay",
+          "Behavior",
+          "TTL"
         );
-
-        done();
       });
+    });
+  });
+
+  describe("renew", function () {
+    it("should renew session", async function () {
+      const renew = await this.c1.session.renew(this.id);
+
+      should(renew).be.an.Array();
+
+      should(renew).not.be.empty();
+
+      should(renew[0]).properties(
+        "CreateIndex",
+        "ID",
+        "Name",
+        "Node",
+        "NodeChecks",
+        "LockDelay",
+        "Behavior",
+        "TTL"
+      );
     });
   });
 });

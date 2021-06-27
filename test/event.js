@@ -1,120 +1,84 @@
-'use strict';
+"use strict";
 
-/**
- * Module dependencies.
- */
+const should = require("should");
 
-var should = require('should');
+const helper = require("./helper");
 
-var helper = require('./helper');
-
-/**
- * Tests
- */
-
-describe('Event', function() {
+describe("Event", function () {
   helper.setup(this);
 
-  describe('fire', function() {
-    it('should work', function(done) {
+  describe("fire", function () {
+    it("should work", async function () {
       this.nock
-        .put('/v1/event/fire/name?node=node1&service=service1&tag=tag1', 'test')
-        .reply(200, { ok: true, Payload: 'dGVzdA==' });
+        .put("/v1/event/fire/name?node=node1&service=service1&tag=tag1", "test")
+        .reply(200, { ok: true, Payload: "dGVzdA==" });
 
-      var opts = {
-        name: 'name',
-        payload: 'test',
-        node: 'node1',
-        service: 'service1',
-        tag: 'tag1',
-      };
-
-      this.consul.event.fire(opts, function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql({ ok: true, Payload: 'test' });
-
-        done();
+      const data = await this.consul.event.fire({
+        name: "name",
+        payload: "test",
+        node: "node1",
+        service: "service1",
+        tag: "tag1",
       });
+      should(data).eql({ ok: true, Payload: "test" });
     });
 
-    it('should work with two arguments', function(done) {
-      this.nock
-        .put('/v1/event/fire/name', 'test')
-        .reply(200, { ok: true });
+    it("should work with two arguments", async function () {
+      this.nock.put("/v1/event/fire/name", "test").reply(200, { ok: true });
 
-      this.consul.event.fire('name', Buffer.from('test'), function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql({ ok: true });
-
-        done();
-      });
+      const data = await this.consul.event.fire("name", Buffer.from("test"));
+      should(data).eql({ ok: true });
     });
 
-    it('should work with one argument', function(done) {
-      this.nock
-        .put('/v1/event/fire/name')
-        .reply(500);
+    it("should work with one argument", async function () {
+      this.nock.put("/v1/event/fire/name").reply(500);
 
-      this.consul.event.fire('name', function(err) {
-        should(err).have.property('message', 'internal server error');
-
-        done();
-      });
+      try {
+        await this.consul.event.fire("name");
+        should.ok(false);
+      } catch (err) {
+        should(err).have.property("message", "internal server error");
+      }
     });
 
-    it('should require name', function(done) {
-      this.consul.event.fire({}, function(err) {
-        should(err).have.property('message', 'consul: event.fire: name required');
-
-        done();
-      });
+    it("should require name", async function () {
+      try {
+        await this.consul.event.fire({});
+        should.ok(false);
+      } catch (err) {
+        should(err).have.property(
+          "message",
+          "consul: event.fire: name required"
+        );
+      }
     });
   });
 
-  describe('list', function() {
-    it('should work', function(done) {
+  describe("list", function () {
+    it("should work", async function () {
       this.nock
-        .get('/v1/event/list?name=name1')
-        .reply(200, [
-          { ok: true, Payload: 'dGVzdA==' },
-          { ok: true },
-        ]);
+        .get("/v1/event/list?name=name1")
+        .reply(200, [{ ok: true, Payload: "dGVzdA==" }, { ok: true }]);
 
-      var opts = { name: 'name1' };
-
-      this.consul.event.list(opts, function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql([{ ok: true, Payload: 'test' }, { ok: true }]);
-
-        done();
-      });
+      const data = await this.consul.event.list({ name: "name1" });
+      should(data).eql([{ ok: true, Payload: "test" }, { ok: true }]);
     });
 
-    it('should work with one argument', function(done) {
-      this.nock
-        .get('/v1/event/list?name=name1')
-        .reply(200, []);
+    it("should work with one argument", async function () {
+      this.nock.get("/v1/event/list?name=name1").reply(200, []);
 
-      this.consul.event.list('name1', function(err) {
-        should.not.exist(err);
-
-        done();
-      });
+      await this.consul.event.list("name1");
     });
 
-    it('should work with no arguments', function(done) {
-      this.nock
-        .get('/v1/event/list')
-        .reply(500);
+    it("should work with no arguments", async function () {
+      this.nock.get("/v1/event/list").reply(500);
 
-      this.consul.event.list(function(err) {
-        should(err).have.property('message', 'internal server error');
-
-        done();
-      });
+      try {
+        await this.consul.event.list();
+        should.ok(false);
+      } catch (err) {
+        should(err).have.property("message", "internal server error");
+      }
     });
   });
 });

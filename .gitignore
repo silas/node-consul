@@ -2,6 +2,7 @@
 *.pid
 *swp
 .env
+.nyc_output
 .rock.yml
 config
 coverage

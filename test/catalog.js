@@ -1,343 +1,205 @@
-'use strict';
+"use strict";
 
-/**
- * Module dependencies.
- */
+const should = require("should");
 
-var should = require('should');
+const helper = require("./helper");
 
-var helper = require('./helper');
-
-/**
- * Tests
- */
-
-describe('Catalog', function() {
+describe("Catalog", function () {
   helper.setup(this);
 
-  describe('datacenters', function() {
-    it('should work', function(done) {
-      this.nock
-        .get('/v1/catalog/datacenters')
-        .reply(200, [{ ok: true }]);
+  describe("datacenters", function () {
+    it("should work", async function () {
+      this.nock.get("/v1/catalog/datacenters").reply(200, [{ ok: true }]);
 
-      var opts = {};
+      const data = await this.consul.catalog.datacenters({});
+      should(data).eql([{ ok: true }]);
+    });
 
-      this.consul.catalog.datacenters(opts, function(err, data) {
-        should.not.exist(err);
+    it("should work with no arguments", async function () {
+      this.nock.get("/v1/catalog/datacenters").reply(200, [{ ok: true }]);
 
+      const data = await this.consul.catalog.datacenters();
+      should(data).eql([{ ok: true }]);
+    });
+  });
+
+  describe("nodes", function () {
+    it("should work", async function () {
+      this.nock.get("/v1/catalog/nodes").reply(200, [{ ok: true }]);
+
+      const data = await this.consul.catalog.nodes({});
+      should(data).eql([{ ok: true }]);
+    });
+
+    it("should work with just string", async function () {
+      this.nock.get("/v1/catalog/nodes?dc=dc1").reply(200, [{ ok: true }]);
+
+      const data = await this.consul.catalog.nodes("dc1");
+      should(data).eql([{ ok: true }]);
+    });
+
+    it("should work with no arguments", async function () {
+      this.nock.get("/v1/catalog/nodes").reply(200, [{ ok: true }]);
+
+      const data = await this.consul.catalog.nodes();
+      should(data).eql([{ ok: true }]);
+    });
+  });
+
+  describe("node", function () {
+    describe("list", function () {
+      it("should work", async function () {
+        this.nock.get("/v1/catalog/nodes").reply(200, [{ ok: true }]);
+
+        const data = await this.consul.catalog.node.list({});
         should(data).eql([{ ok: true }]);
+      });
 
-        done();
+      it("should work with just string", async function () {
+        this.nock.get("/v1/catalog/nodes?dc=dc1").reply(200, [{ ok: true }]);
+
+        const data = await this.consul.catalog.node.list("dc1");
+        should(data).eql([{ ok: true }]);
+      });
+
+      it("should work with no arguments", async function () {
+        this.nock.get("/v1/catalog/nodes").reply(200, [{ ok: true }]);
+
+        const data = await this.consul.catalog.node.list();
+        should(data).eql([{ ok: true }]);
       });
     });
 
-    it('should work with no arguments', function(done) {
-      this.nock
-        .get('/v1/catalog/datacenters')
-        .reply(200, [{ ok: true }]);
+    describe("services", function () {
+      it("should work", async function () {
+        this.nock.get("/v1/catalog/node/node1").reply(200, [{ ok: true }]);
 
-      this.consul.catalog.datacenters(function(err, data) {
-        should.not.exist(err);
-
+        const data = await this.consul.catalog.node.services({ node: "node1" });
         should(data).eql([{ ok: true }]);
+      });
 
-        done();
+      it("should work with just string", async function () {
+        this.nock.get("/v1/catalog/node/node1").reply(200, [{ ok: true }]);
+
+        const data = await this.consul.catalog.node.services("node1");
+        should(data).eql([{ ok: true }]);
+      });
+
+      it("should require node", async function () {
+        try {
+          await this.consul.catalog.node.services({});
+          should.ok(false);
+        } catch (err) {
+          should(err).property(
+            "message",
+            "consul: catalog.node.services: node required"
+          );
+        }
       });
     });
   });
 
-  describe('nodes', function() {
-    it('should work', function(done) {
-      this.nock
-        .get('/v1/catalog/nodes')
-        .reply(200, [{ ok: true }]);
+  describe("services", function () {
+    it("should work", async function () {
+      this.nock.get("/v1/catalog/services").reply(200, [{ ok: true }]);
 
-      var opts = {};
-
-      this.consul.catalog.nodes(opts, function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql([{ ok: true }]);
-
-        done();
-      });
+      const data = await this.consul.catalog.services({});
+      should(data).eql([{ ok: true }]);
     });
 
-    it('should work with just string', function(done) {
-      this.nock
-        .get('/v1/catalog/nodes?dc=dc1')
-        .reply(200, [{ ok: true }]);
+    it("should work with just string", async function () {
+      this.nock.get("/v1/catalog/services?dc=dc1").reply(200, [{ ok: true }]);
 
-      this.consul.catalog.nodes('dc1', function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql([{ ok: true }]);
-
-        done();
-      });
+      const data = await this.consul.catalog.services("dc1");
+      should(data).eql([{ ok: true }]);
     });
 
-    it('should work with no arguments', function(done) {
-      this.nock
-        .get('/v1/catalog/nodes')
-        .reply(200, [{ ok: true }]);
+    it("should work with no arguments", async function () {
+      this.nock.get("/v1/catalog/services").reply(200, [{ ok: true }]);
 
-      this.consul.catalog.nodes(function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql([{ ok: true }]);
-
-        done();
-      });
+      const data = await this.consul.catalog.services();
+      should(data).eql([{ ok: true }]);
     });
   });
 
-  describe('node', function() {
-    describe('list', function() {
-      it('should work', function(done) {
-        this.nock
-          .get('/v1/catalog/nodes')
-          .reply(200, [{ ok: true }]);
+  describe("services", function () {
+    describe("list", function () {
+      it("should work", async function () {
+        this.nock.get("/v1/catalog/services").reply(200, [{ ok: true }]);
 
-        var opts = {};
-
-        this.consul.catalog.node.list(opts, function(err, data) {
-          should.not.exist(err);
-
-          should(data).eql([{ ok: true }]);
-
-          done();
-        });
-      });
-
-      it('should work with just string', function(done) {
-        this.nock
-          .get('/v1/catalog/nodes?dc=dc1')
-          .reply(200, [{ ok: true }]);
-
-        this.consul.catalog.node.list('dc1', function(err, data) {
-          should.not.exist(err);
-
-          should(data).eql([{ ok: true }]);
-
-          done();
-        });
-      });
-
-      it('should work with no arguments', function(done) {
-        this.nock
-          .get('/v1/catalog/nodes')
-          .reply(200, [{ ok: true }]);
-
-        this.consul.catalog.node.list(function(err, data) {
-          should.not.exist(err);
-
-          should(data).eql([{ ok: true }]);
-
-          done();
-        });
-      });
-    });
-
-    describe('services', function() {
-      it('should work', function(done) {
-        this.nock
-          .get('/v1/catalog/node/node1')
-          .reply(200, [{ ok: true }]);
-
-        var opts = { node: 'node1' };
-
-        this.consul.catalog.node.services(opts, function(err, data) {
-          should.not.exist(err);
-
-          should(data).eql([{ ok: true }]);
-
-          done();
-        });
-      });
-
-      it('should work with just string', function(done) {
-        this.nock
-          .get('/v1/catalog/node/node1')
-          .reply(200, [{ ok: true }]);
-
-        this.consul.catalog.node.services('node1', function(err, data) {
-          should.not.exist(err);
-
-          should(data).eql([{ ok: true }]);
-
-          done();
-        });
-      });
-
-      it('should require node', function(done) {
-        this.consul.catalog.node.services({}, function(err) {
-          should(err).property('message', 'consul: catalog.node.services: node required');
-
-          done();
-        });
-      });
-    });
-  });
-
-  describe('services', function() {
-    it('should work', function(done) {
-      this.nock
-        .get('/v1/catalog/services')
-        .reply(200, [{ ok: true }]);
-
-      var opts = {};
-
-      this.consul.catalog.services(opts, function(err, data) {
-        should.not.exist(err);
-
+        const data = await this.consul.catalog.service.list({});
         should(data).eql([{ ok: true }]);
-
-        done();
       });
-    });
 
-    it('should work with just string', function(done) {
-      this.nock
-        .get('/v1/catalog/services?dc=dc1')
-        .reply(200, [{ ok: true }]);
+      it("should work with just string", async function () {
+        this.nock.get("/v1/catalog/services?dc=dc1").reply(200, [{ ok: true }]);
 
-      this.consul.catalog.services('dc1', function(err, data) {
-        should.not.exist(err);
-
+        const data = await this.consul.catalog.service.list("dc1");
         should(data).eql([{ ok: true }]);
-
-        done();
       });
-    });
 
-    it('should work with no arguments', function(done) {
-      this.nock
-        .get('/v1/catalog/services')
-        .reply(200, [{ ok: true }]);
+      it("should work with no arguments", async function () {
+        this.nock.get("/v1/catalog/services").reply(200, [{ ok: true }]);
 
-      this.consul.catalog.services(function(err, data) {
-        should.not.exist(err);
-
+        const data = await this.consul.catalog.service.list();
         should(data).eql([{ ok: true }]);
-
-        done();
-      });
-    });
-  });
-
-  describe('services', function() {
-    describe('list', function() {
-      it('should work', function(done) {
-        this.nock
-          .get('/v1/catalog/services')
-          .reply(200, [{ ok: true }]);
-
-        var opts = {};
-
-        this.consul.catalog.service.list(opts, function(err, data) {
-          should.not.exist(err);
-
-          should(data).eql([{ ok: true }]);
-
-          done();
-        });
-      });
-
-      it('should work with just string', function(done) {
-        this.nock
-          .get('/v1/catalog/services?dc=dc1')
-          .reply(200, [{ ok: true }]);
-
-        this.consul.catalog.service.list('dc1', function(err, data) {
-          should.not.exist(err);
-
-          should(data).eql([{ ok: true }]);
-
-          done();
-        });
-      });
-
-      it('should work with no arguments', function(done) {
-        this.nock
-          .get('/v1/catalog/services')
-          .reply(200, [{ ok: true }]);
-
-        this.consul.catalog.service.list(function(err, data) {
-          should.not.exist(err);
-
-          should(data).eql([{ ok: true }]);
-
-          done();
-        });
       });
     });
 
-    describe('nodes', function() {
-      it('should work', function(done) {
+    describe("nodes", function () {
+      it("should work", async function () {
         this.nock
-          .get('/v1/catalog/service/service1?tag=web')
+          .get("/v1/catalog/service/service1?tag=web")
           .reply(200, [{ ok: true }]);
 
-        var opts = {
-          service: 'service1',
-          tag: 'web',
-        };
-
-        this.consul.catalog.service.nodes(opts, function(err, data) {
-          should.not.exist(err);
-
-          should(data).eql([{ ok: true }]);
-
-          done();
+        const data = await this.consul.catalog.service.nodes({
+          service: "service1",
+          tag: "web",
         });
+        should(data).eql([{ ok: true }]);
       });
 
-      it('should work with just string', function(done) {
+      it("should work with just string", async function () {
         this.nock
-          .get('/v1/catalog/service/service1')
+          .get("/v1/catalog/service/service1")
           .reply(200, [{ ok: true }]);
 
-        this.consul.catalog.service.nodes('service1', function(err, data) {
-          should.not.exist(err);
-
-          should(data).eql([{ ok: true }]);
-
-          done();
-        });
+        const data = await this.consul.catalog.service.nodes("service1");
+        should(data).eql([{ ok: true }]);
       });
 
-      it('should require service', function(done) {
-        this.consul.catalog.service.nodes({}, function(err) {
-          should(err).property('message', 'consul: catalog.service.nodes: service required');
-
-          done();
-        });
+      it("should require service", async function () {
+        try {
+          await this.consul.catalog.service.nodes({});
+          should.ok(false);
+        } catch (err) {
+          should(err).property(
+            "message",
+            "consul: catalog.service.nodes: service required"
+          );
+        }
       });
     });
 
-    describe('connect nodes', function() {
-      it('should work with just string', function(done) {
+    describe("connect nodes", function () {
+      it("should work with just string", async function () {
         this.nock
-          .get('/v1/catalog/connect/service1')
+          .get("/v1/catalog/connect/service1")
           .reply(200, [{ ok: true }]);
 
-        this.consul.catalog.connect.nodes('service1', function(err, data) {
-          should.not.exist(err);
-
-          should(data).eql([{ ok: true }]);
-
-          done();
-        });
+        const data = await this.consul.catalog.connect.nodes("service1");
+        should(data).eql([{ ok: true }]);
       });
 
-      it('should require service', function(done) {
-        this.consul.catalog.connect.nodes({}, function(err) {
-          should(err).property('message', 'consul: catalog.connect.nodes: service required');
-
-          done();
-        });
+      it("should require service", async function () {
+        try {
+          await this.consul.catalog.connect.nodes({});
+        } catch (err) {
+          should(err).property(
+            "message",
+            "consul: catalog.connect.nodes: service required"
+          );
+        }
       });
     });
   });

@@ -1,717 +1,365 @@
-'use strict';
+"use strict";
 
-/**
- * Module dependencies.
- */
+const async_ = require("async");
+const should = require("should");
+const uuid = require("node-uuid");
 
-var async = require('async');
-var lodash = require('lodash');
-var should = require('should');
-var uuid = require('node-uuid');
+const constants = require("../../lib/constants");
 
-var constants = require('../../lib/constants');
+const helper = require("./helper");
 
-var helper = require('./helper');
-
-/**
- * Tests
- */
-
-helper.describe('Agent', function() {
-  before(function(done) {
-    helper.before(this, done);
+helper.describe("Agent", function () {
+  before(async function () {
+    await helper.before(this);
   });
 
-  after(function(done) {
-    helper.after(this, done);
+  after(async function () {
+    await helper.after(this);
   });
 
-  describe('members', function() {
-    it('should return members agent sees in cluster gossip pool', function(done) {
-      this.c1.agent.members(function(err, data) {
-        should.not.exist(err);
+  describe("members", function () {
+    it("should return members agent sees in cluster gossip pool", async function () {
+      const data = await this.c1.agent.members();
+      should(data).be.instanceOf(Array);
 
-        should(data).be.instanceOf(Array);
-
-        data.length.should.eql(1);
-        data.map(function(m) { return m.Name; }).should.containEql('node1');
-
-        done();
-      });
+      should(data.length).eql(1);
+      should(
+        data.map(function (m) {
+          return m.Name;
+        })
+      ).containEql("node1");
     });
   });
 
-  describe('self', function() {
-    it('should return information about agent', function(done) {
-      this.c1.agent.self(function(err, data) {
-        should.not.exist(err);
+  describe("self", function () {
+    it("should return information about agent", async function () {
+      const data = await this.c1.agent.self();
+      should(data).be.instanceOf(Object);
+      should(data).have.properties("Config", "Member");
 
-        should(data).be.instanceOf(Object);
-        data.should.have.properties('Config', 'Member');
+      should(data.Config.Server).be.true();
+      should(data.Config.Datacenter).eql("dc1");
+      should(data.Config.NodeName).eql("node1");
 
-        data.Config.Server.should.be.true;
-        data.Config.Datacenter.should.eql('dc1');
-        data.Config.NodeName.should.eql('node1');
-
-        data.Member.Name.should.eql('node1');
-        data.Member.Addr.should.eql('127.0.0.1');
-
-        done();
-      });
+      should(data.Member.Name).eql("node1");
+      should(data.Member.Addr).eql("127.0.0.1");
     });
 
-    it('should work with opts', function(done) {
-      this.c1.agent.self({}, function(err) {
-        should.not.exist(err);
-
-        done();
-      });
+    it("should work with opts", async function () {
+      await this.c1.agent.self({});
     });
   });
 
-  describe('maintenance', function() {
-    it('should set node maintenance mode', function(done) {
-      var self = this;
+  describe("maintenance", function () {
+    it("should set node maintenance mode", async function () {
+      const statusChecks = await this.c1.agent.checks();
+      should(statusChecks).not.have.property("_node_maintenance");
 
-      var jobs = {};
+      await this.c1.agent.maintenance(true);
 
-      jobs.status = function(next) {
-        self.c1.agent.checks(function(err, checks) {
-          should.not.exist(err);
+      const enableStatus = await this.c1.agent.checks();
+      should(enableStatus).have.property("_node_maintenance");
+      should(enableStatus._node_maintenance).have.property(
+        "Status",
+        "critical"
+      );
 
-          should(checks).not.have.property('_node_maintenance');
+      await this.c1.agent.maintenance({ enable: false });
 
-          next();
-        });
-      };
-
-      jobs.enable = ['status', function(results, next) {
-        self.c1.agent.maintenance(true, function(err) {
-          should.not.exist(err);
-
-          next();
-        });
-      }];
-
-      jobs.enableStatus = ['enable', function(results, next) {
-        self.c1.agent.checks(function(err, checks) {
-          should.not.exist(err);
-
-          should(checks).have.property('_node_maintenance');
-          checks._node_maintenance.should.have.property('Status', 'critical');
-
-          next();
-        });
-      }];
-
-      jobs.disable = ['enableStatus', function(results, next) {
-        self.c1.agent.maintenance({ enable: false }, function(err) {
-          should.not.exist(err);
-
-          next();
-        });
-      }];
-
-      jobs.disableStatus = ['disable', function(results, next) {
-        self.c1.agent.checks(function(err, checks) {
-          should.not.exist(err);
-
-          should(checks).not.have.property('_node_maintenance');
-
-          next();
-        });
-      }];
-
-      async.auto(jobs, done);
+      const disableStatus = await this.c1.agent.checks();
+      should(disableStatus).not.have.property("_node_maintenance");
     });
 
-    it('should require valid enable', function(done) {
-      this.c1.agent.maintenance({ enable: 'false' }, function(err) {
-        should(err).have.property('message', 'consul: agent.maintenance: enable required');
-
-        done();
-      });
-    });
-  });
-
-  describe('join', function() {
-    it('should make node2 join cluster', function(done) {
-      var self = this;
-
-      var joinAddr = '127.0.0.1';
-      var joinerAddr = '127.0.0.2';
-
-      var jobs = [];
-
-      jobs.push(function(cb) {
-        self.c1.agent.members(function(err, data) {
-          should.not.exist(err);
-
-          data = data.map(function(m) { return m.Addr; });
-
-          data.should.containEql(joinAddr);
-          data.should.not.containEql(joinerAddr);
-
-          cb();
-        });
-      });
-
-      jobs.push(function(cb) {
-        self.c2.agent.join({ address: joinAddr, token: 'agent_master' }, function(err) {
-          should.not.exist(err);
-
-          cb();
-        });
-      });
-
-      async.series(jobs, done);
-    });
-
-    it('should require address', function(done) {
-      this.c1.agent.join({}, function(err) {
-        should(err).have.property('message', 'consul: agent.join: address required');
-
-        done();
-      });
-    });
-  });
-
-  describe('forceLeave', function() {
-    it('should remove node2 from the cluster', function(done) {
-      var self = this;
-
-      var jobs = {};
-
-      jobs.ensureJoined = function(cb) {
-        self.c1.agent.members(function(err, data) {
-          should.not.exist(err);
-
-          var node = lodash.find(data, function(m) { return m.Name === 'node2'; });
-
-          should.exist(node);
-          node.Status.should.eql(constants.AGENT_STATUS.indexOf('alive'));
-
-          cb(null, data);
-        });
-      };
-
-      jobs.forceLeave = ['ensureJoined', function(results, cb) {
-        self.c1.agent.forceLeave('node2', cb);
-      }];
-
-      jobs.after = ['forceLeave', function(results, cb) {
-        async.retry(
-          100,
-          function(cb) {
-            self.c1.agent.members(function(err, data) {
-              var node = lodash.find(data, function(m) { return m.Name === 'node2'; });
-              var leaving = node && node.Status === constants.AGENT_STATUS.indexOf('leaving');
-
-              if (err || !leaving) {
-                if (!err) err = new Error('Not leaving');
-                return setTimeout(function() { cb(err); }, 100);
-              }
-
-              cb();
-            });
-          },
-          cb
+    it("should require valid enable", async function () {
+      try {
+        await this.c1.agent.maintenance({ enable: "false" });
+        should.ok(false);
+      } catch (err) {
+        should(err).have.property(
+          "message",
+          "consul: agent.maintenance: enable required"
         );
-      }];
-
-      async.auto(jobs, done);
-    });
-
-    it('should require node', function(done) {
-      this.c1.agent.forceLeave({}, function(err) {
-        should(err).have.property('message', 'consul: agent.forceLeave: node required');
-
-        done();
-      });
+      }
     });
   });
 
-  describe('check', function() {
-    before(function() {
-      var self = this;
+  describe("join", function () {
+    it("should make node2 join cluster", async function () {
+      const joinAddr = "127.0.0.1";
+      const joinerAddr = "127.0.0.2";
 
+      const members = await this.c1.agent.members();
+      const memberAddrs = members.map(function (m) {
+        return m.Addr;
+      });
+
+      should(memberAddrs).containEql(joinAddr);
+      should(memberAddrs).not.containEql(joinerAddr);
+
+      await this.c2.agent.join({ address: joinAddr, token: "agent_master" });
+    });
+
+    it("should require address", async function () {
+      try {
+        await this.c1.agent.join({});
+        should.ok(false);
+      } catch (err) {
+        should(err).have.property(
+          "message",
+          "consul: agent.join: address required"
+        );
+      }
+    });
+  });
+
+  describe("forceLeave", function () {
+    it("should remove node2 from the cluster", async function () {
+      const ensureJoined = await this.c1.agent.members();
+
+      const node2 = ensureJoined.find((m) => m.Name === "node2");
+      should.exist(node2);
+      should(node2.Status).eql(constants.AGENT_STATUS.indexOf("alive"));
+
+      await this.c1.agent.forceLeave("node2");
+
+      await async_.retry({ times: 100, interval: 100 }, async () => {
+        const forceLeaveMembers = await this.c1.agent.members();
+        const node = forceLeaveMembers.find((m) => m.Name === "node2");
+        const leaving =
+          node && node.Status === constants.AGENT_STATUS.indexOf("leaving");
+        if (!leaving) throw new Error("Not leaving");
+      });
+    });
+
+    it("should require node", async function () {
+      try {
+        await this.c1.agent.forceLeave({});
+        should.ok(false);
+      } catch (err) {
+        should(err).have.property(
+          "message",
+          "consul: agent.forceLeave: node required"
+        );
+      }
+    });
+  });
+
+  describe("check", function () {
+    before(function () {
       // helper function to check existence of check
-      self.exists = function(id, exists, cb) {
-        self.c1.agent.checks(function(err, checks) {
-          should.not.exist(err);
+      this.exists = async (id, exists) => {
+        const checks = await this.c1.agent.checks();
 
-          var s = checks.should;
-
-          if (!exists) s = s.not;
-
-          s.have.property(id);
-
-          cb();
-        });
+        let s = should(checks);
+        if (!exists) s = s.not;
+        s.have.property(id);
       };
 
-      self.state = function(id, state, cb) {
-        self.c1.agent.checks(function(err, checks) {
-          should.not.exist(err);
+      this.state = async (id, state) => {
+        const checks = await this.c1.agent.checks();
+        should(checks).have.property(id);
 
-          checks.should.have.property(id);
-
-          var check = checks[id];
-
-          check.Status.should.eql(state);
-
-          cb();
-        });
+        const check = checks[id];
+        should(check.Status).eql(state);
       };
     });
 
-    beforeEach(function(done) {
-      var self = this;
+    beforeEach(async function () {
+      this.name = "check-" + uuid.v4();
+      this.deregister = [this.name];
 
-      self.name = 'check-' + uuid.v4();
-      self.deregister = [self.name];
+      const checks = await this.c1.agent.checks();
 
-      var jobs = [];
+      await Promise.all(
+        Object.keys(checks).map((id) => this.c1.agent.check.deregister(id))
+      );
 
-      // remove existing checks
-      jobs.push(function(cb) {
-        self.c1.agent.checks(function(err, checks) {
-          if (err) return cb(err);
-
-          async.map(
-            Object.keys(checks),
-            self.c1.agent.check.deregister.bind(self.c1.agent.check),
-            cb
-          );
-        });
-      });
-
-      // add check
-      jobs.push(function(cb) {
-        var opts = { name: self.name, ttl: '10s' };
-        self.c1.agent.check.register(opts, cb);
-      });
-
-      async.series(jobs, done);
+      await this.c1.agent.check.register({ name: this.name, ttl: "10s" });
     });
 
-    afterEach(function(done) {
-      var self = this;
-
-      async.map(
-        self.deregister,
-        function(check, cb) {
-          self.c1.agent.check.deregister(check, function() {
-            cb();
-          });
-        },
-        done
+    afterEach(async function () {
+      await Promise.all(
+        this.deregister.map((id) => this.c1.agent.check.deregister(id))
       );
     });
 
-    describe('list', function() {
-      it('should return agent checks', function(done) {
-        var self = this;
-
-        self.c1.agent.checks(function(err, data) {
-          should.not.exist(err);
-
-          should.exist(data);
-          data.should.have.property(self.name);
-
-          done();
-        });
+    describe("list", function () {
+      it("should return agent checks", async function () {
+        const data = await this.c1.agent.checks(this.name);
+        should.exist(data);
+        should(data).have.property(this.name);
       });
     });
 
-    describe('register', function() {
-      it('should create check', function(done) {
-        var self = this;
+    describe("register", function () {
+      it("should create check", async function () {
+        const name = "check-" + uuid.v4();
 
-        var name = 'check-' + uuid.v4();
-
-        var jobs = [];
-
-        jobs.push(function(cb) {
-          self.exists(name, false, cb);
-        });
-
-        jobs.push(function(cb) {
-          self.deregister.push(name);
-          self.c1.agent.check.register({ name: name, ttl: '1s' }, cb);
-        });
-
-        jobs.push(function(cb) {
-          self.exists(name, true, cb);
-        });
-
-        async.series(jobs, done);
+        await this.exists(name, false);
+        await this.deregister.push(name);
+        await this.c1.agent.check.register({ name: name, ttl: "1s" });
+        await this.exists(name, true);
       });
     });
 
-    describe('deregister', function() {
-      it('should remove check', function(done) {
-        var self = this;
-
-        var jobs = [];
-
-        jobs.push(function(cb) {
-          self.exists(self.name, true, cb);
-        });
-
-        jobs.push(function(cb) {
-          self.c1.agent.check.deregister(self.name, cb);
-        });
-
-        jobs.push(function(cb) {
-          self.exists(self.name, false, cb);
-        });
-
-        async.series(jobs, done);
+    describe("deregister", function () {
+      it("should remove check", async function () {
+        await this.exists(this.name, true);
+        await this.c1.agent.check.deregister(this.name);
+        await this.exists(this.name, false);
       });
     });
 
-    describe('pass', function() {
-      it('should mark check as passing', function(done) {
-        var self = this;
-
-        var jobs = [];
-
-        jobs.push(function(cb) {
-          self.state(self.name, 'critical', cb);
-        });
-
-        jobs.push(function(cb) {
-          self.c1.agent.check.pass(self.name, cb);
-        });
-
-        jobs.push(function(cb) {
-          self.state(self.name, 'passing', cb);
-        });
-
-        async.series(jobs, done);
+    describe("pass", function () {
+      it("should mark check as passing", async function () {
+        await this.state(this.name, "critical");
+        await this.c1.agent.check.pass(this.name);
+        await this.state(this.name, "passing");
       });
     });
 
-    describe('warn', function() {
-      it('should mark check as warning', function(done) {
-        var self = this;
-
-        var jobs = [];
-
-        jobs.push(function(cb) {
-          self.state(self.name, 'critical', cb);
-        });
-
-        jobs.push(function(cb) {
-          self.c1.agent.check.warn(self.name, cb);
-        });
-
-        jobs.push(function(cb) {
-          self.state(self.name, 'warning', cb);
-        });
-
-        async.series(jobs, done);
+    describe("warn", function () {
+      it("should mark check as warning", async function () {
+        await this.state(this.name, "critical");
+        await this.c1.agent.check.warn(this.name);
+        await this.state(this.name, "warning");
       });
     });
 
-    describe('fail', function() {
-      it('should mark check as critical', function(done) {
-        var self = this;
-
-        var jobs = [];
-
-        jobs.push(function(cb) {
-          self.state(self.name, 'critical', cb);
-        });
-
-        jobs.push(function(cb) {
-          self.c1.agent.check.fail(self.name, cb);
-        });
-
-        jobs.push(function(cb) {
-          self.state(self.name, 'critical', cb);
-        });
-
-        async.series(jobs, done);
+    describe("fail", function () {
+      it("should mark check as critical", async function () {
+        await this.state(this.name, "critical");
+        await this.c1.agent.check.fail(this.name);
+        await this.state(this.name, "critical");
       });
     });
   });
 
-  describe('service', function() {
-    before(function() {
-      var self = this;
-
+  describe("service", function () {
+    before(function () {
       // helper function to check existence of service
-      self.exists = function(id, exists, cb) {
-        self.c1.agent.services(function(err, services) {
-          should.not.exist(err);
+      this.exists = async (id, exists) => {
+        const services = await this.c1.agent.services();
 
-          var s = services.should;
-
-          if (!exists) s = s.not;
-
-          s.have.property(id);
-
-          cb();
-        });
+        let s = should(services);
+        if (!exists) s = s.not;
+        s.have.property(id);
       };
     });
 
-    beforeEach(function(done) {
-      var self = this;
-
-      self.name = 'service-' + uuid.v4();
-      self.deregister = [self.name];
-
-      var jobs = [];
+    beforeEach(async function () {
+      this.name = "service-" + uuid.v4();
+      this.deregister = [this.name];
 
       // remove existing services
-      jobs.push(function(cb) {
-        self.c1.agent.services(function(err, services) {
-          if (err) return cb(err);
+      const services = await this.c1.agent.services();
 
-          var ids = lodash(services)
-            .values()
-            .filter(function(service) { return service && service.ID !== 'consul'; })
-            .map('ID')
-            .value();
+      const ids = Object.values(services)
+        .filter((s) => s && s.ID !== "consul")
+        .map((s) => s.ID);
 
-          async.map(
-            ids,
-            self.c1.agent.service.deregister.bind(self.c1.agent.service),
-            cb
-          );
-        });
-      });
+      await Promise.all(ids.map((id) => this.c1.agent.service.deregister(id)));
 
       // add service
-      jobs.push(function(cb) {
-        self.c1.agent.service.register(self.name, cb);
-      });
-
-      async.series(jobs, done);
+      await this.c1.agent.service.register(this.name);
     });
 
-    afterEach(function(done) {
-      var self = this;
-
-      async.map(
-        self.deregister,
-        function(service, cb) {
-          self.c1.agent.service.deregister(service, function() { cb(); });
-        },
-        done
+    afterEach(async function () {
+      await Promise.all(
+        this.deregister.map((id) => this.c1.agent.service.deregister(id))
       );
     });
 
-    describe('list', function() {
-      it('should return agent services', function(done) {
-        var self = this;
-
-        this.c1.agent.services(function(err, data) {
-          should.not.exist(err);
-
-          should.exist(data);
-
-          data.should.have.property(self.name);
-
-          done();
-        });
+    describe("list", function () {
+      it("should return agent services", async function () {
+        const data = await this.c1.agent.services();
+        should.exist(data);
+        should(data).have.property(this.name);
       });
     });
 
-    describe('register', function() {
-      it('should create service', function(done) {
-        var self = this;
+    describe("register", function () {
+      it("should create service", async function () {
+        const name = "service-" + uuid.v4();
 
-        var name = 'service-' + uuid.v4();
-
-        var jobs = [];
-
-        jobs.push(function(cb) {
-          self.exists(name, false, cb);
-        });
-
-        jobs.push(function(cb) {
-          self.c1.agent.service.register(name, cb);
-        });
-
-        jobs.push(function(cb) {
-          self.exists(name, true, cb);
-        });
-
-        async.series(jobs, done);
+        await this.exists(name, false);
+        await this.c1.agent.service.register(name);
+        await this.exists(name, true);
       });
 
-      it('should create service with http check', function(done) {
-        var self = this;
+      it("should create service with http check", async function () {
+        const name = "service-" + uuid.v4();
+        const notes = "simple http check";
 
-        var name = 'service-' + uuid.v4();
-        var notes = 'simple http check';
+        await this.exists(name, false);
 
-        var jobs = [];
-
-        jobs.push(function(cb) {
-          self.exists(name, false, cb);
+        await this.c1.agent.service.register({
+          name: name,
+          check: {
+            http: "http://127.0.0.1:8500",
+            interval: "30s",
+            notes: notes,
+          },
         });
 
-        jobs.push(function(cb) {
-          var opts = {
-            name: name,
-            check: {
-              http: 'http://127.0.0.1:8500',
-              interval: '30s',
-              notes: notes,
-            },
-          };
-
-          self.c1.agent.service.register(opts, cb);
-        });
-
-        jobs.push(function(cb) {
-          self.c1.agent.check.list(function(err, checks) {
-            if (err) return cb(err);
-
-            should(checks).not.be.empty;
-            should(checks['service:' + name]).have.property('Notes', notes);
-
-            cb();
-          });
-        });
-
-        async.series(jobs, done);
+        const checks = await this.c1.agent.check.list();
+        should(checks).not.be.empty();
+        should(checks["service:" + name]).have.property("Notes", notes);
       });
 
-      it('should create service with script check', function(done) {
-        var self = this;
+      it("should create service with script check", async function () {
+        const name = "service-" + uuid.v4();
+        const notes = "simple script check";
 
-        var name = 'service-' + uuid.v4();
-        var notes = 'simple script check';
+        await this.exists(name, false);
 
-        var jobs = [];
-
-        jobs.push(function(cb) {
-          self.exists(name, false, cb);
+        await this.c1.agent.service.register({
+          name: name,
+          check: {
+            args: ["sh", "-c", "true"],
+            interval: "30s",
+            timeout: "1s",
+            notes: notes,
+          },
         });
 
-        jobs.push(function(cb) {
-          var opts = {
-            name: name,
-            check: {
-              args: ['sh', '-c', 'true'],
-              interval: '30s',
-              timeout: '1s',
-              notes: notes,
-            },
-          };
-
-          self.c1.agent.service.register(opts, cb);
-        });
-
-        jobs.push(function(cb) {
-          self.c1.agent.check.list(function(err, checks) {
-            if (err) return cb(err);
-
-            should(checks).not.be.empty;
-            should(checks['service:' + name]).have.property('Notes', notes);
-
-            cb();
-          });
-        });
-
-        async.series(jobs, done);
+        const checks = await this.c1.agent.check.list();
+        should(checks).not.be.empty();
+        should(checks["service:" + name]).have.property("Notes", notes);
       });
     });
 
-    describe('deregister', function() {
-      it('should remove service', function(done) {
-        var self = this;
-
-        var jobs = [];
-
-        jobs.push(function(cb) {
-          self.exists(self.name, true, cb);
-        });
-
-        jobs.push(function(cb) {
-          self.c1.agent.service.deregister(self.name, cb);
-        });
-
-        jobs.push(function(cb) {
-          self.exists(self.name, false, cb);
-        });
-
-        async.series(jobs, done);
+    describe("deregister", function () {
+      it("should remove service", async function () {
+        await this.exists(this.name, true);
+        await this.c1.agent.service.deregister(this.name);
+        await this.exists(this.name, false);
       });
     });
 
-    describe('maintenance', function() {
-      it('should set service maintenance mode', function(done) {
-        var self = this;
+    describe("maintenance", function () {
+      it("should set service maintenance mode", async function () {
+        const checkId = "_service_maintenance:" + this.name;
 
-        var checkId = '_service_maintenance:' + self.name;
+        const checks = await this.c1.agent.checks();
+        should(checks).not.have.property(checkId);
 
-        var jobs = {};
+        await this.c1.agent.service.maintenance({
+          id: this.name,
+          enable: true,
+        });
 
-        jobs.status = function(next) {
-          self.c1.agent.checks(function(err, checks) {
-            should.not.exist(err);
+        const enableStatus = await this.c1.agent.checks();
+        should(enableStatus).have.property(checkId);
+        should(enableStatus[checkId]).have.property("Status", "critical");
 
-            should(checks).not.have.property(checkId);
+        await this.c1.agent.service.maintenance({
+          id: this.name,
+          enable: false,
+        });
 
-            next();
-          });
-        };
-
-        jobs.enable = ['status', function(results, next) {
-          var opts = {
-            id: self.name,
-            enable: true,
-          };
-
-          self.c1.agent.service.maintenance(opts, function(err) {
-            should.not.exist(err);
-
-            next();
-          });
-        }];
-
-        jobs.enableStatus = ['enable', function(results, next) {
-          self.c1.agent.checks(function(err, checks) {
-            should.not.exist(err);
-
-            should(checks).have.property(checkId);
-            checks[checkId].should.have.property('Status', 'critical');
-
-            next();
-          });
-        }];
-
-        jobs.disable = ['enableStatus', function(results, next) {
-          var opts = {
-            id: self.name,
-            enable: false,
-          };
-
-          self.c1.agent.service.maintenance(opts, function(err) {
-            should.not.exist(err);
-
-            next();
-          });
-        }];
-
-        jobs.disableStatus = ['disable', function(results, next) {
-          self.c1.agent.checks(function(err, checks) {
-            should.not.exist(err);
-
-            should(checks).not.have.property(checkId);
-
-            next();
-          });
-        }];
-
-        async.auto(jobs, done);
+        const disableStatus = this.c1.agent.checks();
+        should(disableStatus).not.have.property(checkId);
       });
     });
   });

@@ -1,56 +1,41 @@
-'use strict';
+"use strict";
 
-/**
- * Module dependencies.
- */
+const async_ = require("async");
+const debug = require("debug")("acceptance:lock");
+const should = require("should");
 
-var async = require('async');
-var debug = require('debug')('acceptance:lock');
-var lodash = require('lodash');
-var should = require('should');
+const helper = require("./helper");
 
-var helper = require('./helper');
-
-/**
- * Tests
- */
-
-helper.describe('Lock', function() {
-  before(function(done) {
-    helper.before(this, done);
+helper.describe("Lock", function () {
+  before(async function () {
+    await helper.before(this);
   });
 
-  after(function(done) {
-    helper.after(this, done);
+  after(async function () {
+    await helper.after(this);
   });
 
-  beforeEach(function(done) {
-    var c = this.c1;
-
-    c.kv.del({ recurse: true }, function(err) {
-      done(err);
-    });
+  beforeEach(async function () {
+    await this.c1.kv.del({ recurse: true });
   });
 
-  it('should work', function(done) {
-    var self = this;
+  it("should work", async function () {
+    const locks = {};
 
-    var locks = {};
-
-    async.times(50, function(n, next) {
-      var c = self.c1;
-      var prefix = 'lock ' + n + ': ';
-      var lock = c.lock({
-        key: 'test',
-        lockRetryTime: '10ms',
+    await async_.times(50, (n, next) => {
+      const c = this.c1;
+      const prefix = "lock " + n + ": ";
+      const lock = c.lock({
+        key: "test",
+        lockRetryTime: "10ms",
       });
 
-      lock.on('acquire', function() {
-        debug(prefix + ': acquire');
+      lock.on("acquire", () => {
+        debug(prefix + ": acquire");
 
         locks[n] = true;
 
-        lodash.each(locks, function(i, enabled) {
+        locks.forEach((enabled, i) => {
           if (enabled && i !== n) {
             should(locks).not.have.property(i, enabled);
           }
@@ -59,18 +44,18 @@ helper.describe('Lock', function() {
         lock.release();
       });
 
-      lock.on('release', function() {
-        debug(prefix + ': release');
+      lock.on("release", () => {
+        debug(prefix + ": release");
 
         locks[n] = false;
       });
 
-      lock.on('error', function(err) {
-        debug(prefix + ': error: ', err);
+      lock.on("error", (err) => {
+        debug(prefix + ": error: ", err);
       });
 
-      lock.on('end', function() {
-        debug(prefix + ': end');
+      lock.on("end", () => {
+        debug(prefix + ": end");
 
         delete locks[n];
 
@@ -78,6 +63,6 @@ helper.describe('Lock', function() {
       });
 
       lock.acquire();
-    }, done);
+    });
   });
 });

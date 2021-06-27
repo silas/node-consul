@@ -1,169 +1,155 @@
-'use strict';
+"use strict";
 
-/**
- * Module dependencies.
- */
+const should = require("should");
 
-var should = require('should');
+const helper = require("./helper");
 
-var helper = require('./helper');
-
-/**
- * Tests
- */
-
-describe('Transaction', function() {
+describe("Transaction", function () {
   helper.setup(this);
 
-  describe('create', function() {
-    it('should work', function(done) {
-      var operations = [
+  describe("create", function () {
+    it("should work", async function () {
+      const operations = [
         {
           KV: {
-            Verb: 'create',
-            Key: 'key',
-            Value: Buffer.from('value').toString('base64'),
-          }
+            Verb: "create",
+            Key: "key",
+            Value: Buffer.from("value").toString("base64"),
+          },
         },
         {
           Node: {
-            Verb: 'set',
+            Verb: "set",
             Node: {
-              ID: '67539c9d-b948-ba67-edd4-d07a676d6673',
-              Node: 'bar',
-              Address: '192.168.0.1',
-              Datacenter: 'dc1',
+              ID: "67539c9d-b948-ba67-edd4-d07a676d6673",
+              Node: "bar",
+              Address: "192.168.0.1",
+              Datacenter: "dc1",
               Meta: {
-                instance_type: 'm2.large'
-              }
-            }
-          }
+                instance_type: "m2.large",
+              },
+            },
+          },
         },
         {
           Service: {
-            Verb: 'delete',
-            Node: 'foo',
+            Verb: "delete",
+            Node: "foo",
             Service: {
-              ID: 'db1'
-            }
-          }
+              ID: "db1",
+            },
+          },
         },
         {
           Check: {
-            Verb: 'cas',
+            Verb: "cas",
             Check: {
-                Node: 'bar',
-              CheckID: 'service:web1',
-              Name: 'Web HTTP Check',
-              Status: 'critical',
-              ServiceID: 'web1',
-              ServiceName: 'web',
+              Node: "bar",
+              CheckID: "service:web1",
+              Name: "Web HTTP Check",
+              Status: "critical",
+              ServiceID: "web1",
+              ServiceName: "web",
               ServiceTags: null,
               Definition: {
-                HTTP: 'http://localhost:8080',
-                Interval: '10s'
+                HTTP: "http://localhost:8080",
+                Interval: "10s",
               },
-              ModifyIndex: 22
-            }
-          }
-        }
+              ModifyIndex: 22,
+            },
+          },
+        },
       ];
 
-      this.nock
-        .put('/v1/txn', operations)
-        .reply(200, { ok: true });
+      this.nock.put("/v1/txn", operations).reply(200, { ok: true });
 
-      this.consul.transaction.create(operations, function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql({ ok: true });
-
-        done();
-      });
+      const data = await this.consul.transaction.create(operations);
+      should(data).eql({ ok: true });
     });
 
-    it('should accept an option as arguments', function(done) {
-      var operations = [
+    it("should accept an option as arguments", async function () {
+      const operations = [
         {
           KV: {
-            Verb: 'create',
-            Key: 'key',
-            Value: Buffer.from('value').toString('base64'),
-          }
+            Verb: "create",
+            Key: "key",
+            Value: Buffer.from("value").toString("base64"),
+          },
         },
         {
           Node: {
-            Verb: 'set',
+            Verb: "set",
             Node: {
-              ID: '67539c9d-b948-ba67-edd4-d07a676d6673',
-              Node: 'bar',
-              Address: '192.168.0.1',
-              Datacenter: 'dc1',
+              ID: "67539c9d-b948-ba67-edd4-d07a676d6673",
+              Node: "bar",
+              Address: "192.168.0.1",
+              Datacenter: "dc1",
               Meta: {
-                instance_type: 'm2.large'
-              }
-            }
-          }
+                instance_type: "m2.large",
+              },
+            },
+          },
         },
         {
           Service: {
-            Verb: 'delete',
-            Node: 'foo',
+            Verb: "delete",
+            Node: "foo",
             Service: {
-              ID: 'db1'
-            }
-          }
+              ID: "db1",
+            },
+          },
         },
         {
           Check: {
-            Verb: 'cas',
+            Verb: "cas",
             Check: {
-                Node: 'bar',
-              CheckID: 'service:web1',
-              Name: 'Web HTTP Check',
-              Status: 'critical',
-              ServiceID: 'web1',
-              ServiceName: 'web',
+              Node: "bar",
+              CheckID: "service:web1",
+              Name: "Web HTTP Check",
+              Status: "critical",
+              ServiceID: "web1",
+              ServiceName: "web",
               ServiceTags: null,
               Definition: {
-                HTTP: 'http://localhost:8080',
-                Interval: '10s'
+                HTTP: "http://localhost:8080",
+                Interval: "10s",
               },
-              ModifyIndex: 22
-            }
-          }
-        }
+              ModifyIndex: 22,
+            },
+          },
+        },
       ];
 
-      this.nock
-        .put('/v1/txn?stale=1', operations)
-        .reply(200, { ok: true });
+      this.nock.put("/v1/txn?stale=1", operations).reply(200, { ok: true });
 
-      this.consul.transaction.create(operations, { stale: true }, function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql({ ok: true });
-
-        done();
+      const data = await this.consul.transaction.create(operations, {
+        stale: true,
       });
+      should(data).eql({ ok: true });
     });
 
-    it('should require a list of operations', function(done) {
-      this.consul.transaction.create(function(err) {
-        should(err).have.property('message',
-          'consul: Transaction.create: a list of operations are required as first arguments');
-
-        done();
-      });
+    it("should require a list of operations", async function () {
+      try {
+        await this.consul.transaction.create();
+        should.ok(false);
+      } catch (err) {
+        should(err).have.property(
+          "message",
+          "consul: Transaction.create: a list of operations are required as first arguments"
+        );
+      }
     });
 
-    it('should require a list of operations', function(done) {
-      this.consul.transaction.create([], function(err) {
-        should(err).have.property('message',
-          'consul: Transaction.create: operations must be an array with at least one item');
-
-        done();
-      });
+    it("should require a list of operations", async function () {
+      try {
+        await this.consul.transaction.create([]);
+        should.ok(false);
+      } catch (err) {
+        should(err).have.property(
+          "message",
+          "consul: Transaction.create: operations must be an array with at least one item"
+        );
+      }
     });
   });
 });
