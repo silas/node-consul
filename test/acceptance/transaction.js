@@ -1,111 +1,81 @@
-'use strict';
+"use strict";
 
-/**
- * Module dependencies.
- */
+const should = require("should");
 
-var async = require('async');
-var should = require('should');
+const helper = require("./helper");
 
-var helper = require('./helper');
-
-/**
- * Tests
- */
-
-helper.describe('Transaction', function() {
-  before(function(done) {
-    helper.before(this, done);
+helper.describe("Transaction", function () {
+  before(async function () {
+    await helper.before(this);
   });
 
-  after(function(done) {
-    helper.after(this, done);
+  after(async function () {
+    await helper.after(this);
   });
 
-  beforeEach(function(done) {
-    var c = this.c1;
-    var key = this.key = 'hello';
-    var value = this.value = 'world';
+  beforeEach(async function () {
+    this.key = "hello";
+    this.value = "world";
 
-    var jobs = [];
+    await this.c1.kv.del({ recurse: true });
 
-    jobs.push(function(cb) {
-      c.kv.del({ recurse: true }, function() {
-        cb();
-      });
-    });
-
-    jobs.push(function(cb) {
-      c.kv.set(key, value, function(err, ok) {
-        if (err) return cb(err);
-        if (!ok) return cb(new Error('not setup'));
-        cb();
-      });
-    });
-
-    async.series(jobs, function(err) {
-      if (err) done(err);
-      done();
-    });
+    const ok = await this.c1.kv.set(this.key, this.value);
+    if (!ok) throw new Error("not setup");
   });
 
-  describe('transaction', function() {
-    it('should create two kv pairs', function(done) {
-      var c = this.c1;
-      var key1 = 'key1';
-      var value1 = 'value1';
-      var key2 = 'key2';
-      var value2 = 'value2';
+  describe("transaction", function () {
+    it("should create two kv pairs", async function () {
+      const key1 = "key1";
+      const value1 = "value1";
+      const key2 = "key2";
+      const value2 = "value2";
 
-      c.transaction.create([
+      const response = await this.c1.transaction.create([
         {
           KV: {
-            Verb: 'set',
+            Verb: "set",
             Key: key1,
-            Value: Buffer.from(value1).toString('base64')
-          }
-        },{
+            Value: Buffer.from(value1).toString("base64"),
+          },
+        },
+        {
           KV: {
-            Verb: 'set',
+            Verb: "set",
             Key: key2,
-            Value: Buffer.from(value2).toString('base64')
-          }
-        }
-      ], function(err, ok) {
-        should.not.exist(err);
+            Value: Buffer.from(value2).toString("base64"),
+          },
+        },
+      ]);
 
-        ok.should.be.true;
+      should(response).have.property("Results");
+      should(response.Results).be.Array();
 
-        c.kv.get(key1, function(err, data) {
-          should.not.exist(err);
+      const results = response.Results;
+      should(results).have.length(2);
+      should(results[0]).have.property("KV");
+      should(results[1]).have.property("KV");
+      should(results[0].KV).have.keys(
+        "CreateIndex",
+        "ModifyIndex",
+        "LockIndex",
+        "Key",
+        "Flags"
+      );
+      should(results[1].KV).have.keys(
+        "CreateIndex",
+        "ModifyIndex",
+        "LockIndex",
+        "Key",
+        "Flags"
+      );
 
-          data.should.have.keys(
-            'CreateIndex',
-            'ModifyIndex',
-            'LockIndex',
-            'Key',
-            'Flags',
-            'Value'
-          );
-          data.Value.should.eql(value1);
+      const data1 = await this.c1.kv.get(key1);
+      should(data1).have.property("Value");
+      should(data1.Value).eql(value1);
 
-          c.kv.get(key2, function(err, data) {
-            should.not.exist(err);
-
-            data.should.have.keys(
-              'CreateIndex',
-              'ModifyIndex',
-              'LockIndex',
-              'Key',
-              'Flags',
-              'Value'
-            );
-            data.Value.should.eql(value2);
-
-            done();
-          });
-        });
-      });
+      const data2 = await this.c1.kv.get(key2);
+      should(data2).have.property("Value");
+      should(data2.Value).eql(value2);
     });
   });
 });

@@ -4,27 +4,23 @@
   "description": "Consul client",
   "main": "./lib",
   "dependencies": {
-    "papi": "^0.29.0"
+    "papi": "^1.0.0"
   },
   "devDependencies": {
     "async": "^3.2.0",
-    "bluebird": "^3.1.1",
     "debug": "^4.3.1",
-    "istanbul": "^0.4.5",
-    "jscs": "^3.0.7",
     "jshint": "^2.5.5",
-    "lodash": "^4.17.10",
     "mocha": "^8.3.0",
     "nock": "^13.0.7",
     "node-uuid": "^1.4.3",
+    "nyc": "^15.1.0",
     "should": "^13.2.1",
     "sinon": "^9.2.4",
     "temp": "^0.9.4"
   },
   "scripts": {
-    "cover": "istanbul cover _mocha -- --recursive && open coverage/lcov-report/index.html",
-    "test": "jshint lib test && jscs lib test && istanbul cover --report text _mocha -- --recursive --check-leaks && istanbul check-coverage --statements 100 --functions 100 --branches 100 --lines 100",
-    "acceptance": "ACCEPTANCE=true istanbul cover --report text _mocha -- test/acceptance --recursive --check-leaks --timeout 15000",
+    "test": "jshint lib test && nyc mocha -- --recursive --check-leaks && nyc check-coverage --statements 100 --functions 100 --branches 100 --lines 100",
+    "acceptance": "ACCEPTANCE=true nyc mocha -- test/acceptance --recursive --check-leaks --timeout 15000",
     "acceptanceSetupMacOS": "sudo ifconfig lo0 alias 127.0.0.2 up && sudo ifconfig lo0 alias 127.0.0.3 up"
   },
   "keywords": [

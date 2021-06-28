@@ -1,272 +1,166 @@
-'use strict';
+"use strict";
 
-/**
- * Module dependencies.
- */
+const should = require("should");
 
-var should = require('should');
+const helper = require("./helper");
 
-var helper = require('./helper');
-
-/**
- * Tests
- */
-
-describe('Kv', function() {
+describe("Kv", function () {
   helper.setup(this);
 
-  describe('get', function() {
-    it('should work', function(done) {
-      this.nock
-        .get('/v1/kv/key1')
-        .reply(200, [{ ok: true }]);
+  describe("get", function () {
+    it("should work", async function () {
+      this.nock.get("/v1/kv/key1").reply(200, [{ ok: true }]);
 
-      var opts = { key: 'key1' };
-
-      this.consul.kv.get(opts, function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql({ ok: true });
-
-        done();
-      });
+      const data = await this.consul.kv.get({ key: "key1" });
+      should(data).eql({ ok: true });
     });
 
-    it('should return raw', function(done) {
-      this.nock
-        .get('/v1/kv/key1?raw=true')
-        .reply(200, 'value1');
+    it("should return raw", async function () {
+      this.nock.get("/v1/kv/key1?raw=true").reply(200, "value1");
 
-      var opts = {
-        key: 'key1',
+      const data = await this.consul.kv.get({
+        key: "key1",
         raw: true,
-      };
-
-      this.consul.kv.get(opts, function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql(Buffer.from('value1'));
-
-        done();
       });
+      should(data).eql(Buffer.from("value1"));
     });
 
-    it('should return handle not found', function(done) {
-      this.nock
-        .get('/v1/kv/key1')
-        .reply(404, 'value1');
+    it("should return handle not found", async function () {
+      this.nock.get("/v1/kv/key1").reply(404, "value1");
 
-      this.consul.kv.get('key1', function(err, data) {
-        should.not.exist(err);
-        should.not.exist(data);
-
-        done();
-      });
+      const data = await this.consul.kv.get("key1");
+      should.not.exist(data);
     });
 
-    it('should decode values', function(done) {
+    it("should decode values", async function () {
       this.nock
-        .get('/v1/kv/?recurse=true')
-        .reply(200, [{ Value: 'dmFsdWUx' }, { ok: true }]);
+        .get("/v1/kv/?recurse=true")
+        .reply(200, [{ Value: "dmFsdWUx" }, { ok: true }]);
 
-      var opts = { recurse: true };
-
-      this.consul.kv.get(opts, function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql([
-          { Value: 'value1' },
-          { ok: true },
-        ]);
-
-        done();
-      });
+      const data = await this.consul.kv.get({ recurse: true });
+      should(data).eql([{ Value: "value1" }, { ok: true }]);
     });
 
-    it('should empty response', function(done) {
-      this.nock
-        .get('/v1/kv/?recurse=true')
-        .reply(200, []);
+    it("should empty response", async function () {
+      this.nock.get("/v1/kv/?recurse=true").reply(200, []);
 
-      var opts = { recurse: true };
-
-      this.consul.kv.get(opts, function(err, data) {
-        should.not.exist(err);
-        should.not.exist(data);
-
-        done();
-      });
+      const data = await this.consul.kv.get({ recurse: true });
+      should.not.exist(data);
     });
 
-    it('should handle errors', function(done) {
-      this.nock
-        .get('/v1/kv/key1')
-        .reply(500);
+    it("should handle errors", async function () {
+      this.nock.get("/v1/kv/key1").reply(500);
 
-      this.consul.kv.get('key1', function(err) {
-        should(err).have.property('message', 'consul: kv.get: internal server error');
-
-        done();
-      });
+      try {
+        await this.consul.kv.get("key1");
+        should.ok(false);
+      } catch (err) {
+        should(err).have.property(
+          "message",
+          "consul: kv.get: internal server error"
+        );
+      }
     });
   });
 
-  describe('keys', function() {
-    it('should work', function(done) {
-      this.nock
-        .get('/v1/kv/key1?keys=true&separator=%3A')
-        .reply(200, ['test']);
+  describe("keys", function () {
+    it("should work", async function () {
+      this.nock.get("/v1/kv/key1?keys=true&separator=%3A").reply(200, ["test"]);
 
-      var opts = { key: 'key1', separator: ':' };
-
-      this.consul.kv.keys(opts, function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql(['test']);
-
-        done();
-      });
+      const data = await this.consul.kv.keys({ key: "key1", separator: ":" });
+      should(data).eql(["test"]);
     });
 
-    it('should work string argument', function(done) {
-      this.nock
-        .get('/v1/kv/key1?keys=true')
-        .reply(200, ['test']);
+    it("should work string argument", async function () {
+      this.nock.get("/v1/kv/key1?keys=true").reply(200, ["test"]);
 
-      this.consul.kv.keys('key1', function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql(['test']);
-
-        done();
-      });
+      const data = await this.consul.kv.keys("key1");
+      should(data).eql(["test"]);
     });
 
-    it('should work with no arguments', function(done) {
-      this.nock
-        .get('/v1/kv/?keys=true')
-        .reply(200, ['test']);
+    it("should work with no arguments", async function () {
+      this.nock.get("/v1/kv/?keys=true").reply(200, ["test"]);
 
-      this.consul.kv.keys(function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql(['test']);
-
-        done();
-      });
+      const data = await this.consul.kv.keys();
+      should(data).eql(["test"]);
     });
   });
 
-  describe('set', function() {
-    it('should work', function(done) {
+  describe("set", function () {
+    it("should work", async function () {
       this.nock
-        .put('/v1/kv/key1?cas=1&flags=2&acquire=session', 'value1')
+        .put("/v1/kv/key1?cas=1&flags=2&acquire=session", "value1")
         .reply(200, { ok: true });
 
-      var opts = {
-        key: 'key1',
-        value: 'value1',
+      const data = await this.consul.kv.set({
+        key: "key1",
+        value: "value1",
         cas: 1,
         flags: 2,
-        acquire: 'session',
-      };
-
-      this.consul.kv.set(opts, function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql({ ok: true });
-
-        done();
+        acquire: "session",
       });
+      should(data).eql({ ok: true });
     });
 
-    it('should work with 4 arguments', function(done) {
-      this.nock
-        .put('/v1/kv/key1?release=session', '')
-        .reply(200, { ok: true });
+    it("should work with 4 arguments", async function () {
+      this.nock.put("/v1/kv/key1?release=session", "").reply(200, { ok: true });
 
-      var opts = { release: 'session' };
-
-      this.consul.kv.set('key1', null, opts, function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql({ ok: true });
-
-        done();
-      });
+      const opts = { release: "session" };
+      const data = await this.consul.kv.set("key1", null, opts);
+      should(data).eql({ ok: true });
     });
 
-    it('should work with 3 arguments', function(done) {
-      this.nock
-        .put('/v1/kv/key1', 'value1')
-        .reply(200, { ok: true });
+    it("should work with 3 arguments", async function () {
+      this.nock.put("/v1/kv/key1", "value1").reply(200, { ok: true });
 
-      this.consul.kv.set('key1', 'value1', function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql({ ok: true });
-
-        done();
-      });
+      const data = await this.consul.kv.set("key1", "value1");
+      should(data).eql({ ok: true });
     });
 
-    it('should require key', function(done) {
-      this.consul.kv.set({}, function(err) {
-        should(err).have.property('message', 'consul: kv.set: key required');
-
-        done();
-      });
+    it("should require key", async function () {
+      try {
+        await this.consul.kv.set({});
+        should.ok(false);
+      } catch (err) {
+        should(err).have.property("message", "consul: kv.set: key required");
+      }
     });
 
-    it('should require value', function(done) {
-      this.consul.kv.set({ key: 'key1' }, function(err) {
-        should(err).have.property('message', 'consul: kv.set: value required');
-
-        done();
-      });
+    it("should require value", async function () {
+      try {
+        await this.consul.kv.set({ key: "key1" });
+        should.ok(false);
+      } catch (err) {
+        should(err).have.property("message", "consul: kv.set: value required");
+      }
     });
   });
 
-  describe('del', function() {
-    it('should work', function(done) {
-      this.nock
-        .delete('/v1/kv/key1?cas=1')
-        .reply(200, true);
+  describe("del", function () {
+    it("should work", async function () {
+      this.nock.delete("/v1/kv/key1?cas=1").reply(200, true);
 
-      var opts = { key: 'key1', cas: 1 };
-
-      this.consul.kv.del(opts, function(err, result) {
-        should.not.exist(err);
-        should(result).equal(true);
-
-        done();
-      });
+      const result = await this.consul.kv.del({ key: "key1", cas: 1 });
+      should(result).equal(true);
     });
 
-    it('should work with string', function(done) {
-      this.nock
-        .delete('/v1/kv/key1')
-        .reply(200);
+    it("should work using delete alias", async function () {
+      this.nock.delete("/v1/kv/key1?cas=1").reply(200, true);
 
-      this.consul.kv.del('key1', function(err) {
-        should.not.exist(err);
-
-        done();
-      });
+      const result = await this.consul.kv.delete({ key: "key1", cas: 1 });
+      should(result).equal(true);
     });
 
-    it('should work support recurse', function(done) {
-      this.nock
-        .delete('/v1/kv/?recurse=true')
-        .reply(200);
+    it("should work with string", async function () {
+      this.nock.delete("/v1/kv/key1").reply(200);
 
-      var opts = { recurse: true };
+      await this.consul.kv.del("key1");
+    });
 
-      this.consul.kv.del(opts, function(err) {
-        should.not.exist(err);
+    it("should work support recurse", async function () {
+      this.nock.delete("/v1/kv/?recurse=true").reply(200);
 
-        done();
-      });
+      await this.consul.kv.del({ recurse: true });
     });
   });
 });

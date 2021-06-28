@@ -1,77 +1,41 @@
-'use strict';
+"use strict";
 
-/**
- * Module dependencies.
- */
+const should = require("should");
 
-var should = require('should');
+const helper = require("./helper");
 
-var helper = require('./helper');
-
-/**
- * Tests
- */
-
-describe('Status', function() {
+describe("Status", function () {
   helper.setup(this);
 
-  describe('leader', function() {
-    it('should work', function(done) {
-      this.nock
-        .get('/v1/status/leader')
-        .reply(200, { ok: true });
+  describe("leader", function () {
+    it("should work", async function () {
+      this.nock.get("/v1/status/leader").reply(200, { ok: true });
 
-      this.consul.status.leader({}, function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql({ ok: true });
-
-        done();
-      });
+      const data = await this.consul.status.leader({});
+      should(data).eql({ ok: true });
     });
 
-    it('should work with no arguments', function(done) {
-      this.nock
-        .get('/v1/status/leader')
-        .reply(200, { ok: true });
+    it("should work with no arguments", async function () {
+      this.nock.get("/v1/status/leader").reply(200, { ok: true });
 
-      this.consul.status.leader(function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql({ ok: true });
-
-        done();
-      });
+      const data = await this.consul.status.leader();
+      should(data).eql({ ok: true });
     });
   });
 
-  describe('peers', function() {
-    it('should work', function(done) {
-      this.nock
-        .get('/v1/status/peers')
-        .reply(200, [{ ok: true }]);
+  describe("peers", function () {
+    it("should work", async function () {
+      this.nock.get("/v1/status/peers").reply(200, [{ ok: true }]);
 
-      this.consul.status.peers({}, function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql([{ ok: true }]);
-
-        done();
-      });
+      const data = await this.consul.status.peers({});
+      should(data).eql([{ ok: true }]);
     });
 
-    it('should work with no arguments', function(done) {
-      this.nock
-        .get('/v1/status/peers')
-        .reply(200, [{ ok: true }]);
+    it("should work with no arguments", async function () {
+      this.nock.get("/v1/status/peers").reply(200, [{ ok: true }]);
 
-      this.consul.status.peers(function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql([{ ok: true }]);
-
-        done();
-      });
+      const data = await this.consul.status.peers();
+      should(data).eql([{ ok: true }]);
     });
   });
 });

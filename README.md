@@ -10,8 +10,6 @@ This is a [Consul][consul] client.
 See the official [HTTP API][consul-docs-api] docs for more information.
 
  * [Consul](#init)
-   * [Callback](#callback)
-   * [Promise](#promise)
    * [Common Method Call Options](#common-options)
  * [ACL](#acl)
  * [Agent](#agent)
@@ -32,7 +30,7 @@ See the official [HTTP API][consul-docs-api] docs for more information.
  * [Watch](#watch)
 
 <a name="init"></a>
-### consul([options])
+### Consul([options])
 
 Initialize a new Consul client.
 
@@ -43,29 +41,14 @@ Options
  * secure (Boolean, default: false): enable HTTPS
  * ca (String[], optional): array of strings or Buffers of trusted certificates in PEM format
  * defaults (Object, optional): common method call options that will be included with every call (ex: set default `token`), these options can be override on a per call basis
- * promisify (Boolean|Function, optional): convert callback methods to promises
 
 Usage
 
 ``` javascript
-var consul = require('consul')();
+const Consul = require('consul');
+
+const consul = new Consul();
 ```
-
-<a name="callback"></a>
-### Callback
-
-All callback methods have the following signature `function(err, data, res)`.
-
- * err (Error, optional): set if there was an error, otherwise falsy
- * data (Object, optional): response data if any, otherwise `undefined`
- * res (http.IncomingMessage, optional): HTTP response object with additional `body` property. This might not exist when `err` is set. The `body` property can be a decoded object, string, or Buffer.
-
-<a name="promise"></a>
-### Promise
-
-Promise support can be enabled by setting `promisify` to `true` in Node `>= 0.12` or passing a wrapper (ex: `bluebird.fromCallback`) in older versions.
-
-If you need access to the `res` object you can create a custom wrapper ([see example below](#promise-wrapper)).
 
 <a name="common-options"></a>
 ### Common Method Call Options
@@ -101,16 +84,14 @@ These options work for all methods.
  * [replication](#acl-replication)
 
 <a name="acl-bootstrap"></a>
-### consul.acl.bootstrap(callback)
+### consul.acl.bootstrap()
 
 Creates one-time management token if not configured.
 
 Usage
 
 ``` javascript
-consul.acl.bootstrap(function(err, result) {
-  if (err) throw err;
-});
+await consul.acl.bootstrap();
 ```
 
 Result
@@ -122,7 +103,7 @@ Result
 ```
 
 <a name="acl-create"></a>
-### consul.acl.create([options], callback)
+### consul.acl.create([options])
 
 Creates a new token with policy.
 
@@ -135,9 +116,7 @@ Options
 Usage
 
 ``` javascript
-consul.acl.create(function(err, result) {
-  if (err) throw err;
-});
+await consul.acl.create();
 ```
 
 Result
@@ -149,7 +128,7 @@ Result
 ```
 
 <a name="acl-update"></a>
-### consul.acl.update(options, callback)
+### consul.acl.update(options)
 
 Update the policy of a token.
 
@@ -163,13 +142,11 @@ Options
 Usage
 
 ``` javascript
-consul.acl.update({ id: '63e1d82e-f718-eb92-3b7d-61f0c71d45b4', name: 'test' }, function(err) {
-  if (err) throw err;
-});
+await consul.acl.update({ id: '63e1d82e-f718-eb92-3b7d-61f0c71d45b4', name: 'test' });
 ```
 
 <a name="acl-destroy"></a>
-### consul.acl.destroy(options, callback)
+### consul.acl.destroy(options)
 
 Destroys a given token.
 
@@ -180,13 +157,11 @@ Options
 Usage
 
 ``` javascript
-consul.acl.destroy('b1f4c10e-b61b-e1de-de95-218c9fefdd3e', function(err) {
-  if (err) throw err;
-});
+await consul.acl.destroy('b1f4c10e-b61b-e1de-de95-218c9fefdd3e');
 ```
 
 <a name="acl-get"></a>
-### consul.acl.get(options, callback)
+### consul.acl.get(options)
 
 Queries the policy of a given token.
 
@@ -197,9 +172,7 @@ Options
 Usage
 
 ``` javascript
-consul.acl.get('63e1d82e-f718-eb92-3b7d-61f0c71d45b4', function(err, result) {
-  if (err) throw err;
-});
+await consul.acl.get('63e1d82e-f718-eb92-3b7d-61f0c71d45b4');
 ```
 
 Result
@@ -216,7 +189,7 @@ Result
 ```
 
 <a name="acl-clone"></a>
-### consul.acl.clone(options, callback)
+### consul.acl.clone(options)
 
 Creates a new token by cloning an existing token.
 
@@ -227,9 +200,7 @@ Options
 Usage
 
 ``` javascript
-consul.acl.clone('63e1d82e-f718-eb92-3b7d-61f0c71d45b4', function(err) {
-  if (err) throw err;
-});
+await consul.acl.clone('63e1d82e-f718-eb92-3b7d-61f0c71d45b4');
 ```
 
 Result
@@ -241,16 +212,14 @@ Result
 ```
 
 <a name="acl-list"></a>
-### consul.acl.list([options], callback)
+### consul.acl.list([options])
 
 Lists all the active tokens.
 
 Usage
 
 ``` javascript
-consul.acl.list(function(err, result) {
-  if (err) throw err;
-});
+await consul.acl.list();
 ```
 
 Result
@@ -277,16 +246,14 @@ Result
 ```
 
 <a name="acl-replication"></a>
-### consul.acl.replication([options], callback)
+### consul.acl.replication([options])
 
 Get the status of the ACL replication process in the datacenter.
 
 Usage
 
 ``` javascript
-consul.acl.replication(function(err, result) {
-  if (err) throw err;
-});
+await consul.acl.replication();
 ```
 
 Result
@@ -315,7 +282,7 @@ Result
  * [forceLeave](#agent-force-leave)
 
 <a name="agent-members"></a>
-### consul.agent.members([options], callback)
+### consul.agent.members([options])
 
 Returns the members as seen by the consul agent.
 
@@ -326,9 +293,7 @@ Options
 Usage
 
 ``` javascript
-consul.agent.members(function(err, result) {
-  if (err) throw err;
-});
+await consul.agent.members();
 ```
 
 Result
@@ -361,29 +326,25 @@ Result
 ```
 
 <a name="agent-reload"></a>
-### consul.agent.reload([options], callback)
+### consul.agent.reload([options])
 
 Reload agent configuration.
 
 Usage
 
 ``` javascript
-consul.agent.reload(function(err, result) {
-  if (err) throw err;
-});
+await consul.agent.reload();
 ```
 
 <a name="agent-self"></a>
-### consul.agent.self(callback)
+### consul.agent.self()
 
 Returns the agent node configuration.
 
 Usage
 
 ``` javascript
-consul.agent.self(function(err, result) {
-  if (err) throw err;
-});
+await consul.agent.self();
 ```
 
 Result
@@ -464,7 +425,7 @@ Result
 ```
 
 <a name="agent-maintenance"></a>
-### consul.agent.maintenance(options, callback)
+### consul.agent.maintenance(options)
 
 Set node maintenance mode.
 
@@ -476,13 +437,11 @@ Options
 Usage
 
 ``` javascript
-consul.agent.maintenance(true, function(err) {
-  if (err) throw err;
-});
+await consul.agent.maintenance(true);
 ```
 
 <a name="agent-join"></a>
-### consul.agent.join(options, callback)
+### consul.agent.join(options)
 
 Trigger agent to join a node.
 
@@ -494,13 +453,11 @@ Options
 Usage
 
 ``` javascript
-consul.agent.join('127.0.0.2', function(err) {
-  if (err) throw err;
-});
+await consul.agent.join('127.0.0.2');
 ```
 
 <a name="agent-force-leave"></a>
-### consul.agent.forceLeave(options, callback)
+### consul.agent.forceLeave(options)
 
 Force remove node.
 
@@ -511,9 +468,7 @@ Options
 Usage
 
 ``` javascript
-consul.agent.forceLeave('node2', function(err) {
-  if (err) throw err;
-});
+await consul.agent.forceLeave('node2');
 ```
 
 <a name="agent-check"></a>
@@ -527,16 +482,14 @@ consul.agent.forceLeave('node2', function(err) {
  * [fail](#agent-check-fail)
 
 <a name="agent-check-list"></a>
-### consul.agent.check.list(callback)
+### consul.agent.check.list()
 
 Returns the checks the agent is managing.
 
 Usage
 
 ``` javascript
-consul.agent.check.list(function(err, result) {
-  if (err) throw err;
-});
+await consul.agent.check.list();
 ```
 
 Result
@@ -557,7 +510,7 @@ Result
 ```
 
 <a name="agent-check-register"></a>
-### consul.agent.check.register(options, callback)
+### consul.agent.check.register(options)
 
 Registers a new check.
 
@@ -592,19 +545,17 @@ Options
 Usage
 
 ``` javascript
-var check = {
+const check = {
   name: 'example',
   ttl: '15s',
   notes: 'This is an example check.',
 };
 
-consul.agent.check.register(check, function(err) {
-  if (err) throw err;
-});
+await consul.agent.check.register(check);
 ```
 
 <a name="agent-check-deregister"></a>
-### consul.agent.check.deregister(options, callback)
+### consul.agent.check.deregister(options)
 
 Deregister a check.
 
@@ -615,13 +566,11 @@ Options
 Usage
 
 ``` javascript
-consul.agent.check.deregister('example', function(err) {
-  if (err) throw err;
-});
+await consul.agent.check.deregister('example');
 ```
 
 <a name="agent-check-pass"></a>
-### consul.agent.check.pass(options, callback)
+### consul.agent.check.pass(options)
 
 Mark a test as passing.
 
@@ -633,13 +582,11 @@ Options
 Usage
 
 ``` javascript
-consul.agent.check.pass('example', function(err) {
-  if (err) throw err;
-});
+await consul.agent.check.pass('example');
 ```
 
 <a name="agent-check-warn"></a>
-### consul.agent.check.warn(options, callback)
+### consul.agent.check.warn(options)
 
 Mark a test as warning.
 
@@ -651,13 +598,11 @@ Options
 Usage
 
 ``` javascript
-consul.agent.check.warn('example', function(err) {
-  if (err) throw err;
-});
+await consul.agent.check.warn('example');
 ```
 
 <a name="agent-check-fail"></a>
-### consul.agent.check.fail(options, callback)
+### consul.agent.check.fail(options)
 
 Mark a test as critical.
 
@@ -669,9 +614,7 @@ Options
 Usage
 
 ``` javascript
-consul.agent.check.fail('example', function(err) {
-  if (err) throw err;
-});
+await consul.agent.check.fail('example');
 ```
 
 <a name="agent-service"></a>
@@ -683,16 +626,14 @@ consul.agent.check.fail('example', function(err) {
  * [maintenance](#agent-service-maintenance)
 
 <a name="agent-service-list"></a>
-### consul.agent.service.list(callback)
+### consul.agent.service.list()
 
 Returns the services the agent is managing.
 
 Usage
 
 ``` javascript
-consul.agent.service.list(function(err, result) {
-  if (err) throw err;
-});
+await consul.agent.service.list();
 ```
 
 Result
@@ -712,7 +653,7 @@ Result
 ```
 
 <a name="agent-service-register"></a>
-### consul.agent.service.register(options, callback)
+### consul.agent.service.register(options)
 
 Registers a new service.
 
@@ -745,13 +686,11 @@ Options
 Usage
 
 ``` javascript
-consul.agent.service.register('example', function(err) {
-  if (err) throw err;
-});
+await consul.agent.service.register('example');
 ```
 
 <a name="agent-service-deregister"></a>
-### consul.agent.service.deregister(options, callback)
+### consul.agent.service.deregister(options)
 
 Deregister a service.
 
@@ -762,13 +701,11 @@ Options
 Usage
 
 ``` javascript
-consul.agent.service.deregister('example', function(err) {
-  if (err) throw err;
-});
+await consul.agent.service.deregister('example');
 ```
 
 <a name="agent-service-maintenance"></a>
-### consul.agent.service.maintenance(options, callback)
+### consul.agent.service.maintenance(options)
 
 Set service maintenance mode.
 
@@ -781,9 +718,7 @@ Options
 Usage
 
 ``` javascript
-consul.agent.service.maintenance({ id: 'example', enable: true }, function(err) {
-  if (err) throw err;
-});
+await consul.agent.service.maintenance({ id: 'example', enable: true });
 ```
 
 <a name="catalog"></a>
@@ -795,16 +730,14 @@ consul.agent.service.maintenance({ id: 'example', enable: true }, function(err) 
  * [service](#catalog-service)
 
 <a name="catalog-datacenters"></a>
-### consul.catalog.datacenters(callback)
+### consul.catalog.datacenters()
 
 Lists known datacenters.
 
 Usage
 
 ``` javascript
-consul.catalog.datacenters(function(err, result) {
-  if (err) throw err;
-});
+await consul.catalog.datacenters();
 ```
 
 Result
@@ -821,7 +754,7 @@ Result
  * [nodes](#catalog-connect-nodes)
 
 <a name="catalog-connect-nodes"></a>
-### consul.catalog.connect.nodes(options, callback)
+### consul.catalog.connect.nodes(options)
 
 Lists the nodes for a given Connect-capable service.
 
@@ -833,9 +766,7 @@ Options
 Usage
 
 ``` javascript
-consul.catalog.connect.nodes('example', function(err, result) {
-  if (err) throw err;
-});
+await consul.catalog.connect.nodes('example');
 ```
 
 Result
@@ -880,7 +811,7 @@ Result
  * [services](#catalog-node-services)
 
 <a name="catalog-node-list"></a>
-### consul.catalog.node.list([options], callback)
+### consul.catalog.node.list([options])
 
 Lists nodes in a given datacenter.
 
@@ -891,9 +822,7 @@ Options
 Usage
 
 ``` javascript
-consul.catalog.node.list(function(err, result) {
-  if (err) throw err;
-});
+await consul.catalog.node.list();
 ```
 
 Result
@@ -908,7 +837,7 @@ Result
 ```
 
 <a name="catalog-node-services"></a>
-### consul.catalog.node.services(options, callback)
+### consul.catalog.node.services(options)
 
 Lists the services provided by a node.
 
@@ -919,9 +848,7 @@ Options
 Usage
 
 ``` javascript
-consul.catalog.node.services('node1', function(err, result) {
-  if (err) throw err;
-});
+await consul.catalog.node.services('node1');
 ```
 
 Result
@@ -959,7 +886,7 @@ Result
  * [nodes](#catalog-service-nodes)
 
 <a name="catalog-service-list"></a>
-### consul.catalog.service.list([options], callback)
+### consul.catalog.service.list([options])
 
 Lists services in a given datacenter.
 
@@ -970,9 +897,7 @@ Options
 Usage
 
 ``` javascript
-consul.catalog.service.list(function(err, result) {
-  if (err) throw err;
-});
+await consul.catalog.service.list();
 ```
 
 Result
@@ -988,7 +913,7 @@ Result
 ```
 
 <a name="catalog-service-nodes"></a>
-### consul.catalog.service.nodes(options, callback)
+### consul.catalog.service.nodes(options)
 
 Lists the nodes for a given service.
 
@@ -1001,9 +926,7 @@ Options
 Usage
 
 ``` javascript
-consul.catalog.service.nodes('example', function(err, result) {
-  if (err) throw err;
-});
+await consul.catalog.service.nodes('example');
 ```
 
 Result
@@ -1031,7 +954,7 @@ Result
  * [list](#event-list)
 
 <a name="event-fire"></a>
-### consul.event.fire(options, callback)
+### consul.event.fire(options)
 
 Fires a new user event.
 
@@ -1046,9 +969,7 @@ Options
 Usage
 
 ``` javascript
-consul.event.fire('deploy', '53', function(err, result) {
-  if (err) throw err;
-});
+await consul.event.fire('deploy', '53');
 ```
 
 Result
@@ -1067,7 +988,7 @@ Result
 ```
 
 <a name="event-list"></a>
-### consul.event.list([options], callback)
+### consul.event.list([options])
 
 Lists the most recent events an agent has seen.
 
@@ -1078,9 +999,7 @@ Options
 Usage
 
 ``` javascript
-consul.event.list('deploy', function(err, result) {
-  if (err) throw err;
-});
+await consul.event.list('deploy');
 ```
 
 Result
@@ -1109,7 +1028,7 @@ Result
  * [state](#health-state)
 
 <a name="health-node"></a>
-### consul.health.node(options, callback)
+### consul.health.node(options)
 
 Returns the health info of a node.
 
@@ -1121,9 +1040,7 @@ Options
 Usage
 
 ``` javascript
-consul.health.node('node1', function(err, result) {
-  if (err) throw err;
-});
+await consul.health.node('node1');
 ```
 
 Result
@@ -1154,7 +1071,7 @@ Result
 ```
 
 <a name="health-checks"></a>
-### consul.health.checks(options, callback)
+### consul.health.checks(options)
 
 Returns the checks of a service.
 
@@ -1166,9 +1083,7 @@ Options
 Usage
 
 ``` javascript
-consul.health.checks('example', function(err, result) {
-  if (err) throw err;
-});
+await consul.health.checks('example');
 ```
 
 Result
@@ -1189,7 +1104,7 @@ Result
 ```
 
 <a name="health-service"></a>
-### consul.health.service(options, callback)
+### consul.health.service(options)
 
 Returns the nodes and health info of a service.
 
@@ -1203,9 +1118,7 @@ Options
 Usage
 
 ``` javascript
-consul.health.service('example', function(err, result) {
-  if (err) throw err;
-});
+await consul.health.service('example');
 ```
 
 Result
@@ -1250,7 +1163,7 @@ Result
 ```
 
 <a name="health-state"></a>
-### consul.health.state(options, callback)
+### consul.health.state(options)
 
 Returns the checks in a given state.
 
@@ -1262,9 +1175,7 @@ Options
 Usage
 
 ``` javascript
-consul.health.state('critical', function(err, result) {
-  if (err) throw err;
-});
+await consul.health.state('critical');
 ```
 
 Result
@@ -1293,7 +1204,7 @@ Result
  * [del](#kv-del)
 
 <a name="kv-get"></a>
-### consul.kv.get(options, callback)
+### consul.kv.get(options)
 
 Return key/value (kv) pair(s) or `undefined` if key not found.
 
@@ -1310,10 +1221,7 @@ Options
 Usage
 
 ``` javascript
-consul.kv.get('hello', function(err, result) {
-  if (err) throw err;
-  if (result === undefined) throw new Error('key not found');
-});
+await consul.kv.get('hello');
 ```
 
 Result
@@ -1330,7 +1238,7 @@ Result
 ```
 
 <a name="kv-keys"></a>
-### consul.kv.keys(options, callback)
+### consul.kv.keys(options)
 
 Return keys for a given prefix.
 
@@ -1343,9 +1251,7 @@ Options
 Usage
 
 ``` javascript
-consul.kv.keys('a/', function(err, result) {
-  if (err) throw err;
-});
+await consul.kv.keys('a/');
 ```
 
 Result
@@ -1358,7 +1264,7 @@ Result
 ```
 
 <a name="kv-set"></a>
-### consul.kv.set(options, callback)
+### consul.kv.set(options)
 
 Set key/value (kv) pair.
 
@@ -1375,9 +1281,7 @@ Options
 Usage
 
 ``` javascript
-consul.kv.set('hello', 'world', function(err, result) {
-  if (err) throw err;
-});
+await consul.kv.set('hello', 'world');
 ```
 
 Result
@@ -1387,7 +1291,7 @@ true
 ```
 
 <a name="kv-del"></a>
-### consul.kv.del(options, callback)
+### consul.kv.del(options)
 
 Delete key/value (kv) pair(s).
 
@@ -1401,9 +1305,7 @@ Options
 Usage
 
 ``` javascript
-consul.kv.del('hello', function(err) {
-  if (err) throw err;
-});
+await consul.kv.del('hello');
 ```
 
 <a name="lock"></a>
@@ -1430,7 +1332,7 @@ Events
 Usage
 
 ``` javascript
-var lock = consul.lock({ key: 'test' });
+const lock = consul.lock({ key: 'test' });
 
 lock.on('acquire', function() {
   console.log('lock acquired');
@@ -1473,16 +1375,14 @@ lock released or there was a permanent failure
  * [explain](#query-explain)
 
 <a name="query-list"></a>
-### consul.query.list(callback)
+### consul.query.list()
 
 List prepared query.
 
 Usage
 
 ``` javascript
-consul.query.list(function(err, result) {
-  if (err) throw err;
-});
+await consul.query.list();
 ```
 
 Result
@@ -1525,7 +1425,7 @@ Result
 ```
 
 <a name="query-create"></a>
-### consul.query.create(options, callback)
+### consul.query.create(options)
 
 Create a new prepared query.
 
@@ -1545,7 +1445,7 @@ Options
 Usage
 
 ``` javascript
-var opts = {
+const opts = {
   name: 'redis',
   service: {
     service: 'redis'
@@ -1553,9 +1453,7 @@ var opts = {
   },
 };
 
-consul.query.create(opts, function(err, result) {
-  if (err) throw err;
-});
+await consul.query.create(opts);
 ```
 
 Result
@@ -1567,7 +1465,7 @@ Result
 ```
 
 <a name="query-update"></a>
-### consul.query.update(options, callback)
+### consul.query.update(options)
 
 Update existing prepared query.
 
@@ -1580,7 +1478,7 @@ And all [create options][query-create].
 Usage
 
 ``` javascript
-var opts = {
+const opts = {
   query: '422b14b9-874b-4520-bd2e-e149a42b0066',
   name: 'redis',
   service: {
@@ -1589,13 +1487,11 @@ var opts = {
   },
 };
 
-consul.query.update(opts, function(err, result) {
-  if (err) throw err;
-});
+await consul.query.update(opts);
 ```
 
 <a name="query-get"></a>
-### consul.query.get(options, callback)
+### consul.query.get(options)
 
 Get prepared query.
 
@@ -1606,9 +1502,7 @@ Options
 Usage
 
 ``` javascript
-consul.query.get('6119cabf-c052-48fe-9f07-711762e52931', function(err, result) {
-  if (err) throw err;
-});
+await consul.query.get('6119cabf-c052-48fe-9f07-711762e52931');
 ```
 
 Result
@@ -1650,7 +1544,7 @@ Result
 
 
 <a name="query-destroy"></a>
-### consul.query.destroy(options, callback)
+### consul.query.destroy(options)
 
 Delete prepared query.
 
@@ -1661,13 +1555,11 @@ Options
 Usage
 
 ``` javascript
-consul.query.destroy('422b14b9-874b-4520-bd2e-e149a42b0066', function(err) {
-  if (err) throw err;
-});
+await consul.query.destroy('422b14b9-874b-4520-bd2e-e149a42b0066');
 ```
 
 <a name="query-execute"></a>
-### consul.query.execute(options, callback)
+### consul.query.execute(options)
 
 Execute prepared query.
 
@@ -1678,9 +1570,7 @@ Options
 Usage
 
 ``` javascript
-consul.query.execute('6119cabf-c052-48fe-9f07-711762e52931', function(err) {
-  if (err) throw err;
-});
+await consul.query.execute('6119cabf-c052-48fe-9f07-711762e52931');
 ```
 
 Result
@@ -1737,7 +1627,7 @@ Result
 ```
 
 <a name="query-explain"></a>
-### consul.query.explain(options, callback)
+### consul.query.explain(options)
 
 Explain prepared query.
 
@@ -1748,10 +1638,7 @@ Options
 Usage
 
 ``` javascript
-consul.query.explain('422b14b9-874b-4520-bd2e-e149a42b0066', function(err, result) {
-  if (err) throw err;
-  console.log(result);
-});
+await consul.query.explain('422b14b9-874b-4520-bd2e-e149a42b0066');
 ```
 
 Result
@@ -1804,7 +1691,7 @@ Result
  * [renew](#session-renew)
 
 <a name="session-create"></a>
-### consul.session.create([options], callback)
+### consul.session.create([options])
 
 Create a new session.
 
@@ -1821,9 +1708,7 @@ Options
 Usage
 
 ``` javascript
-consul.session.create(function(err, result) {
-  if (err) throw err;
-});
+await consul.session.create();
 ```
 
 Result
@@ -1835,7 +1720,7 @@ Result
 ```
 
 <a name="session-destroy"></a>
-### consul.session.destroy(options, callback)
+### consul.session.destroy(options)
 
 Destroy a given session.
 
@@ -1847,13 +1732,11 @@ Options
 Usage
 
 ``` javascript
-consul.session.destroy('a0f5dc05-84c3-5f5a-1d88-05b875e524e1', function(err) {
-  if (err) throw err;
-});
+await consul.session.destroy('a0f5dc05-84c3-5f5a-1d88-05b875e524e1');
 ```
 
 <a name="session-get"></a>
-### consul.session.get(options, callback)
+### consul.session.get(options)
 
 Queries a given session.
 
@@ -1865,9 +1748,7 @@ Options
 Usage
 
 ``` javascript
-consul.session.get('a0f5dc05-84c3-5f5a-1d88-05b875e524e1', function(err, result) {
-  if (err) throw err;
-});
+await consul.session.get('a0f5dc05-84c3-5f5a-1d88-05b875e524e1');
 ```
 
 Result
@@ -1886,7 +1767,7 @@ Result
 ```
 
 <a name="session-node"></a>
-### consul.session.node(options, callback)
+### consul.session.node(options)
 
 Lists sessions belonging to a node.
 
@@ -1898,9 +1779,7 @@ Options
 Usage
 
 ``` javascript
-consul.session.node('node1', function(err, result) {
-  if (err) throw err;
-});
+await consul.session.node('node1');
 ```
 
 Result
@@ -1921,7 +1800,7 @@ Result
 ```
 
 <a name="session-list"></a>
-### consul.session.list([options], callback)
+### consul.session.list([options])
 
 Lists all the active sessions.
 
@@ -1932,9 +1811,7 @@ Options
 Usage
 
 ``` javascript
-consul.session.list(function(err, result) {
-  if (err) throw err;
-});
+await consul.session.list();
 ```
 
 Result
@@ -1955,7 +1832,7 @@ Result
 ```
 
 <a name="session-renew"></a>
-### consul.session.renew(options, callback)
+### consul.session.renew(options)
 
 Renew a given session.
 
@@ -1967,9 +1844,7 @@ Options
 Usage
 
 ``` javascript
-consul.session.renew('a0f5dc05-84c3-5f5a-1d88-05b875e524e1', function(err, renew) {
-  if (err) throw err;
-});
+await consul.session.renew('a0f5dc05-84c3-5f5a-1d88-05b875e524e1');
 ```
 
 Result
@@ -1998,16 +1873,14 @@ Result
  * [peers](#status-peers)
 
 <a name="status-leader"></a>
-### consul.status.leader(callback)
+### consul.status.leader()
 
 Returns the current Raft leader.
 
 Usage
 
 ``` javascript
-consul.status.leader(function(err, result) {
-  if (err) throw err;
-});
+await consul.status.leader();
 ```
 
 Result
@@ -2017,16 +1890,14 @@ Result
 ```
 
 <a name="status-peers"></a>
-### consul.status.peers(callback)
+### consul.status.peers()
 
 Returns the current Raft peer set.
 
 Usage
 
 ``` javascript
-consul.status.peers(function(err, result) {
-  if (err) throw err;
-});
+await consul.status.peers();
 ```
 
 Result
@@ -2038,13 +1909,13 @@ Result
 ```
 
 <a name="transaction"></a>
-### consul.transaction.create(operations, callback)
+### consul.transaction.create(operations)
 
 operations: The body of the request should be a list of operations to perform inside the atomic transaction. Up to 64 operations may be present in a single transaction.
 
 Usage
 ``` javascript
-consul.transaction.create([
+await consul.transaction.create([
   {
     {
       KV: {
@@ -2086,7 +1957,7 @@ Options
 Usage
 
 ``` javascript
-var watch = consul.watch({
+const watch = consul.watch({
   method: consul.kv.get,
   options: { key: 'test' },
   backoffFactor: 1000,
@@ -2101,38 +1972,6 @@ watch.on('error', function(err) {
 });
 
 setTimeout(function() { watch.end(); }, 30 * 1000);
-```
-
-<a name="promise-wrapper"></a>
-### Promise Wrapper
-
-``` javascript
-var Bluebird = require('bluebird');
-
-function fromCallback(fn) {
-  return new Bluebird(function(resolve, reject) {
-    try {
-      return fn(function(err, data, res) {
-        if (err) {
-          err.res = res;
-          return reject(err);
-        }
-        return resolve([data, res]);
-      });
-    } catch (err) {
-      return reject(err);
-    }
-  });
-}
-
-var consul = require('consul')({ promisify: fromCallback });
-
-consul.kv.set('test', 'hello world').then(function() {
-  consul.kv.keys().spread(function(data, res) {
-    console.log('data:', data);
-    console.log('headers:', res.headers);
-  });
-});
 ```
 
 ## Acceptance Tests

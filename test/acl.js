@@ -1,333 +1,205 @@
-'use strict';
+"use strict";
 
-/**
- * Module dependencies.
- */
+const should = require("should");
 
-var should = require('should');
+const helper = require("./helper");
 
-var helper = require('./helper');
-
-/**
- * Tests
- */
-
-describe('Acl', function() {
+describe("Acl", function () {
   helper.setup(this);
 
-  describe('bootstrap', function() {
-    it('should work', function(done) {
-      this.nock
-        .put('/v1/acl/bootstrap')
-        .reply(200, { ok: true });
+  describe("bootstrap", function () {
+    it("should work", async function () {
+      this.nock.put("/v1/acl/bootstrap").reply(200, { ok: true });
 
-      var opts = {};
-
-      this.consul.acl.bootstrap(opts, function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql({ ok: true });
-
-        done();
-      });
+      const data = await this.consul.acl.bootstrap({});
+      should(data).eql({ ok: true });
     });
 
-    it('should work with no arguments', function(done) {
-      this.nock
-        .put('/v1/acl/bootstrap')
-        .reply(200, { ok: true });
+    it("should work with no arguments", async function () {
+      this.nock.put("/v1/acl/bootstrap").reply(200, { ok: true });
 
-      this.consul.acl.bootstrap(function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql({ ok: true });
-
-        done();
-      });
+      const data = await this.consul.acl.bootstrap();
+      should(data).eql({ ok: true });
     });
   });
 
-  describe('create', function() {
-    it('should work', function(done) {
+  describe("create", function () {
+    it("should work", async function () {
       this.nock
-        .put('/v1/acl/create', {
-          Name: 'name',
-          Type: 'type',
-          Rules: 'rules',
+        .put("/v1/acl/create", {
+          Name: "name",
+          Type: "type",
+          Rules: "rules",
         })
         .reply(200, { ok: true });
 
-      var opts = {
-        name: 'name',
-        type: 'type',
-        rules: 'rules',
-      };
-
-      this.consul.acl.create(opts, function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql({ ok: true });
-
-        done();
+      const data = await this.consul.acl.create({
+        name: "name",
+        type: "type",
+        rules: "rules",
       });
+      should(data).eql({ ok: true });
     });
 
-    it('should work with no arguments', function(done) {
-      this.nock
-        .put('/v1/acl/create', {})
-        .reply(200, { ok: true });
+    it("should work with no arguments", async function () {
+      this.nock.put("/v1/acl/create", {}).reply(200, { ok: true });
 
-      this.consul.acl.create(function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql({ ok: true });
-
-        done();
-      });
+      const data = await this.consul.acl.create();
+      should(data).eql({ ok: true });
     });
   });
 
-  describe('update', function() {
-    it('should work', function(done) {
+  describe("update", function () {
+    it("should work", async function () {
       this.nock
-        .put('/v1/acl/update', {
-          ID: '123',
-          Name: 'name',
-          Type: 'type',
-          Rules: 'rules',
+        .put("/v1/acl/update", {
+          ID: "123",
+          Name: "name",
+          Type: "type",
+          Rules: "rules",
         })
         .reply(200);
 
-      var opts = {
-        id: '123',
-        name: 'name',
-        type: 'type',
-        rules: 'rules',
-      };
-
-      this.consul.acl.update(opts, function(err) {
-        should.not.exist(err);
-
-        done();
+      await this.consul.acl.update({
+        id: "123",
+        name: "name",
+        type: "type",
+        rules: "rules",
       });
     });
 
-    it('should work with just ID', function(done) {
-      this.nock
-        .put('/v1/acl/update', { ID: '123' })
-        .reply(200);
+    it("should work with just ID", async function () {
+      this.nock.put("/v1/acl/update", { ID: "123" }).reply(200);
 
-      var opts = { id: '123' };
-
-      this.consul.acl.update(opts, function(err) {
-        should.not.exist(err);
-
-        done();
-      });
+      await this.consul.acl.update({ id: "123" });
     });
 
-    it('should require ID', function(done) {
-      this.consul.acl.update({}, function(err) {
-        should(err).have.property('message', 'consul: acl.update: id required');
-        should(err).have.property('isValidation', true);
-
-        done();
-      });
+    it("should require ID", async function () {
+      try {
+        await this.consul.acl.update({});
+        should.ok(false);
+      } catch (err) {
+        should(err).have.property("message", "consul: acl.update: id required");
+        should(err).have.property("isValidation", true);
+      }
     });
   });
 
-  describe('destroy', function() {
-    it('should work', function(done) {
-      this.nock
-        .put('/v1/acl/destroy/123')
-        .reply(200);
+  describe("destroy", function () {
+    it("should work", async function () {
+      this.nock.put("/v1/acl/destroy/123").reply(200);
 
-      var opts = { id: '123' };
-
-      this.consul.acl.destroy(opts, function(err) {
-        should.not.exist(err);
-
-        done();
-      });
+      await this.consul.acl.destroy({ id: "123" });
     });
 
-    it('should work with string ID', function(done) {
-      this.nock
-        .put('/v1/acl/destroy/123')
-        .reply(200);
+    it("should work with string ID", async function () {
+      this.nock.put("/v1/acl/destroy/123").reply(200);
 
-      this.consul.acl.destroy('123', function(err) {
-        should.not.exist(err);
-
-        done();
-      });
+      await this.consul.acl.destroy("123");
     });
 
-    it('should require ID', function(done) {
-      this.consul.acl.destroy({}, function(err) {
-        should(err).have.property('message', 'consul: acl.destroy: id required');
-        should(err).have.property('isValidation', true);
-
-        done();
-      });
+    it("should require ID", async function () {
+      try {
+        await this.consul.acl.destroy({});
+        should.ok(false);
+      } catch (err) {
+        should(err).have.property(
+          "message",
+          "consul: acl.destroy: id required"
+        );
+        should(err).have.property("isValidation", true);
+      }
     });
   });
 
-  describe('info', function() {
-    it('should work', function(done) {
-      this.nock
-        .get('/v1/acl/info/123')
-        .reply(200, [{ ok: true }]);
+  describe("info", function () {
+    it("should work", async function () {
+      this.nock.get("/v1/acl/info/123").reply(200, [{ ok: true }]);
 
-      var opts = { id: '123' };
-
-      this.consul.acl.info(opts, function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql({ ok: true });
-
-        done();
-      });
+      const data = await this.consul.acl.info({ id: "123" });
+      should(data).eql({ ok: true });
     });
 
-    it('should work using get alias', function(done) {
-      this.nock
-        .get('/v1/acl/info/123')
-        .reply(200, [{ ok: true }]);
+    it("should work using get alias", async function () {
+      this.nock.get("/v1/acl/info/123").reply(200, [{ ok: true }]);
 
-      var opts = { id: '123' };
-
-      this.consul.acl.get(opts, function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql({ ok: true });
-
-        done();
-      });
+      const data = await this.consul.acl.get({ id: "123" });
+      should(data).eql({ ok: true });
     });
 
-    it('should work with string ID', function(done) {
-      this.nock
-        .get('/v1/acl/info/123')
-        .reply(200, [{ ok: true }]);
+    it("should work with string ID", async function () {
+      this.nock.get("/v1/acl/info/123").reply(200, [{ ok: true }]);
 
-      this.consul.acl.info('123', function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql({ ok: true });
-
-        done();
-      });
+      const data = await this.consul.acl.info("123");
+      should(data).eql({ ok: true });
     });
 
-    it('should require ID', function(done) {
-      this.consul.acl.info({}, function(err) {
-        should(err).have.property('message', 'consul: acl.info: id required');
-        should(err).have.property('isValidation', true);
-
-        done();
-      });
+    it("should require ID", async function () {
+      try {
+        await this.consul.acl.info({});
+        should.ok(false);
+      } catch (err) {
+        should(err).have.property("message", "consul: acl.info: id required");
+        should(err).have.property("isValidation", true);
+      }
     });
   });
 
-  describe('clone', function() {
-    it('should work', function(done) {
-      this.nock
-        .put('/v1/acl/clone/123')
-        .reply(200, { ID: '124' });
+  describe("clone", function () {
+    it("should work", async function () {
+      this.nock.put("/v1/acl/clone/123").reply(200, { ID: "124" });
 
-      var opts = { id: '123' };
-
-      this.consul.acl.clone(opts, function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql({ ID: '124' });
-
-        done();
-      });
+      const data = await this.consul.acl.clone({ id: "123" });
+      should(data).eql({ ID: "124" });
     });
 
-    it('should work with string ID', function(done) {
-      this.nock
-        .put('/v1/acl/clone/123')
-        .reply(200, { ID: '124' });
+    it("should work with string ID", async function () {
+      this.nock.put("/v1/acl/clone/123").reply(200, { ID: "124" });
 
-      this.consul.acl.clone('123', function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql({ ID: '124' });
-
-        done();
-      });
+      const data = await this.consul.acl.clone("123");
+      should(data).eql({ ID: "124" });
     });
 
-    it('should require ID', function(done) {
-      this.consul.acl.clone({}, function(err) {
-        should(err).have.property('message', 'consul: acl.clone: id required');
-        should(err).have.property('isValidation', true);
-
-        done();
-      });
+    it("should require ID", async function () {
+      try {
+        await this.consul.acl.clone({});
+        should.ok(false);
+      } catch (err) {
+        should(err).have.property("message", "consul: acl.clone: id required");
+        should(err).have.property("isValidation", true);
+      }
     });
   });
 
-  describe('list', function() {
-    it('should work', function(done) {
-      this.nock
-        .get('/v1/acl/list')
-        .reply(200, [{ ok: true }]);
+  describe("list", function () {
+    it("should work", async function () {
+      this.nock.get("/v1/acl/list").reply(200, [{ ok: true }]);
 
-      this.consul.acl.list({}, function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql([{ ok: true }]);
-
-        done();
-      });
+      const data = await this.consul.acl.list({});
+      should(data).eql([{ ok: true }]);
     });
 
-    it('should work with no arguments', function(done) {
-      this.nock
-        .get('/v1/acl/list')
-        .reply(200, [{ ok: true }]);
+    it("should work with no arguments", async function () {
+      this.nock.get("/v1/acl/list").reply(200, [{ ok: true }]);
 
-      this.consul.acl.list(function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql([{ ok: true }]);
-
-        done();
-      });
+      const data = await this.consul.acl.list();
+      should(data).eql([{ ok: true }]);
     });
   });
 
-  describe('replication', function() {
-    it('should work', function(done) {
-      this.nock
-        .get('/v1/acl/replication?dc=dc1')
-        .reply(200, [{ ok: true }]);
+  describe("replication", function () {
+    it("should work", async function () {
+      this.nock.get("/v1/acl/replication?dc=dc1").reply(200, [{ ok: true }]);
 
-      this.consul.acl.replication({ dc: 'dc1' }, function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql([{ ok: true }]);
-
-        done();
-      });
+      const data = await this.consul.acl.replication({ dc: "dc1" });
+      should(data).eql([{ ok: true }]);
     });
 
-    it('should work with no arguments', function(done) {
-      this.nock
-        .get('/v1/acl/replication')
-        .reply(200, [{ ok: true }]);
+    it("should work with no arguments", async function () {
+      this.nock.get("/v1/acl/replication").reply(200, [{ ok: true }]);
 
-      this.consul.acl.replication(function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql([{ ok: true }]);
-
-        done();
-      });
+      const data = await this.consul.acl.replication();
+      should(data).eql([{ ok: true }]);
     });
   });
 });

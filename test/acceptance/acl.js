@@ -1,297 +1,223 @@
-'use strict';
+"use strict";
 
-/**
- * Module dependencies.
- */
+const should = require("should");
 
-var lodash = require('lodash');
-var should = require('should');
+const helper = require("./helper");
 
-var helper = require('./helper');
-
-/**
- * Tests
- */
-
-helper.describe('Acl', function() {
-  before(function(done) {
-    helper.before(this, done);
+helper.describe.skip("Acl", function () {
+  before(async function () {
+    await helper.before(this);
   });
 
-  after(function(done) {
-    helper.after(this, done);
+  after(async function () {
+    await helper.after(this);
   });
 
-  beforeEach(function(done) {
-    var self = this;
-
+  beforeEach(async function () {
     this.config = {
-      name: 'test',
+      name: "test",
       rules: JSON.stringify({
         key: {
-          '': {
-            policy: 'read',
+          "": {
+            policy: "read",
           },
-          'rw/': {
-            policy: 'write',
+          "rw/": {
+            policy: "write",
           },
-          'deny/': {
-            policy: 'deny',
-          }
+          "deny/": {
+            policy: "deny",
+          },
         },
       }),
     };
 
-    self.c1.acl.create(lodash.merge({ token: 'root' }, this.config), function(err, acl) {
-      if (err) return done(err);
-
-      self.id = acl.ID;
-
-      done();
-    });
+    const acl = await this.c1.acl.create({ token: "root", ...this.config });
+    this.id = acl.ID;
   });
 
-  afterEach(function(done) {
-    this.c1.acl.destroy({ id: this.id, token: 'root' }, done);
+  afterEach(async function () {
+    await this.c1.acl.destroy({ id: this.id, token: "root" });
   });
 
-  describe('create', function() {
-    it('should create token', function(done) {
-      this.c1.acl.create({ token: 'root', type: 'management' }, function(err, acl) {
-        should.not.exist(err);
-
-        acl.should.have.keys('ID');
-
-        done();
+  describe("create", function () {
+    it("should create token", async function () {
+      const acl = await this.c1.acl.create({
+        token: "root",
+        type: "management",
       });
+      should(acl).have.keys("ID");
     });
 
-    it('should require token', function(done) {
-      var self = this;
-
-      self.c1.acl.create({ token: 'test' }, function(err) {
-        should(err).have.property('message', 'ACL not found');
-
-        done();
-      });
+    it("should require token", async function () {
+      try {
+        await this.c1.acl.create({ token: "test" });
+        should.ok(false);
+      } catch (err) {
+        should(err).have.property("message", "ACL not found");
+      }
     });
   });
 
-  describe('update', function() {
-    it('should update existing token', function(done) {
-      var self = this;
+  describe("update", function () {
+    it("should update existing token", async function () {
+      const newName = "My New Name";
 
-      var newName = 'My New Name';
-
-      var opts = {
-        id: self.id,
+      await this.c1.acl.update({
+        id: this.id,
         name: newName,
-        type: 'management',
-        rules: self.config.rules,
-        token: 'root',
-      };
-
-      self.c1.acl.update(opts, function(err) {
-        should.not.exist(err);
-
-        self.c1.acl.get({ id: self.id }, function(err, acl) {
-          should.not.exist(err);
-
-          acl.Name.should.equal(newName);
-
-          done();
-        });
+        type: "management",
+        rules: this.config.rules,
+        token: "root",
       });
+
+      const acl = await this.c1.acl.get({ id: this.id });
+      should(acl).have.keys("Name");
+      should(acl.Name).equal(newName);
     });
 
-    it('should require token', function(done) {
-      var self = this;
-
-      self.c1.acl.destroy({ id: self.id, token: '' }, function(err) {
-        should(err).have.property('message', 'Permission denied');
-
-        done();
-      });
+    it("should require token", async function () {
+      try {
+        await this.c1.acl.destroy({ id: this.id, token: "" });
+        should.ok(false);
+      } catch (err) {
+        should(err).have.property("message", "Permission denied");
+      }
     });
 
-    it('should require id', function(done) {
-      var self = this;
-
-      self.c1.acl.update({}, function(err) {
-        should(err).have.property('message', 'consul: acl.update: id required');
-
-        done();
-      });
+    it("should require id", async function () {
+      try {
+        await this.c1.acl.update({});
+        should.ok(false);
+      } catch (err) {
+        should(err).have.property("message", "consul: acl.update: id required");
+      }
     });
   });
 
-  describe('destroy', function() {
-    it('should destroy token', function(done) {
-      var self = this;
+  describe("destroy", function () {
+    it("should destroy token", async function () {
+      await this.c1.acl.destroy({ id: this.id, token: "root" });
 
-      self.c1.acl.destroy({ id: self.id, token: 'root' }, function(err) {
-        should.not.exist(err);
-
-        self.c1.acl.get({ id: self.id, token: 'root' }, function(err, acl) {
-          should.not.exist(err);
-          should.not.exist(acl);
-
-          done();
-        });
-      });
+      const acl = await this.c1.acl.get({ id: this.id, token: "root" });
+      should.not.exist(acl);
     });
 
-    it('should require token', function(done) {
-      var self = this;
-
-      self.c1.acl.destroy({ id: self.id, token: '' }, function(err) {
-        should(err).have.property('message', 'Permission denied');
-
-        done();
-      });
+    it("should require token", async function () {
+      try {
+        await this.c1.acl.destroy({ id: this.id, token: "" });
+        should.ok(false);
+      } catch (err) {
+        should(err).have.property("message", "Permission denied");
+      }
     });
 
-    it('should require id', function(done) {
-      var self = this;
-
-      self.c1.acl.destroy({}, function(err) {
-        should(err).have.property('message', 'consul: acl.destroy: id required');
-
-        done();
-      });
-    });
-  });
-
-  describe('get', function() {
-    it('should return token information', function(done) {
-      var self = this;
-
-      self.c1.acl.get({ id: self.id, token: 'root' }, function(err, acl) {
-        should.not.exist(err);
-
-        acl.should.have.keys(
-          'CreateIndex',
-          'ModifyIndex',
-          'ID',
-          'Name',
-          'Type',
-          'Rules'
+    it("should require id", async function () {
+      try {
+        await this.c1.acl.destroy({});
+        should.ok(false);
+      } catch (err) {
+        should(err).have.property(
+          "message",
+          "consul: acl.destroy: id required"
         );
-
-        acl.Name.should.equal(self.config.name);
-        acl.Type.should.equal('client');
-        acl.Rules.should.equal(self.config.rules);
-
-        done();
-      });
-    });
-
-    it('should require token', function(done) {
-      var self = this;
-
-      self.c1.acl.get({ id: self.id, token: '' }, function(err) {
-        should.not.exist(err);
-
-        // TODO: should this be denied?
-        //should(err).have.property('message', 'Permission denied');
-
-        done();
-      });
-    });
-
-    it('should require id', function(done) {
-      var self = this;
-
-      self.c1.acl.info({}, function(err) {
-        should(err).have.property('message', 'consul: acl.info: id required');
-
-        done();
-      });
+      }
     });
   });
 
-  describe('clone', function() {
-    it('should copy existing token', function(done) {
-      var self = this;
-
-      self.c1.acl.clone({ id: 'root', token: 'root' }, function(err, acl) {
-        should.not.exist(err);
-
-        acl.should.have.keys('ID');
-
-        self.c1.acl.get({ id: acl.ID, token: acl.ID }, function(err, acl) {
-          should.not.exist(err);
-
-          acl.should.have.keys(
-            'CreateIndex',
-            'ModifyIndex',
-            'ID',
-            'Name',
-            'Type',
-            'Rules'
-          );
-
-          acl.Name.should.equal('Master Token');
-          acl.Type.should.equal('management');
-          acl.Rules.should.equal('');
-
-          done();
-        });
-      });
+  describe("get", function () {
+    it("should return token information", async function () {
+      const acl = await this.c1.acl.get({ id: this.id, token: "root" });
+      should(acl).have.keys(
+        "CreateIndex",
+        "ModifyIndex",
+        "ID",
+        "Name",
+        "Type",
+        "Rules"
+      );
+      should(acl.Name).equal(this.config.name);
+      should(acl.Type).equal("client");
+      should(acl.Rules).equal(this.config.rules);
     });
 
-    it('should require token', function(done) {
-      var self = this;
-
-      self.c1.acl.clone({ id: self.id, token: '' }, function(err) {
-        should(err).have.property('message', 'Permission denied');
-
-        done();
-      });
+    it("should require token", async function () {
+      await this.c1.acl.get({ id: this.id, token: "" });
+      // TODO: should this be denied?
+      //should(err).have.property('message', 'Permission denied');
     });
 
-    it('should require id', function(done) {
-      var self = this;
-
-      self.c1.acl.clone({}, function(err) {
-        should(err).have.property('message', 'consul: acl.clone: id required');
-
-        done();
-      });
+    it("should require id", async function () {
+      try {
+        await this.c1.acl.info({});
+        should.ok(false);
+      } catch (err) {
+        should(err).have.property("message", "consul: acl.info: id required");
+      }
     });
   });
 
-  describe('list', function() {
-    it('should return all tokens', function(done) {
-      this.c1.acl.list({ token: 'root' }, function(err, acls) {
-        should.not.exist(err);
+  describe("clone", function () {
+    it("should copy existing token", async function () {
+      const acl = await this.c1.acl.clone({ id: "root", token: "root" });
+      should(acl).have.keys("ID");
 
-        should(acls).be.an.instanceof(Array);
-        acls.length.should.be.above(0);
+      const acl2 = this.c1.acl.get({ id: acl.ID, token: acl.ID });
+      should(acl2).have.keys(
+        "CreateIndex",
+        "ModifyIndex",
+        "ID",
+        "Name",
+        "Type",
+        "Rules"
+      );
+      should(acl2.Name).equal("Master Token");
+      should(acl2.Type).equal("management");
+      should(acl2.Rules).equal("");
+    });
 
-        acls.forEach(function(acl) {
-          acl.should.have.keys(
-            'CreateIndex',
-            'ModifyIndex',
-            'ID',
-            'Name',
-            'Type',
-            'Rules'
-          );
-        });
+    it("should require token", async function () {
+      try {
+        await this.c1.acl.clone({ id: this.id, token: "" });
+      } catch (err) {
+        should(err).have.property("message", "Permission denied");
+      }
+    });
 
-        done();
+    it("should require id", async function () {
+      try {
+        await this.c1.acl.clone({});
+        should.ok(false);
+      } catch (err) {
+        should(err).have.property("message", "consul: acl.clone: id required");
+      }
+    });
+  });
+
+  describe("list", function () {
+    it("should return all tokens", async function () {
+      const acls = await this.c1.acl.list({ token: "root" });
+      should(acls).be.an.instanceof(Array);
+      should(acls.length).be.above(0);
+
+      acls.forEach(function (acl) {
+        should(acl).have.keys(
+          "CreateIndex",
+          "ModifyIndex",
+          "ID",
+          "Name",
+          "Type",
+          "Rules"
+        );
       });
     });
 
-    it('should require token', function(done) {
-      var self = this;
-
-      self.c1.acl.list({ token: '' }, function(err) {
-        should(err).have.property('message', 'Permission denied');
-
-        done();
-      });
+    it("should require token", async function () {
+      try {
+        await this.c1.acl.list({ token: "" });
+        should.ok(false);
+      } catch (err) {
+        should(err).have.property("message", "Permission denied");
+      }
     });
   });
 });

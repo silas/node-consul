@@ -1,192 +1,140 @@
-'use strict';
+"use strict";
 
-/**
- * Module dependencies.
- */
+const async_ = require("async");
+const should = require("should");
 
-var async = require('async');
-var lodash = require('lodash');
-var should = require('should');
+const helper = require("./helper");
 
-var helper = require('./helper');
-
-/**
- * Tests
- */
-
-helper.describe('Watch', function() {
-  before(function(done) {
-    helper.before(this, done);
+helper.describe("Watch", function () {
+  before(async function () {
+    await helper.before(this);
   });
 
-  after(function(done) {
-    helper.after(this, done);
+  after(async function () {
+    await helper.after(this);
   });
 
-  beforeEach(function(done) {
-    var c = this.c1;
-
-    c.kv.del({ recurse: true }, function(err) {
-      done(err);
-    });
+  beforeEach(async function () {
+    await this.c1.kv.del({ recurse: true });
   });
 
-  it('should work', function(done) {
-    var c = this.c1;
+  it("should work", async function () {
+    const key = "test";
+    let count = 0;
 
-    var key = 'test';
-    var count = 0;
+    const changes = [];
+    const updateTimes = [];
+    const errors = [];
 
-    var changes = [];
-    var updateTimes = [];
-    var errors = [];
-
-    var watch = c.watch({
-      method: c.kv.get,
-      options: { key: key, wait: '1ms' },
+    const watch = this.c1.watch({
+      method: this.c1.kv.get,
+      options: { key: key, wait: "1ms" },
     });
 
-    watch.on('change', function(data) {
+    watch.on("change", function (data) {
       updateTimes.push(watch.updateTime());
       changes.push(data);
     });
 
-    watch.on('error', function(err) {
+    watch.on("error", function (err) {
       errors.push(err);
     });
 
-    var jobs = [];
+    count++;
+    await this.c1.kv.set(key, "1");
 
-    jobs.push(function(next) {
-      count++;
-      c.kv.set(key, '1', next);
-    });
+    count++;
+    await this.c1.kv.set(key, "2");
 
-    jobs.push(function(next) {
-      count++;
-      c.kv.set(key, '2', next);
-    });
+    count++;
+    await this.c1.kv.set(key, "3");
 
-    jobs.push(function(next) {
-      count++;
-      c.kv.set(key, '3', next);
-    });
+    count++;
+    await this.c1.kv.del(key);
 
-    jobs.push(function(next) {
-      count++;
-      c.kv.del(key, next);
-    });
-
-    jobs.push(function(next) {
-      async.until(
-        function(next) { return next(null, changes.length === count + 1); },
-        function(next) { setTimeout(next, 50); },
-        next
-      );
-    });
-
-    jobs.push(function(next) {
-      var values = lodash.map(changes, function(data) {
-        return data && data.Value;
-      });
-
-      values.should.eql([
-        undefined,
-        '1',
-        '2',
-        '3',
-        undefined,
-      ]);
-
-      watch.isRunning().should.be.true;
-
-      watch.end();
-      watch.isRunning().should.be.false;
-
-      watch._run();
-
-      watch.isRunning().should.be.false;
-      watch.end();
-
-      next();
-    });
-
-    jobs.push(function(next) {
-      updateTimes.should.not.be.empty;
-
-      lodash.each(updateTimes, function(updateTime, i) {
-        if (i === 0) return;
-
-        updateTime.should.have.above(updateTimes[i - 1]);
-      });
-
-      next();
-    });
-
-    async.series(jobs, done);
-  });
-
-  it('should not retry on 400 errors', function(done) {
-    var c = this.c1;
-
-    var errors = [];
-
-    var watch = c.watch({ method: c.kv.get });
-
-    watch.on('error', function(err) {
-      errors.push(err);
-    });
-
-    async.until(
-      function(next) { return next(null, errors.length === 1); },
-      function(next) { setTimeout(next, 50); },
-      function(err) {
-        if (err) return done(err);
-
-        watch.should.have.property('_attempts', 0);
-        watch.should.have.property('_end', true);
-
-        done();
+    await async_.until(
+      function (next) {
+        return next(null, changes.length === count + 1);
+      },
+      function (next) {
+        setTimeout(next, 50);
       }
     );
+
+    const values = changes.map((data) => data && data.Value);
+
+    should(values).eql([undefined, "1", "2", "3", undefined]);
+
+    should(watch.isRunning()).be.true();
+
+    watch.end();
+    should(watch.isRunning()).be.false();
+
+    watch._run();
+
+    should(watch.isRunning()).be.false();
+    watch.end();
+
+    should(updateTimes).not.be.empty();
+
+    updateTimes.forEach(function (updateTime, i) {
+      if (i === 0) return;
+      should(updateTime).have.above(updateTimes[i - 1]);
+    });
   });
 
-  it('should exponential retry', function(done) {
-    var c = this.c1;
+  it("should not retry on 400 errors", async function () {
+    const errors = [];
 
-    var todo = ['one', 'two', 'three'];
+    const watch = this.c1.watch({ method: this.c1.kv.get });
 
-    var method = function(opts, callback) {
-      var err = new Error(todo.shift());
+    watch.on("error", function (err) {
+      errors.push(err);
+    });
 
-      if (err.message === 'one') {
-        throw err;
+    await async_.until(
+      function (next) {
+        return next(null, errors.length === 1);
+      },
+      function (next) {
+        setTimeout(next, 50);
       }
+    );
 
-      callback(err);
+    should(watch).have.property("_attempts", 0);
+    should(watch).have.property("_end", true);
+  });
+
+  it("should exponential retry", async function () {
+    const todo = ["one", "two", "three"];
+
+    const method = async function () {
+      throw new Error(todo.shift());
     };
 
-    var oneErr, twoErr;
-    var time = +new Date();
+    let oneErr, twoErr;
+    const time = +new Date();
 
-    var watch = c.watch({ method: method });
+    const watch = this.c1.watch({ method: method });
 
-    watch.on('error', function(err) {
-      err.time = +new Date();
+    return new Promise((resolve) => {
+      watch.on("error", function (err) {
+        err.time = +new Date();
 
-      if (err.message === 'one') {
-        oneErr = err;
-      } else if (err.message === 'two') {
-        twoErr = err;
-      } else if (err.message === 'three') {
-        should(oneErr.time - time).be.approximately(0, 20);
-        should(twoErr.time - oneErr.time).be.approximately(200, 20);
-        should(err.time - twoErr.time).be.approximately(400, 20);
+        if (err.message === "one") {
+          oneErr = err;
+        } else if (err.message === "two") {
+          twoErr = err;
+        } else if (err.message === "three") {
+          should(oneErr.time - time).be.approximately(0, 20);
+          should(twoErr.time - oneErr.time).be.approximately(200, 20);
+          should(err.time - twoErr.time).be.approximately(400, 20);
 
-        watch.end();
+          watch.end();
 
-        done();
-      }
+          resolve();
+        }
+      });
     });
   });
 });

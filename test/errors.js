@@ -1,58 +1,50 @@
-'use strict';
+"use strict";
 
-/**
- * Module dependencies.
- */
+const should = require("should");
 
-var should = require('should');
+const errors = require("../lib/errors");
 
-var errors = require('../lib/errors');
+const helper = require("./helper");
 
-var helper = require('./helper');
-
-/**
- * Tests
- */
-
-describe('errors', function() {
+describe("errors", function () {
   helper.setup(this);
 
-  describe('Consul', function() {
-    it('should work', function() {
-      var msg = 'test message';
+  describe("Consul", function () {
+    it("should work", function () {
+      const msg = "test message";
 
-      var err = errors.Consul(msg);
-      err.should.have.property('isConsul', true);
-      err.should.have.property('message', msg);
+      let err = errors.Consul(msg);
+      should(err).have.property("isConsul", true);
+      should(err).have.property("message", msg);
 
-      var test = new Error(msg);
+      const test = new Error(msg);
       test.isTest = true;
 
       err = errors.Consul(test);
-      err.should.have.property('message', msg);
-      err.should.have.property('isConsul', true);
-      err.should.have.property('isTest', true);
+      should(err).have.property("message", msg);
+      should(err).have.property("isConsul", true);
+      should(err).have.property("isTest", true);
 
       err = errors.Consul(null);
-      err.should.not.have.property('message', undefined);
-      err.should.have.property('isConsul', true);
+      should(err).not.have.property("message", undefined);
+      should(err).have.property("isConsul", true);
 
-      err = errors.Consul('');
-      err.should.not.have.property('message', undefined);
-      err.should.have.property('isConsul', true);
+      err = errors.Consul("");
+      should(err).not.have.property("message", undefined);
+      should(err).have.property("isConsul", true);
     });
   });
 
-  describe('Validation', function() {
-    it('should work', function() {
-      var msg = 'test';
-      var err = errors.Validation(msg);
+  describe("Validation", function () {
+    it("should work", function () {
+      const msg = "test";
+      const err = errors.Validation(msg);
 
-      should(err).have.property('isConsul', true);
-      should(err).have.property('isValidation', true);
-      should(err).have.property('message', msg);
+      should(err).have.property("isConsul", true);
+      should(err).have.property("isValidation", true);
+      should(err).have.property("message", msg);
 
-      should(errors.Validation).not.have.property('message');
+      should(errors.Validation).not.have.property("message");
     });
   });
 });

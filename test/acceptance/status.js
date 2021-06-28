@@ -1,47 +1,29 @@
-'use strict';
+"use strict";
 
-/**
- * Module dependencies.
- */
+const should = require("should");
 
-var should = require('should');
+const helper = require("./helper");
 
-var helper = require('./helper');
-
-/**
- * Tests
- */
-
-helper.describe('Status', function() {
-  before(function(done) {
-    helper.before(this, done);
+helper.describe("Status", function () {
+  before(async function () {
+    await helper.before(this);
   });
 
-  after(function(done) {
-    helper.after(this, done);
+  after(async function () {
+    await helper.after(this);
   });
 
-  describe('leader', function() {
-    it('should return leader', function(done) {
-      this.c1.status.leader(function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql('127.0.0.1:8300');
-
-        done();
-      });
+  describe("leader", function () {
+    it("should return leader", async function () {
+      const data = await this.c1.status.leader();
+      should(data).eql("127.0.0.1:8300");
     });
   });
 
-  describe('peers', function() {
-    it('should return peers', function(done) {
-      this.c1.status.peers(function(err, data) {
-        should.not.exist(err);
-
-        should(data).eql(['127.0.0.1:8300']);
-
-        done();
-      });
+  describe("peers", function () {
+    it("should return peers", async function () {
+      const data = await this.c1.status.peers();
+      should(data).eql(["127.0.0.1:8300"]);
     });
   });
 });

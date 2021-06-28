@@ -1,58 +1,46 @@
-'use strict';
+"use strict";
 
-/**
- * Module dependencies.
- */
+require("should");
 
-require('should');
+const nock = require("nock");
+const sinon = require("sinon");
 
-var nock = require('nock');
-var sinon = require('sinon');
-
-var consul = require('../lib');
-
-/**
- * Setup tests
- */
+const Consul = require("../lib");
 
 function setup(scope) {
   if (scope._setup) return;
   scope._setup = true;
 
-  beforeEach.call(scope, function() {
-    var self = this;
+  beforeEach.call(scope, function () {
+    const self = this;
 
     self.sinon = sinon.createSandbox();
 
     nock.disableNetConnect();
 
-    Object.defineProperty(self, 'consul', {
+    Object.defineProperty(self, "consul", {
       configurable: true,
       enumerable: true,
-      get: function() {
-        return consul();
+      get: function () {
+        return new Consul();
       },
     });
 
-    Object.defineProperty(self, 'nock', {
+    Object.defineProperty(self, "nock", {
       configurable: true,
       enumerable: true,
-      get: function() {
-        return nock('http://127.0.0.1:8500');
+      get: function () {
+        return nock("http://127.0.0.1:8500");
       },
     });
   });
 
-  afterEach.call(scope, function() {
+  afterEach.call(scope, function () {
     this.sinon.restore();
 
     nock.cleanAll();
   });
 }
 
-/**
- * Module exports.
- */
-
-exports.consul = consul;
+exports.consul = (opts) => new Consul(opts);
 exports.setup = setup;

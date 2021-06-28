@@ -1,23 +1,14 @@
-'use strict';
+"use strict";
 
-/**
- * Module dependencies.
- */
+require("should");
 
-require('should');
+const async_ = require("async");
+const fs = require("fs");
+const path = require("path");
+const spawn = require("child_process").spawn;
+const temp = require("temp").track();
 
-var async = require('async');
-var fs = require('fs');
-var lodash = require('lodash');
-var path = require('path');
-var spawn = require('child_process').spawn;
-var temp = require('temp').track();
-
-var consul = require('../../lib');
-
-/**
- * Buffer to string
- */
+const Consul = require("../../lib");
 
 function bufferToString(value) {
   if (!value) return value;
@@ -28,8 +19,8 @@ function bufferToString(value) {
     return value.map(bufferToString);
   }
 
-  if (typeof value === 'object') {
-    Object.keys(value).forEach(function(key) {
+  if (typeof value === "object") {
+    Object.keys(value).forEach(function (key) {
       value[key] = bufferToString(value[key]);
     });
   }
@@ -37,229 +28,246 @@ function bufferToString(value) {
   return value;
 }
 
-/**
- * Debug (convert buffers to strings)
- */
-
 function debugBuffer(name) {
-  var debug = require('debug')(name);
+  const debug = require("debug")(name);
 
-  return function() {
+  return function () {
     debug.apply(debug, bufferToString(Array.prototype.slice.call(arguments)));
   };
 }
 
-/**
- * Cluster
- */
+class Cluster {
+  constructor() {
+    this._started = false;
+    this.process = {};
+  }
 
-function Cluster() {
-  this._started = false;
-  this.process = {};
-}
+  spawn(opts, callback) {
+    const binPath = process.env.CONSUL_BIN || "consul";
 
-Cluster.prototype.spawn = function(opts, callback) {
-  var self = this;
+    const args = ["agent"];
 
-  var binPath = process.env.CONSUL_BIN || 'consul';
+    Object.keys(opts).forEach(function (key) {
+      args.push("-" + key);
 
-  var args = ['agent'];
-
-  Object.keys(opts).forEach(function(key) {
-    args.push('-' + key);
-
-    if (opts.hasOwnProperty(key) && typeof opts[key] !== 'boolean' &&
-        opts[key] !== undefined) {
-      args.push('' + opts[key]);
-    }
-  });
-
-  var jobs = {};
-
-  jobs.dirPath = function(cb) {
-    temp.mkdir({}, cb);
-  };
-
-  jobs.configFile = ['dirPath', function(results, cb) {
-    var config = {
-      acl_datacenter: 'dc1',
-      acl_master_token: 'root',
-      acl_agent_master_token: 'agent_master',
-      enable_script_checks: true,
-    };
-
-    var filePath = path.join(results.dirPath, 'config.json');
-
-    fs.writeFile(filePath, JSON.stringify(config), function(err) {
-      cb(err, filePath);
-    });
-  }];
-
-  jobs.process = ['configFile', 'dirPath', function(results, cb) {
-    args.push('-config-file');
-    args.push(results.configFile);
-
-    args.push('-data-dir');
-    args.push(path.join(results.dirPath, opts.node, 'data'));
-
-    args.push('-pid-file');
-    args.push(path.join(results.dirPath, opts.node, 'pid'));
-
-    var process = spawn(binPath, args);
-
-    process.destroy = function() {
-      process._destroyed = true;
-      process.kill('SIGKILL');
-    };
-
-    self.process[opts.node] = process;
-
-    var out = '';
-    process.stdout.on('data', function(data) { out += data.toString(); });
-    process.stderr.on('data', function(data) { out += data.toString(); });
-
-    process.on('exit', function(code) {
-      if (code !== 0 && !process._destroyed) {
-        var err = new Error('Server exited (' + opts.node + '): ' + code + '\n');
-        err.message += 'Command: ' + binPath + ' ' + JSON.stringify(args) + '\n';
-        err.message += 'Output:\n' + out;
-        throw err;
+      if (
+        opts.hasOwnProperty(key) &&
+        typeof opts[key] !== "boolean" &&
+        opts[key] !== undefined
+      ) {
+        args.push("" + opts[key]);
       }
     });
 
-    cb(null, process);
-  }];
+    const jobs = {};
 
-  jobs.connected = ['process', function(results, cb) {
-    var log = debugBuffer('consul:' + opts.bind);
-    var token = opts.bootstrap ? 'root' : 'agent_master';
-    var client = consul({ host: opts.bind, defaults: { token: token } });
+    jobs.dirPath = function (cb) {
+      temp.mkdir({}, cb);
+    };
 
-    client.on('log', log);
+    jobs.configFile = [
+      "dirPath",
+      (results, cb) => {
+        const config = {
+          primary_datacenter: "dc1",
+          acl: {
+            enabled: false,
+          },
+          enable_script_checks: true,
+        };
 
-    async.retry(
-      100,
-      function(cb) {
-        // wait until server starts
-        if (opts.bootstrap) {
-          client.kv.set('check', 'ok', function(err) {
-            if (err) log(err);
-            if (err) return setTimeout(function() { cb(err); }, 100);
-            cb();
-          });
-        } else {
-          client.agent.self(function(err) {
-            if (err) log(err);
-            if (err) return setTimeout(function() { cb(err); }, 100);
-            cb();
-          });
-        }
+        const filePath = path.join(results.dirPath, "config.json");
+
+        fs.writeFile(filePath, JSON.stringify(config), function (err) {
+          cb(err, filePath);
+        });
       },
-      function(err) {
-        if (err) {
-          results.process.destroy();
+    ];
 
-          return cb(new Error('Failed to start: ' + opts.node));
-        }
+    jobs.process = [
+      "configFile",
+      "dirPath",
+      (results, cb) => {
+        args.push("-config-file");
+        args.push(results.configFile);
+
+        args.push("-data-dir");
+        args.push(path.join(results.dirPath, opts.node, "data"));
+
+        args.push("-pid-file");
+        args.push(path.join(results.dirPath, opts.node, "pid"));
+
+        const process = spawn(binPath, args);
+
+        process.destroy = function () {
+          process._destroyed = true;
+          process.kill("SIGKILL");
+        };
+
+        this.process[opts.node] = process;
+
+        let out = "";
+        process.stdout.on("data", function (data) {
+          out += data.toString();
+        });
+        process.stderr.on("data", function (data) {
+          out += data.toString();
+        });
+
+        process.on("exit", function (code) {
+          if (code !== 0 && !process._destroyed) {
+            const err = new Error(
+              "Server exited (" + opts.node + "): " + code + "\n"
+            );
+            err.message +=
+              "Command: " + binPath + " " + JSON.stringify(args) + "\n";
+            err.message += "Output:\n" + out;
+            throw err;
+          }
+        });
+
+        cb(null, process);
+      },
+    ];
+
+    jobs.connected = [
+      "process",
+      (results, cb) => {
+        const log = debugBuffer("consul:" + opts.bind);
+        const token = opts.bootstrap ? "root" : "agent_master";
+        const client = new Consul({
+          host: opts.bind,
+          defaults: { token: token },
+        });
+
+        client.on("log", log);
+
+        async_.retry(
+          1000,
+          function (cb) {
+            // wait until server starts
+            if (opts.bootstrap) {
+              client.kv
+                .set("check", "ok")
+                .then(() => cb())
+                .catch((err) => {
+                  log(err);
+                  cb(err);
+                });
+            } else {
+              client.agent
+                .self()
+                .then(() => cb())
+                .catch((err) => {
+                  log(err);
+                  cb(err);
+                });
+            }
+          },
+          function (err) {
+            if (err) {
+              results.process.destroy();
+
+              return cb(new Error("Failed to start: " + opts.node));
+            }
+
+            cb();
+          }
+        );
+      },
+    ];
+
+    async_.auto(jobs, callback);
+  }
+
+  setup() {
+    const self = this;
+
+    return new Promise((resolve, reject) => {
+      if (self._started) return reject(new Error("already started"));
+      self._started = true;
+
+      const jobs = {};
+
+      const nodes = ["node1", "node2", "node3"];
+
+      nodes.forEach(function (node, i) {
+        i = i + 1;
+
+        jobs["node" + i] = function (cb) {
+          const opts = {
+            node: node,
+            datacenter: "dc1",
+            bind: "127.0.0." + i,
+            client: "127.0.0." + i,
+          };
+
+          if (i === 1) {
+            opts.bootstrap = true;
+            opts.server = true;
+          }
+
+          self.spawn(opts, cb);
+        };
+      });
+
+      async_.auto(jobs, function (err) {
+        if (err) return reject(err);
+        resolve();
+      });
+    });
+  }
+
+  teardown() {
+    const self = this;
+
+    return new Promise((resolve, reject) => {
+      const jobs = {};
+
+      jobs.kill = function (cb) {
+        Object.keys(self.process).forEach(function (key) {
+          self.process[key].destroy();
+        });
 
         cb();
-      }
-    );
-  }];
-
-  async.auto(jobs, callback);
-};
-
-Cluster.prototype.setup = function(callback) {
-  var self = this;
-
-  if (self._started) return callback(new Error('already started'));
-  self._started = true;
-
-  var jobs = {};
-
-  var nodes = ['node1', 'node2', 'node3'];
-
-  nodes.forEach(function(node, i) {
-    i = i + 1;
-
-    jobs['node' + i] = function(cb) {
-      var opts = {
-        node: node,
-        datacenter: 'dc1',
-        bind: '127.0.0.' + i,
-        client: '127.0.0.' + i,
       };
 
-      if (i === 1) {
-        opts.bootstrap = true;
-        opts.server = true;
-      }
+      jobs.cleanup = [
+        "kill",
+        function (results, cb) {
+          temp.cleanup(cb);
+        },
+      ];
 
-      self.spawn(opts, cb);
-    };
-  });
-
-  async.auto(jobs, function(err) {
-    if (err) return callback(err);
-
-    callback();
-  });
-};
-
-Cluster.prototype.teardown = function(callback) {
-  var self = this;
-
-  var jobs = {};
-
-  jobs.kill = function(cb) {
-    Object.keys(self.process).forEach(function(key) {
-      self.process[key].destroy();
+      async_.auto(jobs, (err) => {
+        if (err) return reject(err);
+        resolve();
+      });
     });
+  }
+}
 
-    cb();
-  };
-
-  jobs.cleanup = ['kill', function(results, cb) {
-    temp.cleanup(cb);
-  }];
-
-  async.auto(jobs, callback);
-};
-
-/**
- * Before
- */
-
-function before(test, callback) {
+async function before(test) {
   test.cluster = new Cluster();
 
-  test.cluster.setup(function(err) {
-    if (err) return callback(err);
+  await test.cluster.setup();
 
-    var client;
-
-    for (var i = 1; i <= 3; i++) {
-      client = test['c' + i] = consul({ host: '127.0.0.' + i, defaults: { token: 'root' } });
-      client.on('log', debugBuffer('consul:' + '127.0.0.' + i));
-    }
-
-    callback();
-  });
+  for (let i = 1; i <= 3; i++) {
+    const client = (test["c" + i] = new Consul({
+      host: "127.0.0." + i,
+      defaults: { token: "root" },
+    }));
+    client.on("log", debugBuffer("consul:" + "127.0.0." + i));
+  }
 }
 
-/**
- * After
- */
-
-function after(test, callback) {
-  test.cluster.teardown(callback);
+async function after(test) {
+  await test.cluster.teardown();
 }
 
-/**
- * Module Exports
- */
+function skip() {}
+skip.skip = skip;
 
-exports.describe = process.env.ACCEPTANCE === 'true' ? describe : lodash.noop;
+exports.describe = process.env.ACCEPTANCE === "true" ? describe : skip;
 exports.before = before;
 exports.after = after;
