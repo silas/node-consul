@@ -12,6 +12,7 @@ See the official [HTTP API][consul-docs-api] docs for more information.
  * [Consul](#init)
    * [Common Method Call Options](#common-options)
  * [ACL](#acl)
+   * [Legacy](#acl-legacy)
  * [Agent](#agent)
    * [Check](#agent-check)
    * [Service](#agent-service)
@@ -75,12 +76,7 @@ These options work for all methods.
 ### consul.acl
 
  * [bootstrap](#acl-bootstrap)
- * [create](#acl-create)
- * [update](#acl-update)
- * [destroy](#acl-destroy)
- * [get](#acl-get)
- * [clone](#acl-clone)
- * [list](#acl-list)
+ * [legacy](#acl-legacy)
  * [replication](#acl-replication)
 
 <a name="acl-bootstrap"></a>
@@ -100,149 +96,6 @@ Result
 {
   "ID": "adf4238a-882b-9ddc-4a9d-5b6758e4159e"
 }
-```
-
-<a name="acl-create"></a>
-### consul.acl.create([options])
-
-Creates a new token with policy.
-
-Options
-
- * name (String, optional): human readable name for the token
- * type (String, enum: client, management; default: client): type of token
- * rules (String, optional): string encoded HCL or JSON
-
-Usage
-
-``` javascript
-await consul.acl.create();
-```
-
-Result
-
-``` json
-{
-  "ID": "b1f4c10e-b61b-e1de-de95-218c9fefdd3e"
-}
-```
-
-<a name="acl-update"></a>
-### consul.acl.update(options)
-
-Update the policy of a token.
-
-Options
-
- * id (String): token ID
- * name (String, optional): human readable name for the token
- * type (String, enum: client, management; default: client): type of token
- * rules (String, optional): string encoded HCL or JSON
-
-Usage
-
-``` javascript
-await consul.acl.update({ id: '63e1d82e-f718-eb92-3b7d-61f0c71d45b4', name: 'test' });
-```
-
-<a name="acl-destroy"></a>
-### consul.acl.destroy(options)
-
-Destroys a given token.
-
-Options
-
- * id (String): token ID
-
-Usage
-
-``` javascript
-await consul.acl.destroy('b1f4c10e-b61b-e1de-de95-218c9fefdd3e');
-```
-
-<a name="acl-get"></a>
-### consul.acl.get(options)
-
-Queries the policy of a given token.
-
-Options
-
- * id (String): token ID
-
-Usage
-
-``` javascript
-await consul.acl.get('63e1d82e-f718-eb92-3b7d-61f0c71d45b4');
-```
-
-Result
-
-``` json
-{
-  "CreateIndex": 7,
-  "ModifyIndex": 7,
-  "ID": "63e1d82e-f718-eb92-3b7d-61f0c71d45b4",
-  "Name": "Read only",
-  "Type": "client",
-  "Rules": "{\"key\":{\"\":{\"policy\":\"read\"}}}"
-}
-```
-
-<a name="acl-clone"></a>
-### consul.acl.clone(options)
-
-Creates a new token by cloning an existing token.
-
-Options
-
- * id (String): token ID
-
-Usage
-
-``` javascript
-await consul.acl.clone('63e1d82e-f718-eb92-3b7d-61f0c71d45b4');
-```
-
-Result
-
-``` json
-{
-  "ID": "9fb8b20b-2636-adbb-9b99-d879df3305ec"
-}
-```
-
-<a name="acl-list"></a>
-### consul.acl.list([options])
-
-Lists all the active tokens.
-
-Usage
-
-``` javascript
-await consul.acl.list();
-```
-
-Result
-
-``` json
-[
-  {
-    "CreateIndex": 2,
-    "ModifyIndex": 2,
-    "ID": "anonymous",
-    "Name": "Anonymous Token",
-    "Type": "client",
-    "Rules": ""
-  }
-  {
-    "CreateIndex": 3,
-    "ModifyIndex": 3,
-    "ID": "root",
-    "Name": "Master Token",
-    "Type": "management",
-    "Rules": ""
-  }
-]
 ```
 
 <a name="acl-replication"></a>
@@ -267,6 +120,162 @@ Result
   "LastSuccess": "2016-08-05T06:28:58Z",
   "LastError": "2016-08-05T06:28:28Z"
 }
+```
+
+<a name="acl-legacy"></a>
+### consul.acl.legacy
+
+ * [create](#acl-legacy-create)
+ * [update](#acl-legacy-update)
+ * [destroy](#acl-legacy-destroy)
+ * [get](#acl-legacy-get)
+ * [clone](#acl-legacy-clone)
+ * [list](#acl-legacy-list)
+
+<a name="acl-legacy-create"></a>
+### consul.acl.legacy.create([options])
+
+Creates a new token with policy.
+
+Options
+
+ * name (String, optional): human readable name for the token
+ * type (String, enum: client, management; default: client): type of token
+ * rules (String, optional): string encoded HCL or JSON
+
+Usage
+
+``` javascript
+await consul.acl.legacy.create();
+```
+
+Result
+
+``` json
+{
+  "ID": "b1f4c10e-b61b-e1de-de95-218c9fefdd3e"
+}
+```
+
+<a name="acl-legacy-update"></a>
+### consul.acl.legacy.update(options)
+
+Update the policy of a token.
+
+Options
+
+ * id (String): token ID
+ * name (String, optional): human readable name for the token
+ * type (String, enum: client, management; default: client): type of token
+ * rules (String, optional): string encoded HCL or JSON
+
+Usage
+
+``` javascript
+await consul.acl.legacy.update({
+  id: '63e1d82e-f718-eb92-3b7d-61f0c71d45b4',
+  name: 'test',
+});
+```
+
+<a name="acl-legacy-destroy"></a>
+### consul.acl.legacy.destroy(options)
+
+Destroys a given token.
+
+Options
+
+ * id (String): token ID
+
+Usage
+
+``` javascript
+await consul.acl.legacy.destroy('b1f4c10e-b61b-e1de-de95-218c9fefdd3e');
+```
+
+<a name="acl-legacy-get"></a>
+### consul.acl.legacy.get(options)
+
+Queries the policy of a given token.
+
+Options
+
+ * id (String): token ID
+
+Usage
+
+``` javascript
+await consul.acl.legacy.get('63e1d82e-f718-eb92-3b7d-61f0c71d45b4');
+```
+
+Result
+
+``` json
+{
+  "CreateIndex": 7,
+  "ModifyIndex": 7,
+  "ID": "63e1d82e-f718-eb92-3b7d-61f0c71d45b4",
+  "Name": "Read only",
+  "Type": "client",
+  "Rules": "{\"key\":{\"\":{\"policy\":\"read\"}}}"
+}
+```
+
+<a name="acl-legacy-clone"></a>
+### consul.acl.legacy.clone(options)
+
+Creates a new token by cloning an existing token.
+
+Options
+
+ * id (String): token ID
+
+Usage
+
+``` javascript
+await consul.acl.legacy.clone('63e1d82e-f718-eb92-3b7d-61f0c71d45b4');
+```
+
+Result
+
+``` json
+{
+  "ID": "9fb8b20b-2636-adbb-9b99-d879df3305ec"
+}
+```
+
+<a name="acl-legacy-list"></a>
+### consul.acl.legacy.list([options])
+
+Lists all the active tokens.
+
+Usage
+
+``` javascript
+await consul.acl.legacy.list();
+```
+
+Result
+
+``` json
+[
+  {
+    "CreateIndex": 2,
+    "ModifyIndex": 2,
+    "ID": "anonymous",
+    "Name": "Anonymous Token",
+    "Type": "client",
+    "Rules": ""
+  }
+  {
+    "CreateIndex": 3,
+    "ModifyIndex": 3,
+    "ID": "root",
+    "Name": "Master Token",
+    "Type": "management",
+    "Rules": ""
+  }
+]
 ```
 
 <a name="agent"></a>
