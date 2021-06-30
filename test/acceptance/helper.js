@@ -11,18 +11,20 @@ const util = require("util");
 
 const Consul = require("../../lib");
 
-function bufferToString(value) {
+function bufferToString(value, depth) {
   if (!value) return value;
+  if (!depth) depth = 0;
+  if (depth > 10) return value;
 
   if (Buffer.isBuffer(value)) return value.toString();
 
   if (Array.isArray(value)) {
-    return value.map(bufferToString);
+    return value.map((v) => bufferToString(v, depth+1));
   }
 
   if (typeof value === "object") {
     for (const [k, v] of Object.entries(value)) {
-      value[k] = bufferToString(v);
+      value[k] = bufferToString(v, depth+1);
     }
   }
 

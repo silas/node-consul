@@ -1,5 +1,7 @@
 "use strict";
 
+const http = require("http");
+
 const should = require("should");
 
 const consul = require("../lib");
@@ -66,6 +68,17 @@ describe("Consul", function () {
       hostname: "example.org",
       path: "/proxy/v1",
     });
+
+    should(() => {
+      helper.consul({ baseUrl: {} });
+    }).throwError(/baseUrl must be a string.*/);
+
+    const agent = new http.Agent();
+    should(
+        helper.consul({
+          agent
+        })._opts.agent
+    ).equal(agent);
   });
 
   it("should not mutate options", function () {
@@ -77,6 +90,19 @@ describe("Consul", function () {
     client._opts.test = "fail";
 
     should(opts).eql({ test: "opts" });
+  });
+
+  describe("destroy", function () {
+    it("should work", function () {
+      const client = helper.consul();
+      should(client._opts.agent).not.be.null();
+
+      client.destroy();
+      delete client._opts.agent.destroy;
+      client.destroy();
+      delete client._opts.agent;
+      client.destroy();
+    });
   });
 
   describe("parseQueryMeta", function () {
