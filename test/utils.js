@@ -12,53 +12,40 @@ describe("utils", function () {
 
   describe("body", function () {
     it("should work", function () {
-      utils.body({ err: null, res: { body: "body" } }, function () {
-        should(arguments[0]).equal(false);
-        should(arguments[1]).equal(undefined);
-        should(arguments[2]).equal("body");
+      utils.body({ err: null, res: { body: "body" } }, (...args) => {
+        should(args).eql([false, undefined, "body"]);
       });
 
-      utils.body({ err: "err", res: { body: "body" } }, function () {
-        should(arguments[0]).equal(false);
-        should(arguments[1]).equal("err");
+      utils.body({ err: "err", res: { body: "body" } }, (...args) => {
+        should(args).eql([false, "err"]);
       });
     });
   });
 
   describe("bodyItem", function () {
     it("should work", function () {
-      utils.bodyItem({ err: null, res: { body: ["body"] } }, function () {
-        should(arguments[0]).equal(false);
-        should(arguments[1]).equal(undefined);
-        should(arguments[2]).equal("body");
+      utils.bodyItem({ err: null, res: { body: ["body"] } }, (...args) => {
+        should(args).eql([false, undefined, "body"]);
       });
 
-      utils.bodyItem({ err: null, res: { body: [] } }, function () {
-        should(arguments[0]).equal(false);
-        should(arguments[1]).equal(undefined);
-        should(arguments[2]).equal(undefined);
+      utils.bodyItem({ err: null, res: { body: [] } }, (...args) => {
+        should(args).eql([false, undefined, undefined]);
       });
 
-      utils.bodyItem({ err: "err", res: { body: ["body"] } }, function () {
-        should(arguments[0]).equal(false);
-        should(arguments[1]).equal("err");
-        should(arguments[2]).equal(undefined);
+      utils.bodyItem({ err: "err", res: { body: ["body"] } }, (...args) => {
+        should(args).eql([false, "err"]);
       });
     });
   });
 
   describe("empty", function () {
     it("should work", function () {
-      utils.empty({ err: null, res: "res" }, function () {
-        should(arguments[0]).equal(false);
-        should(arguments[1]).equal(undefined);
-        should(arguments[2]).equal(undefined);
+      utils.empty({ err: null, res: "res" }, (...args) => {
+        should(args).eql([false, undefined, undefined]);
       });
 
-      utils.empty({ err: "err", res: "res" }, function () {
-        should(arguments[0]).equal(false);
-        should(arguments[1]).equal("err");
-        should(arguments[2]).equal(undefined);
+      utils.empty({ err: "err", res: "res" }, (...args) => {
+        should(args).eql([false, "err"]);
       });
     });
   });
@@ -113,7 +100,7 @@ describe("utils", function () {
 
   describe("options", function () {
     it("should work", function () {
-      const test = function (opts, req) {
+      const test = (opts, req) => {
         if (req === undefined) req = {};
         utils.options(req, opts);
         return req;
@@ -241,35 +228,31 @@ describe("utils", function () {
     });
 
     it("should cancel timeout", function (done) {
-      const self = this;
-
       utils.setTimeoutContext(
-        function () {
+        () => {
           throw new Error("should have been canceled");
         },
-        self.ctx,
+        this.ctx,
         10
       );
 
-      self.ctx.on("cancel", function () {
-        should(self.ctx.listeners("cancel")).have.length(1);
+      this.ctx.on("cancel", () => {
+        should(this.ctx.listeners("cancel")).have.length(1);
 
         done();
       });
 
-      self.ctx.emit("cancel");
+      this.ctx.emit("cancel");
     });
 
     it("should remove cancel listener", function (done) {
-      const self = this;
-
       utils.setTimeoutContext(
-        function () {
-          should(self.ctx.listeners("cancel")).have.length(0);
+        () => {
+          should(this.ctx.listeners("cancel")).have.length(0);
 
           done();
         },
-        self.ctx,
+        this.ctx,
         0
       );
     });
@@ -281,23 +264,21 @@ describe("utils", function () {
     });
 
     it("should cancel timeout", function (done) {
-      const self = this;
-
       utils.setIntervalContext(
-        function () {
+        () => {
           throw new Error("should have been canceled");
         },
-        self.ctx,
+        this.ctx,
         10
       );
 
-      self.ctx.on("cancel", function () {
-        should(self.ctx.listeners("cancel")).have.length(1);
+      this.ctx.on("cancel", () => {
+        should(this.ctx.listeners("cancel")).have.length(1);
 
         done();
       });
 
-      self.ctx.emit("cancel");
+      this.ctx.emit("cancel");
     });
   });
 
@@ -431,8 +412,8 @@ describe("utils", function () {
     it(
       "should require args, grpc, http, tcp and interval, ttl, or " +
         "aliasnode/aliasservice",
-      function () {
-        should(function () {
+      () => {
+        should(() => {
           utils.createCheck();
         }).throw(
           "args/grpc/http/tcp and interval, ttl, or aliasnode/aliasservice"
@@ -659,7 +640,7 @@ describe("utils", function () {
     });
 
     it("should not allow nested sidecars", function () {
-      should(function () {
+      should(() => {
         utils.createService({
           connect: {
             sidecar_service: {
@@ -673,7 +654,7 @@ describe("utils", function () {
     });
 
     it("should require proxy destination service name", function () {
-      should(function () {
+      should(() => {
         utils.createService({
           proxy: {},
         });

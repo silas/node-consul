@@ -86,7 +86,7 @@ helper.describe("Catalog", function () {
         const data = await this.c1.catalog.service.nodes(this.service.name);
         should(data).be.instanceof(Array);
 
-        const nodes = data.map(function (n) {
+        const nodes = data.map((n) => {
           return n.Node;
         });
         should(nodes).eql(["node1"]);

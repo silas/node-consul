@@ -23,7 +23,7 @@ helper.describe("Transaction", function () {
     if (!ok) throw new Error("not setup");
   });
 
-  describe("transaction", function () {
+  describe("create", function () {
     it("should create two kv pairs", async function () {
       const key1 = "key1";
       const value1 = "value1";

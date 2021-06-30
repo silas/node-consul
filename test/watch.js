@@ -31,7 +31,7 @@ describe("Watch", function () {
     should(watch.updateTime()).be.undefined();
 
     // make tests run fast
-    watch._wait = function () {
+    watch._wait = () => {
       return 1;
     };
 
@@ -39,13 +39,13 @@ describe("Watch", function () {
     const list = [];
     const called = {};
 
-    watch.on("error", function (err) {
+    watch.on("error", (err) => {
       called.error = true;
 
       errors.push(err);
     });
 
-    watch.on("cancel", function () {
+    watch.on("cancel", () => {
       called.cancel = true;
 
       should(list).eql([1, 4, 5]);
@@ -57,7 +57,7 @@ describe("Watch", function () {
       should(watch.isRunning()).be.false();
     });
 
-    watch.on("change", function (data, res) {
+    watch.on("change", (data, res) => {
       called.change = true;
 
       list.push(data.n);
@@ -84,7 +84,7 @@ describe("Watch", function () {
       }
     });
 
-    watch.on("end", function () {
+    watch.on("end", () => {
       should(called).have.property("cancel", true);
       should(called).have.property("change", true);
       should(called).have.property("error", true);
@@ -103,21 +103,21 @@ describe("Watch", function () {
     const errors = [];
     const called = {};
 
-    watch.on("error", function (err) {
+    watch.on("error", (err) => {
       called.error = true;
 
       errors.push(err);
     });
 
-    watch.on("cancel", function () {
+    watch.on("cancel", () => {
       called.cancel = true;
     });
 
-    watch.on("change", function () {
+    watch.on("change", () => {
       called.change = true;
     });
 
-    watch.on("end", function () {
+    watch.on("end", () => {
       should(called).eql({ cancel: true, error: true });
       should(errors).have.length(1);
       should(errors[0]).have.property("isValidation", true);
@@ -146,11 +146,11 @@ describe("Watch", function () {
 
     const errors = [];
 
-    watch.on("error", function (err) {
+    watch.on("error", (err) => {
       errors.push(err);
     });
 
-    watch.on("end", function () {
+    watch.on("end", () => {
       should(errors).have.length(3);
 
       done();
@@ -158,20 +158,16 @@ describe("Watch", function () {
   });
 
   it("should require method", function () {
-    const self = this;
-
-    should(function () {
-      self.consul.watch({});
+    should(() => {
+      this.consul.watch({});
     }).throw("method required");
   });
 
   it("should set timeout correctly", async function () {
-    const self = this;
-
-    const test = function (options) {
+    const test = (options) => {
       const opts = { key: "test", method: async () => null };
       if (options) opts.options = options;
-      return self.consul.watch(opts)._options.timeout;
+      return this.consul.watch(opts)._options.timeout;
     };
 
     should(test()).equal(33000);
@@ -223,12 +219,12 @@ describe("Watch", function () {
   describe("err", function () {
     it("should handle method throw", function (done) {
       const watch = this.consul.watch({
-        method: async function () {
+        method: async () => {
           throw new Error("ok");
         },
       });
 
-      watch.on("error", function (err) {
+      watch.on("error", (err) => {
         watch.end();
         if (err.message === "ok") {
           done();

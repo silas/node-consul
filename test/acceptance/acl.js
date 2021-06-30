@@ -199,7 +199,7 @@ helper.describe.skip("Acl", function () {
       should(acls).be.an.instanceof(Array);
       should(acls.length).be.above(0);
 
-      acls.forEach(function (acl) {
+      for (const acl in acls) {
         should(acl).have.keys(
           "CreateIndex",
           "ModifyIndex",
@@ -208,7 +208,7 @@ helper.describe.skip("Acl", function () {
           "Type",
           "Rules"
         );
-      });
+      }
     });
 
     it("should require token", async function () {

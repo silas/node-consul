@@ -31,12 +31,12 @@ helper.describe("Watch", function () {
       options: { key: key, wait: "1ms" },
     });
 
-    watch.on("change", function (data) {
+    watch.on("change", (data) => {
       updateTimes.push(watch.updateTime());
       changes.push(data);
     });
 
-    watch.on("error", function (err) {
+    watch.on("error", (err) => {
       errors.push(err);
     });
 
@@ -53,10 +53,10 @@ helper.describe("Watch", function () {
     await this.c1.kv.del(key);
 
     await async_.until(
-      function (next) {
+      (next) => {
         return next(null, changes.length === count + 1);
       },
-      function (next) {
+      (next) => {
         setTimeout(next, 50);
       }
     );
@@ -88,15 +88,15 @@ helper.describe("Watch", function () {
 
     const watch = this.c1.watch({ method: this.c1.kv.get });
 
-    watch.on("error", function (err) {
+    watch.on("error", (err) => {
       errors.push(err);
     });
 
     await async_.until(
-      function (next) {
+      (next) => {
         return next(null, errors.length === 1);
       },
-      function (next) {
+      (next) => {
         setTimeout(next, 50);
       }
     );
@@ -118,7 +118,7 @@ helper.describe("Watch", function () {
     const watch = this.c1.watch({ method: method });
 
     return new Promise((resolve) => {
-      watch.on("error", function (err) {
+      watch.on("error", (err) => {
         err.time = +new Date();
 
         if (err.message === "one") {

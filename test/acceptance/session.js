@@ -14,12 +14,16 @@ helper.describe("Session", function () {
   });
 
   beforeEach(async function () {
-    const session = this.c1.session.create();
+    const session = await this.c1.session.create();
     this.id = session.ID;
   });
 
   afterEach(async function () {
-    await this.c1.session.destroy(this.id);
+    try {
+      await this.c1.session.destroy(this.id);
+    } catch (err) {
+      // ignore
+    }
   });
 
   describe("create", function () {
@@ -62,7 +66,7 @@ helper.describe("Session", function () {
       should(sessions).be.an.instanceof(Array);
       should(sessions.length).be.above(0);
 
-      sessions.forEach((session) => {
+      for (const session of sessions) {
         should(session).have.properties(
           "CreateIndex",
           "ID",
@@ -73,7 +77,7 @@ helper.describe("Session", function () {
           "Behavior",
           "TTL"
         );
-      });
+      }
     });
 
     it("should return an empty list when no node found", async function () {
@@ -91,7 +95,7 @@ helper.describe("Session", function () {
       should(sessions).be.an.instanceof(Array);
       should(sessions.length).be.above(0);
 
-      sessions.forEach(function (session) {
+      for (const session of sessions) {
         should(session).have.properties(
           "CreateIndex",
           "ID",
@@ -102,7 +106,7 @@ helper.describe("Session", function () {
           "Behavior",
           "TTL"
         );
-      });
+      }
     });
   });
 
