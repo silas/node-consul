@@ -545,13 +545,11 @@ Options
 Usage
 
 ``` javascript
-const check = {
+await consul.agent.check.register({
   name: 'example',
   ttl: '15s',
   notes: 'This is an example check.',
-};
-
-await consul.agent.check.register(check);
+});
 ```
 
 <a name="agent-check-deregister"></a>
@@ -1334,21 +1332,21 @@ Usage
 ``` javascript
 const lock = consul.lock({ key: 'test' });
 
-lock.on('acquire', function() {
+lock.on('acquire', () => {
   console.log('lock acquired');
 
   lock.release();
 });
 
-lock.on('release', function() {
+lock.on('release', () => {
   console.log('lock released');
 });
 
-lock.on('error', function() {
+lock.on('error', () => {
   console.log('lock error:', err);
 });
 
-lock.on('end', function(err) {
+lock.on('end', (err) => {
   console.log('lock released or there was a permanent failure');
 });
 
@@ -1445,15 +1443,13 @@ Options
 Usage
 
 ``` javascript
-const opts = {
+await consul.query.create({
   name: 'redis',
   service: {
     service: 'redis'
     onlypassing: true
   },
-};
-
-await consul.query.create(opts);
+});
 ```
 
 Result
@@ -1478,16 +1474,14 @@ And all [create options][query-create].
 Usage
 
 ``` javascript
-const opts = {
+await consul.query.update({
   query: '422b14b9-874b-4520-bd2e-e149a42b0066',
   name: 'redis',
   service: {
     service: 'redis'
     onlypassing: false
   },
-};
-
-await consul.query.update(opts);
+});
 ```
 
 <a name="query-get"></a>
@@ -1963,15 +1957,15 @@ const watch = consul.watch({
   backoffFactor: 1000,
 });
 
-watch.on('change', function(data, res) {
+watch.on('change', (data, res) => {
   console.log('data:', data);
 });
 
-watch.on('error', function(err) {
+watch.on('error', (err) => {
   console.log('error:', err);
 });
 
-setTimeout(function() { watch.end(); }, 30 * 1000);
+setTimeout(() => { watch.end(); }, 30 * 1000);
 ```
 
 ## Acceptance Tests
@@ -2009,6 +2003,6 @@ Parts of the Documentation were copied from the official
 [Consul website][consul-docs-api], see the NOTICE file for license
 information.
 
-[consul]: http://www.consul.io/
-[consul-docs-api]: http://www.consul.io/docs/agent/http.html
-[download]: http://www.consul.io/downloads.html
+[consul]: https://www.consul.io/
+[consul-docs-api]: https://www.consul.io/api-docs
+[download]: https://www.consul.io/downloads

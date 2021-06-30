@@ -20,7 +20,7 @@
   },
   "scripts": {
     "test": "jshint lib test && nyc mocha -- --recursive --check-leaks && nyc check-coverage --statements 100 --functions 100 --branches 100 --lines 100",
-    "acceptance": "ACCEPTANCE=true nyc mocha -- test/acceptance --recursive --check-leaks --timeout 15000",
+    "acceptance": "ACCEPTANCE=true nyc mocha -- test/acceptance --recursive --check-leaks --timeout 30000",
     "acceptanceSetupMacOS": "sudo ifconfig lo0 alias 127.0.0.2 up && sudo ifconfig lo0 alias 127.0.0.3 up"
   },
   "keywords": [

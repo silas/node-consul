@@ -24,7 +24,7 @@ helper.describe("Agent", function () {
 
       should(data.length).eql(1);
       should(
-        data.map(function (m) {
+        data.map((m) => {
           return m.Name;
         })
       ).containEql("node1");
@@ -89,7 +89,7 @@ helper.describe("Agent", function () {
       const joinerAddr = "127.0.0.2";
 
       const members = await this.c1.agent.members();
-      const memberAddrs = members.map(function (m) {
+      const memberAddrs = members.map((m) => {
         return m.Addr;
       });
 

@@ -101,7 +101,7 @@ helper.describe("Kv", function () {
       should(data.length).equal(3);
 
       should(data).eql(
-        this.keys.filter(function (key) {
+        this.keys.filter((key) => {
           return key.match(/^a/);
         })
       );
@@ -118,7 +118,7 @@ helper.describe("Kv", function () {
 
       should(data).eql(
         this.keys
-          .filter(function (key) {
+          .filter((key) => {
             return key.match(/^a\//);
           })
           .map(function (v) {

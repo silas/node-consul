@@ -12,13 +12,11 @@ function setup(scope) {
   scope._setup = true;
 
   beforeEach.call(scope, function () {
-    const self = this;
-
-    self.sinon = sinon.createSandbox();
+    this.sinon = sinon.createSandbox();
 
     nock.disableNetConnect();
 
-    Object.defineProperty(self, "consul", {
+    Object.defineProperty(this, "consul", {
       configurable: true,
       enumerable: true,
       get: function () {
@@ -26,7 +24,7 @@ function setup(scope) {
       },
     });
 
-    Object.defineProperty(self, "nock", {
+    Object.defineProperty(this, "nock", {
       configurable: true,
       enumerable: true,
       get: function () {

@@ -33,8 +33,6 @@ describe("Lock", function () {
 
   describe("constructor", function () {
     it("should require valid options", function () {
-      const self = this;
-
       const checks = [
         {
           opts: { session: true },
@@ -47,8 +45,8 @@ describe("Lock", function () {
       ];
 
       checks.forEach((check) => {
-        should(function () {
-          self.consul.lock(check.opts);
+        should(() => {
+          this.consul.lock(check.opts);
         }).throw(check.message);
       });
     });
@@ -58,7 +56,7 @@ describe("Lock", function () {
     it("should create ctx", function (done) {
       delete this.lock._ctx;
 
-      this.lock._run = function (ctx) {
+      this.lock._run = (ctx) => {
         should(ctx).have.property("key", "test");
         should(ctx).have.property("index", "0");
         should(ctx).have.property("end", false);
@@ -75,29 +73,25 @@ describe("Lock", function () {
     });
 
     it("should error for activate lock", function () {
-      const self = this;
-
-      should(function () {
-        self.lock.acquire();
+      should(() => {
+        this.lock.acquire();
       }).throw("lock in use");
     });
   });
 
   describe("release", function () {
     it("should require activate lock", function () {
-      const self = this;
+      delete this.lock._ctx;
 
-      delete self.lock._ctx;
-
-      should(function () {
-        self.lock.release();
+      should(() => {
+        this.lock.release();
       }).throw("no lock in use");
     });
   });
 
   describe("_err", function () {
     it("should emit error", function (done) {
-      this.lock.once("error", function (err, res) {
+      this.lock.once("error", (err, res) => {
         should(err).have.property("message", "ok");
         should(res).equal("res");
 
@@ -110,7 +104,7 @@ describe("Lock", function () {
 
   describe("_run", function () {
     it("should do nothing when ctx ended", function () {
-      this.lock.on("end", function () {
+      this.lock.on("end", () => {
         throw new Error("should not end");
       });
 
@@ -119,19 +113,17 @@ describe("Lock", function () {
     });
 
     it("should throw on unknown state", function () {
-      const self = this;
+      this.ctx.state = "foo";
 
-      self.ctx.state = "foo";
-
-      should(function () {
-        self.lock._run(self.ctx);
+      should(() => {
+        this.lock._run(this.ctx);
       }).throw("invalid state: foo");
     });
   });
 
   describe("_session", function () {
     beforeEach(function () {
-      this.lock._run = function () {};
+      this.lock._run = () => {};
       this.ctx.session = { ttl: "100ms" };
     });
 
@@ -140,11 +132,11 @@ describe("Lock", function () {
 
       let error;
 
-      this.lock.once("error", function (err) {
+      this.lock.once("error", (err) => {
         error = err;
       });
 
-      this.lock.on("end", function () {
+      this.lock.on("end", () => {
         should(error).have.property(
           "message",
           "session create: internal server error"
@@ -167,11 +159,11 @@ describe("Lock", function () {
 
       let error;
 
-      this.lock.once("error", function (err) {
+      this.lock.once("error", (err) => {
         error = err;
       });
 
-      this.lock.on("end", function () {
+      this.lock.on("end", () => {
         should(error).have.property("message", "internal server error");
 
         done();
@@ -188,11 +180,11 @@ describe("Lock", function () {
         .reply(503);
 
       let error = [];
-      this.lock.once("error", function (err) {
+      this.lock.once("error", (err) => {
         error = err;
       });
 
-      this.lock.on("end", function () {
+      this.lock.on("end", () => {
         should(error).have.property("message", "service unavailable");
 
         done();
@@ -207,11 +199,11 @@ describe("Lock", function () {
       this.nock.get("/v1/kv/test?index=0&wait=15s").reply(500);
 
       let error = [];
-      this.lock.once("error", function (err) {
+      this.lock.once("error", (err) => {
         error = err;
       });
 
-      this.lock.on("end", function () {
+      this.lock.on("end", () => {
         should(error).have.property(
           "message",
           "consul: kv.get: internal server error"
@@ -229,11 +221,11 @@ describe("Lock", function () {
         .reply(200, [{ Flags: 123 }], { "X-Consul-Index": "5" });
 
       let error;
-      this.lock.once("error", function (err) {
+      this.lock.once("error", (err) => {
         error = err;
       });
 
-      this.lock.on("end", function () {
+      this.lock.on("end", () => {
         should(error).have.property(
           "message",
           "consul: lock: existing key does not match lock use"
@@ -249,11 +241,11 @@ describe("Lock", function () {
       this.nock.get("/v1/kv/test?index=0&wait=15s").reply(200);
 
       let error;
-      this.lock.once("error", function (err) {
+      this.lock.once("error", (err) => {
         error = err;
       });
 
-      this.lock.on("end", function () {
+      this.lock.on("end", () => {
         should(error).have.property(
           "message",
           "consul: lock: error getting key"
@@ -268,7 +260,7 @@ describe("Lock", function () {
     it("should acquire on success", function (done) {
       this.nock.get("/v1/kv/test?index=0&wait=15s").reply(404);
 
-      this.lock._run = function (ctx) {
+      this.lock._run = (ctx) => {
         should(ctx).have.property("state", "acquire");
         done();
       };
@@ -296,16 +288,14 @@ describe("Lock", function () {
 
       this.ctx.session.ttl = "15s";
 
-      this.lock.on("end", function () {
+      this.lock.on("end", () => {
         done();
       });
       this.lock._monitor(this.ctx);
     });
 
     it("should timeout when session ttl set", function (done) {
-      const self = this;
-
-      self.nock
+      this.nock
         .get("/v1/kv/test?index=0&wait=5ms")
         .reply(200, [], { "X-Consul-Index": "5" })
         .get("/v1/kv/test?index=5&wait=5ms")
@@ -316,23 +306,23 @@ describe("Lock", function () {
         .delay(1000)
         .reply(200, [], { "X-Consul-Index": "15" });
 
-      self.ctx.session = { ttl: "10ms" };
+      this.ctx.session = { ttl: "10ms" };
 
-      self.sinon.stub(consul.Watch.prototype, "_wait").callsFake(function () {
+      this.sinon.stub(consul.Watch.prototype, "_wait").callsFake(() => {
         return 0;
       });
 
       let monitor;
 
-      self.lock.on("end", function () {
+      this.lock.on("end", () => {
         should(monitor._options).have.property("index", "10");
 
         done();
       });
 
-      self.lock._monitor(self.ctx);
+      this.lock._monitor(this.ctx);
 
-      monitor = self.ctx.monitor;
+      monitor = this.ctx.monitor;
     });
   });
 
@@ -355,11 +345,11 @@ describe("Lock", function () {
       this.ctx.held = true;
 
       let error;
-      this.lock.once("error", function (err) {
+      this.lock.once("error", (err) => {
         error = err;
       });
 
-      this.lock.on("end", function () {
+      this.lock.on("end", () => {
         should(error).have.property("message", "internal server error");
 
         done();
@@ -376,11 +366,11 @@ describe("Lock", function () {
       this.ctx.held = true;
 
       let error;
-      this.lock.once("error", function (err) {
+      this.lock.once("error", (err) => {
         error = err;
       });
 
-      this.lock.on("end", function () {
+      this.lock.on("end", () => {
         should(error).have.property("message", "failed to release lock");
 
         done();
@@ -390,7 +380,7 @@ describe("Lock", function () {
     });
 
     it("should not set release when not held", function (done) {
-      this.lock.on("end", function () {
+      this.lock.on("end", () => {
         done();
       });
       this.lock._release(this.ctx);
@@ -445,15 +435,15 @@ describe("Lock", function () {
       let acquire = 0;
       let release = 0;
 
-      lock.on("acquire", function () {
+      lock.on("acquire", () => {
         acquire++;
         lock.release();
       });
-      lock.on("release", function () {
+      lock.on("release", () => {
         release++;
       });
 
-      lock.on("end", function () {
+      lock.on("end", () => {
         should(acquire).equal(1);
         should(release).equal(1);
 
@@ -484,15 +474,15 @@ describe("Lock", function () {
       let acquire = 0;
       let release = 0;
 
-      lock.on("acquire", function () {
+      lock.on("acquire", () => {
         acquire++;
         lock.release();
       });
-      lock.on("release", function () {
+      lock.on("release", () => {
         release++;
       });
 
-      lock.on("end", function () {
+      lock.on("end", () => {
         should(acquire).equal(1);
         should(release).equal(1);
 
