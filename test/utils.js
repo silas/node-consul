@@ -1,6 +1,10 @@
 "use strict";
 
 const events = require("events");
+const http = require("http");
+const https = require("https");
+const { URL } = require("url");
+
 const should = require("should");
 
 const utils = require("../lib/utils");
@@ -9,6 +13,19 @@ const helper = require("./helper");
 
 describe("utils", function () {
   helper.setup(this);
+
+  describe("getAgent", function () {
+    it("should work", function () {
+      should(utils.getAgent()).be.undefined();
+      should(utils.getAgent({})).be.undefined();
+
+      should(utils.getAgent("http://www.example.com")).be.instanceOf(http.Agent);
+      should(utils.getAgent(new URL("http://www.example.com"))).be.instanceOf(http.Agent);
+
+      should(utils.getAgent("https://www.example.com")).be.instanceOf(https.Agent);
+      should(utils.getAgent(new URL("https://www.example.com"))).be.instanceOf(https.Agent);
+    });
+  });
 
   describe("body", function () {
     it("should work", function () {
