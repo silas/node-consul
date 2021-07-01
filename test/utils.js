@@ -275,30 +275,6 @@ describe("utils", function () {
     });
   });
 
-  describe("setIntervalContext", function () {
-    beforeEach(function () {
-      this.ctx = new events.EventEmitter();
-    });
-
-    it("should cancel timeout", function (done) {
-      utils.setIntervalContext(
-        () => {
-          throw new Error("should have been canceled");
-        },
-        this.ctx,
-        10
-      );
-
-      this.ctx.on("cancel", () => {
-        should(this.ctx.listeners("cancel")).have.length(1);
-
-        done();
-      });
-
-      this.ctx.emit("cancel");
-    });
-  });
-
   describe("createCheck", function () {
     it("should work", function () {
       should(
