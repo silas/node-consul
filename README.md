@@ -23,7 +23,6 @@ See the official [HTTP API][consul-docs-api] docs for more information.
  * [Event](#event)
  * [Health](#health)
  * [KV](#kv)
- * [Lock](#lock)
  * [Query](#query)
  * [Session](#session)
  * [Status](#status)
@@ -1313,61 +1312,6 @@ Usage
 
 ``` javascript
 await consul.kv.del('hello');
-```
-
-<a name="lock"></a>
-### consul.lock(options)
-
-_Experimental_
-
-Lock a key using the method described in the [leader election](https://www.consul.io/docs/guides/leader-election.html) guide.
-
-Options
-
- * key (String): lock key
- * value (String|Buffer, optional): lock value
- * session (Object|String, optional): session options
-
-Events
-
- * `acquire`: lock successfully acquired
- * `error`: lock related error
- * `retry`: lock retry attempt
- * `release`: lock gracefully released (not always emitted)
- * `end`: lock ended (always emitted)
-
-Usage
-
-``` javascript
-const lock = consul.lock({ key: 'test' });
-
-lock.on('acquire', () => {
-  console.log('lock acquired');
-
-  lock.release();
-});
-
-lock.on('release', () => {
-  console.log('lock released');
-});
-
-lock.on('error', () => {
-  console.log('lock error:', err);
-});
-
-lock.on('end', (err) => {
-  console.log('lock released or there was a permanent failure');
-});
-
-lock.acquire();
-```
-
-Result
-
-```
-lock acquired
-lock released
-lock released or there was a permanent failure
 ```
 
 <a name="query"></a>
