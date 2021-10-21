@@ -39,8 +39,12 @@ Options
  * host (String, default: 127.0.0.1): agent address
  * port (Integer, default: 8500): agent HTTP(S) port
  * secure (Boolean, default: false): enable HTTPS
- * ca (String[], optional): array of strings or Buffers of trusted certificates in PEM format
  * defaults (Object, optional): common method call options that will be included with every call (ex: set default `token`), these options can be override on a per call basis
+
+Advanced options
+
+ * agent (http.Agent|https.Agent, optionals): if not set uses the global agent
+ * tls options: ca, cert, ciphers, clientCertEngine, crl, dhparam, ecdhCurve, honorCipherOrder, key, passphrase, pfx, rejectUnauthorized, secureOptions, secureProtocol, servername, and sessionIdContext (see [Node.js docs](https://nodejs.org/dist/latest/docs/api/tls.html#tls_tls_connect_options_callback) for details)
 
 Usage
 

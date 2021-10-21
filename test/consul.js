@@ -37,7 +37,6 @@ describe("Consul", function () {
 
     should(helper.consul()._opts.baseUrl).eql({
       protocol: "http:",
-      auth: null,
       port: "8500",
       hostname: "127.0.0.1",
       path: "/v1",
@@ -51,7 +50,6 @@ describe("Consul", function () {
       })._opts.baseUrl
     ).eql({
       protocol: "https:",
-      auth: null,
       port: "8501",
       hostname: "127.0.0.2",
       path: "/v1",
