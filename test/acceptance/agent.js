@@ -180,7 +180,7 @@ helper.describe("Agent", function () {
     afterEach(async function () {
       await Promise.all(
         this.deregister.map((id) => this.c1.agent.check.deregister(id))
-      );
+      ).catch(() => null);
     });
 
     describe("list", function () {
@@ -267,7 +267,7 @@ helper.describe("Agent", function () {
     afterEach(async function () {
       await Promise.all(
         this.deregister.map((id) => this.c1.agent.service.deregister(id))
-      );
+      ).catch(() => null);
     });
 
     describe("list", function () {

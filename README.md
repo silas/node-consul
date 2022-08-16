@@ -44,6 +44,7 @@ Options
 Advanced options
 
  * agent (http.Agent|https.Agent, optionals): if not set uses the global agent
+ * baseUrl, headers, tags, socketPath, and timeout (see [Papi](https://github.com/silas/node-papi/blob/main/README.md#client) for details)
  * tls options: ca, cert, ciphers, clientCertEngine, crl, dhparam, ecdhCurve, honorCipherOrder, key, passphrase, pfx, rejectUnauthorized, secureOptions, secureProtocol, servername, and sessionIdContext (see [Node.js docs](https://nodejs.org/dist/latest/docs/api/tls.html#tls_tls_connect_options_callback) for details)
 
 Usage
