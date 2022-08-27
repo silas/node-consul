@@ -19,12 +19,12 @@ function bufferToString(value, depth) {
   if (Buffer.isBuffer(value)) return value.toString();
 
   if (Array.isArray(value)) {
-    return value.map((v) => bufferToString(v, depth+1));
+    return value.map((v) => bufferToString(v, depth + 1));
   }
 
   if (typeof value === "object") {
     for (const [k, v] of Object.entries(value)) {
-      value[k] = bufferToString(v, depth+1);
+      value[k] = bufferToString(v, depth + 1);
     }
   }
 

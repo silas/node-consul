@@ -19,12 +19,12 @@ describe("Acl", function () {
       describe("create", function () {
         it("should work", async function () {
           this.nock
-              .put("/v1/acl/create", {
-                Name: "name",
-                Type: "type",
-                Rules: "rules",
-              })
-              .reply(200, { ok: true });
+            .put("/v1/acl/create", {
+              Name: "name",
+              Type: "type",
+              Rules: "rules",
+            })
+            .reply(200, { ok: true });
 
           const data = await this.consul.acl.legacy.create({
             name: "name",
@@ -45,13 +45,13 @@ describe("Acl", function () {
       describe("update", function () {
         it("should work", async function () {
           this.nock
-              .put("/v1/acl/update", {
-                ID: "123",
-                Name: "name",
-                Type: "type",
-                Rules: "rules",
-              })
-              .reply(200);
+            .put("/v1/acl/update", {
+              ID: "123",
+              Name: "name",
+              Type: "type",
+              Rules: "rules",
+            })
+            .reply(200);
 
           await this.consul.acl.legacy.update({
             id: "123",
@@ -72,7 +72,10 @@ describe("Acl", function () {
             await this.consul.acl.legacy.update({});
             should.ok(false);
           } catch (err) {
-            should(err).have.property("message", "consul: acl.legacy.update: id required");
+            should(err).have.property(
+              "message",
+              "consul: acl.legacy.update: id required"
+            );
             should(err).have.property("isValidation", true);
           }
         });
@@ -97,8 +100,8 @@ describe("Acl", function () {
             should.ok(false);
           } catch (err) {
             should(err).have.property(
-                "message",
-                "consul: acl.legacy.destroy: id required"
+              "message",
+              "consul: acl.legacy.destroy: id required"
             );
             should(err).have.property("isValidation", true);
           }
@@ -132,7 +135,10 @@ describe("Acl", function () {
             await this.consul.acl.legacy.info({});
             should.ok(false);
           } catch (err) {
-            should(err).have.property("message", "consul: acl.legacy.info: id required");
+            should(err).have.property(
+              "message",
+              "consul: acl.legacy.info: id required"
+            );
             should(err).have.property("isValidation", true);
           }
         });
@@ -158,7 +164,10 @@ describe("Acl", function () {
             await this.consul.acl.legacy.clone({});
             should.ok(false);
           } catch (err) {
-            should(err).have.property("message", "consul: acl.legacy.clone: id required");
+            should(err).have.property(
+              "message",
+              "consul: acl.legacy.clone: id required"
+            );
             should(err).have.property("isValidation", true);
           }
         });

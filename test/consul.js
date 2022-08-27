@@ -73,9 +73,9 @@ describe("Consul", function () {
 
     const agent = new http.Agent();
     should(
-        helper.consul({
-          agent
-        })._opts.agent
+      helper.consul({
+        agent,
+      })._opts.agent
     ).equal(agent);
   });
 
