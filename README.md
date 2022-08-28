@@ -30,7 +30,7 @@ See the official [HTTP API][consul-docs-api] docs for more information.
 * [Transaction](#transaction)
 * [Watch](#watch)
 
-<a name="init"></a>
+<a id="init"></a>
 
 ### Consul([options])
 
@@ -57,7 +57,7 @@ import Consul from "consul";
 const consul = new Consul();
 ```
 
-<a name="common-options"></a>
+<a id="common-options"></a>
 
 ### Common Method Call Options
 
@@ -79,7 +79,7 @@ These options work for all methods.
 - ctx (EventEmitter, optional): emit `cancel` to abort request
 - timeout (Number|String, optional): number of milliseconds before request is aborted (ex: `1000` or `1s`)
 
-<a name="acl"></a>
+<a id="acl"></a>
 
 ### consul.acl
 
@@ -87,7 +87,7 @@ These options work for all methods.
 - [legacy](#acl-legacy)
 - [replication](#acl-replication)
 
-<a name="acl-bootstrap"></a>
+<a id="acl-bootstrap"></a>
 
 ### consul.acl.bootstrap()
 
@@ -107,7 +107,7 @@ Result
 }
 ```
 
-<a name="acl-replication"></a>
+<a id="acl-replication"></a>
 
 ### consul.acl.replication([options])
 
@@ -132,7 +132,7 @@ Result
 }
 ```
 
-<a name="acl-legacy"></a>
+<a id="acl-legacy"></a>
 
 ### consul.acl.legacy
 
@@ -143,7 +143,7 @@ Result
 - [clone](#acl-legacy-clone)
 - [list](#acl-legacy-list)
 
-<a name="acl-legacy-create"></a>
+<a id="acl-legacy-create"></a>
 
 ### consul.acl.legacy.create([options])
 
@@ -169,7 +169,7 @@ Result
 }
 ```
 
-<a name="acl-legacy-update"></a>
+<a id="acl-legacy-update"></a>
 
 ### consul.acl.legacy.update(options)
 
@@ -191,7 +191,7 @@ await consul.acl.legacy.update({
 });
 ```
 
-<a name="acl-legacy-destroy"></a>
+<a id="acl-legacy-destroy"></a>
 
 ### consul.acl.legacy.destroy(options)
 
@@ -207,7 +207,7 @@ Usage
 await consul.acl.legacy.destroy("b1f4c10e-b61b-e1de-de95-218c9fefdd3e");
 ```
 
-<a name="acl-legacy-get"></a>
+<a id="acl-legacy-get"></a>
 
 ### consul.acl.legacy.get(options)
 
@@ -236,7 +236,7 @@ Result
 }
 ```
 
-<a name="acl-legacy-clone"></a>
+<a id="acl-legacy-clone"></a>
 
 ### consul.acl.legacy.clone(options)
 
@@ -260,7 +260,7 @@ Result
 }
 ```
 
-<a name="acl-legacy-list"></a>
+<a id="acl-legacy-list"></a>
 
 ### consul.acl.legacy.list([options])
 
@@ -295,7 +295,7 @@ Result
 ]
 ```
 
-<a name="agent"></a>
+<a id="agent"></a>
 
 ### consul.agent
 
@@ -308,7 +308,7 @@ Result
 - [join](#agent-join)
 - [forceLeave](#agent-force-leave)
 
-<a name="agent-members"></a>
+<a id="agent-members"></a>
 
 ### consul.agent.members([options])
 
@@ -353,7 +353,7 @@ Result
 ]
 ```
 
-<a name="agent-reload"></a>
+<a id="agent-reload"></a>
 
 ### consul.agent.reload([options])
 
@@ -365,7 +365,7 @@ Usage
 await consul.agent.reload();
 ```
 
-<a name="agent-self"></a>
+<a id="agent-self"></a>
 
 ### consul.agent.self()
 
@@ -454,7 +454,7 @@ Result
 }
 ```
 
-<a name="agent-maintenance"></a>
+<a id="agent-maintenance"></a>
 
 ### consul.agent.maintenance(options)
 
@@ -471,7 +471,7 @@ Usage
 await consul.agent.maintenance(true);
 ```
 
-<a name="agent-join"></a>
+<a id="agent-join"></a>
 
 ### consul.agent.join(options)
 
@@ -488,7 +488,7 @@ Usage
 await consul.agent.join("127.0.0.2");
 ```
 
-<a name="agent-force-leave"></a>
+<a id="agent-force-leave"></a>
 
 ### consul.agent.forceLeave(options)
 
@@ -504,7 +504,7 @@ Usage
 await consul.agent.forceLeave("node2");
 ```
 
-<a name="agent-check"></a>
+<a id="agent-check"></a>
 
 ### consul.agent.check
 
@@ -515,7 +515,7 @@ await consul.agent.forceLeave("node2");
 - [warn](#agent-check-warn)
 - [fail](#agent-check-fail)
 
-<a name="agent-check-list"></a>
+<a id="agent-check-list"></a>
 
 ### consul.agent.check.list()
 
@@ -544,7 +544,7 @@ Result
 }
 ```
 
-<a name="agent-check-register"></a>
+<a id="agent-check-register"></a>
 
 ### consul.agent.check.register(options)
 
@@ -588,7 +588,7 @@ await consul.agent.check.register({
 });
 ```
 
-<a name="agent-check-deregister"></a>
+<a id="agent-check-deregister"></a>
 
 ### consul.agent.check.deregister(options)
 
@@ -604,7 +604,7 @@ Usage
 await consul.agent.check.deregister("example");
 ```
 
-<a name="agent-check-pass"></a>
+<a id="agent-check-pass"></a>
 
 ### consul.agent.check.pass(options)
 
@@ -621,7 +621,7 @@ Usage
 await consul.agent.check.pass("example");
 ```
 
-<a name="agent-check-warn"></a>
+<a id="agent-check-warn"></a>
 
 ### consul.agent.check.warn(options)
 
@@ -638,7 +638,7 @@ Usage
 await consul.agent.check.warn("example");
 ```
 
-<a name="agent-check-fail"></a>
+<a id="agent-check-fail"></a>
 
 ### consul.agent.check.fail(options)
 
@@ -655,7 +655,7 @@ Usage
 await consul.agent.check.fail("example");
 ```
 
-<a name="agent-service"></a>
+<a id="agent-service"></a>
 
 ### consul.agent.service
 
@@ -664,7 +664,7 @@ await consul.agent.check.fail("example");
 - [deregister](#agent-service-deregister)
 - [maintenance](#agent-service-maintenance)
 
-<a name="agent-service-list"></a>
+<a id="agent-service-list"></a>
 
 ### consul.agent.service.list()
 
@@ -689,7 +689,7 @@ Result
 }
 ```
 
-<a name="agent-service-register"></a>
+<a id="agent-service-register"></a>
 
 ### consul.agent.service.register(options)
 
@@ -727,7 +727,7 @@ Usage
 await consul.agent.service.register("example");
 ```
 
-<a name="agent-service-deregister"></a>
+<a id="agent-service-deregister"></a>
 
 ### consul.agent.service.deregister(options)
 
@@ -743,7 +743,7 @@ Usage
 await consul.agent.service.deregister("example");
 ```
 
-<a name="agent-service-maintenance"></a>
+<a id="agent-service-maintenance"></a>
 
 ### consul.agent.service.maintenance(options)
 
@@ -761,7 +761,7 @@ Usage
 await consul.agent.service.maintenance({ id: "example", enable: true });
 ```
 
-<a name="catalog"></a>
+<a id="catalog"></a>
 
 ### consul.catalog
 
@@ -770,7 +770,7 @@ await consul.agent.service.maintenance({ id: "example", enable: true });
 - [node](#catalog-node)
 - [service](#catalog-service)
 
-<a name="catalog-datacenters"></a>
+<a id="catalog-datacenters"></a>
 
 ### consul.catalog.datacenters()
 
@@ -788,13 +788,13 @@ Result
 ["dc1"]
 ```
 
-<a name="catalog-connect"></a>
+<a id="catalog-connect"></a>
 
 ### consul.catalog.connect
 
 - [nodes](#catalog-connect-nodes)
 
-<a name="catalog-connect-nodes"></a>
+<a id="catalog-connect-nodes"></a>
 
 ### consul.catalog.connect.nodes(options)
 
@@ -844,14 +844,14 @@ Result
 ]
 ```
 
-<a name="catalog-node"></a>
+<a id="catalog-node"></a>
 
 ### consul.catalog.node
 
 - [list](#catalog-node-list)
 - [services](#catalog-node-services)
 
-<a name="catalog-node-list"></a>
+<a id="catalog-node-list"></a>
 
 ### consul.catalog.node.list([options])
 
@@ -878,7 +878,7 @@ Result
 ]
 ```
 
-<a name="catalog-node-services"></a>
+<a id="catalog-node-services"></a>
 
 ### consul.catalog.node.services(options)
 
@@ -919,14 +919,14 @@ Result
 }
 ```
 
-<a name="catalog-service"></a>
+<a id="catalog-service"></a>
 
 ### consul.catalog.service
 
 - [list](#catalog-service-list)
 - [nodes](#catalog-service-nodes)
 
-<a name="catalog-service-list"></a>
+<a id="catalog-service-list"></a>
 
 ### consul.catalog.service.list([options])
 
@@ -951,7 +951,7 @@ Result
 }
 ```
 
-<a name="catalog-service-nodes"></a>
+<a id="catalog-service-nodes"></a>
 
 ### consul.catalog.service.nodes(options)
 
@@ -984,14 +984,14 @@ Result
 ]
 ```
 
-<a name="event"></a>
+<a id="event"></a>
 
 ### consul.event
 
 - [fire](#event-fire)
 - [list](#event-list)
 
-<a name="event-fire"></a>
+<a id="event-fire"></a>
 
 ### consul.event.fire(options)
 
@@ -1026,7 +1026,7 @@ Result
 }
 ```
 
-<a name="event-list"></a>
+<a id="event-list"></a>
 
 ### consul.event.list([options])
 
@@ -1059,7 +1059,7 @@ Result
 ]
 ```
 
-<a name="health"></a>
+<a id="health"></a>
 
 ### consul.health
 
@@ -1068,7 +1068,7 @@ Result
 - [service](#health-service)
 - [state](#health-state)
 
-<a name="health-node"></a>
+<a id="health-node"></a>
 
 ### consul.health.node(options)
 
@@ -1112,7 +1112,7 @@ Result
 ]
 ```
 
-<a name="health-checks"></a>
+<a id="health-checks"></a>
 
 ### consul.health.checks(options)
 
@@ -1146,7 +1146,7 @@ Result
 ]
 ```
 
-<a name="health-service"></a>
+<a id="health-service"></a>
 
 ### consul.health.service(options)
 
@@ -1206,7 +1206,7 @@ Result
 ]
 ```
 
-<a name="health-state"></a>
+<a id="health-state"></a>
 
 ### consul.health.state(options)
 
@@ -1240,7 +1240,7 @@ Result
 ]
 ```
 
-<a name="kv"></a>
+<a id="kv"></a>
 
 ### consul.kv
 
@@ -1249,7 +1249,7 @@ Result
 - [set](#kv-set)
 - [del](#kv-del)
 
-<a name="kv-get"></a>
+<a id="kv-get"></a>
 
 ### consul.kv.get(options)
 
@@ -1284,7 +1284,7 @@ Result
 }
 ```
 
-<a name="kv-keys"></a>
+<a id="kv-keys"></a>
 
 ### consul.kv.keys(options)
 
@@ -1308,7 +1308,7 @@ Result
 ["a/b", "a/c"]
 ```
 
-<a name="kv-set"></a>
+<a id="kv-set"></a>
 
 ### consul.kv.set(options)
 
@@ -1336,7 +1336,7 @@ Result
 true
 ```
 
-<a name="kv-del"></a>
+<a id="kv-del"></a>
 
 ### consul.kv.del(options)
 
@@ -1355,7 +1355,7 @@ Usage
 await consul.kv.del("hello");
 ```
 
-<a name="query"></a>
+<a id="query"></a>
 
 ### consul.query
 
@@ -1367,7 +1367,7 @@ await consul.kv.del("hello");
 - [execute](#query-execute)
 - [explain](#query-explain)
 
-<a name="query-list"></a>
+<a id="query-list"></a>
 
 ### consul.query.list()
 
@@ -1412,7 +1412,7 @@ Result
 ]
 ```
 
-<a name="query-create"></a>
+<a id="query-create"></a>
 
 ### consul.query.create(options)
 
@@ -1451,7 +1451,7 @@ Result
 }
 ```
 
-<a name="query-update"></a>
+<a id="query-update"></a>
 
 ### consul.query.update(options)
 
@@ -1476,7 +1476,7 @@ await consul.query.update({
 });
 ```
 
-<a name="query-get"></a>
+<a id="query-get"></a>
 
 ### consul.query.get(options)
 
@@ -1523,7 +1523,7 @@ Result
 }
 ```
 
-<a name="query-destroy"></a>
+<a id="query-destroy"></a>
 
 ### consul.query.destroy(options)
 
@@ -1539,7 +1539,7 @@ Usage
 await consul.query.destroy("422b14b9-874b-4520-bd2e-e149a42b0066");
 ```
 
-<a name="query-execute"></a>
+<a id="query-execute"></a>
 
 ### consul.query.execute(options)
 
@@ -1608,7 +1608,7 @@ Result
 }
 ```
 
-<a name="query-explain"></a>
+<a id="query-explain"></a>
 
 ### consul.query.explain(options)
 
@@ -1657,7 +1657,7 @@ Result
 }
 ```
 
-<a name="session"></a>
+<a id="session"></a>
 
 ### consul.session
 
@@ -1668,7 +1668,7 @@ Result
 - [list](#session-list)
 - [renew](#session-renew)
 
-<a name="session-create"></a>
+<a id="session-create"></a>
 
 ### consul.session.create([options])
 
@@ -1698,7 +1698,7 @@ Result
 }
 ```
 
-<a name="session-destroy"></a>
+<a id="session-destroy"></a>
 
 ### consul.session.destroy(options)
 
@@ -1715,7 +1715,7 @@ Usage
 await consul.session.destroy("a0f5dc05-84c3-5f5a-1d88-05b875e524e1");
 ```
 
-<a name="session-get"></a>
+<a id="session-get"></a>
 
 ### consul.session.get(options)
 
@@ -1745,7 +1745,7 @@ Result
 }
 ```
 
-<a name="session-node"></a>
+<a id="session-node"></a>
 
 ### consul.session.node(options)
 
@@ -1777,7 +1777,7 @@ Result
 ]
 ```
 
-<a name="session-list"></a>
+<a id="session-list"></a>
 
 ### consul.session.list([options])
 
@@ -1808,7 +1808,7 @@ Result
 ]
 ```
 
-<a name="session-renew"></a>
+<a id="session-renew"></a>
 
 ### consul.session.renew(options)
 
@@ -1842,14 +1842,14 @@ Result
 ]
 ```
 
-<a name="status"></a>
+<a id="status"></a>
 
 ### consul.status
 
 - [leader](#status-leader)
 - [peers](#status-peers)
 
-<a name="status-leader"></a>
+<a id="status-leader"></a>
 
 ### consul.status.leader()
 
@@ -1867,7 +1867,7 @@ Result
 "127.0.0.1:8300"
 ```
 
-<a name="status-peers"></a>
+<a id="status-peers"></a>
 
 ### consul.status.peers()
 
@@ -1885,7 +1885,7 @@ Result
 ["127.0.0.1:8300"]
 ```
 
-<a name="transaction"></a>
+<a id="transaction"></a>
 
 ### consul.transaction.create(operations)
 
@@ -1912,7 +1912,7 @@ await consul.transaction.create([
 ]);
 ```
 
-<a name="watch"></a>
+<a id="watch"></a>
 
 ### consul.watch(options)
 
