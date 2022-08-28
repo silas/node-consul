@@ -52,7 +52,7 @@ Advanced options
 Usage
 
 ```javascript
-const Consul = require("consul");
+import Consul from "consul";
 
 const consul = new Consul();
 ```
