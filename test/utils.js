@@ -423,6 +423,182 @@ describe("utils", function () {
     );
   });
 
+  describe("createCatalogDeregistration", function () {
+    it("should work", function () {
+      should(
+        utils.createCatalogDeregistration({
+          node: "node",
+          checkid: "check",
+          serviceid: "service",
+        })
+      ).eql({
+        Node: "node",
+        CheckID: "check",
+        ServiceID: "service",
+      });
+    });
+    it("should work", function () {
+      should(utils.createCatalogDeregistration({})).eql({});
+    });
+  });
+
+  describe("createCatalogRegistration", function () {
+    it("throw on missing grpc/http/tcp", function () {
+      should(() => {
+        utils.createCatalogRegistration({
+          id: "123",
+          node: "node",
+          nodeMeta: { "external-node": "true" },
+          check: {
+            node: "foo",
+            checkID: "service:web1",
+            serviceid: "service",
+            name: "Web HTTP check",
+            definition: {
+              intervalduration: "5s",
+            },
+            notes: "http node check",
+            status: "critical",
+          },
+          service: { id: "service" },
+          address: "10.0.0.1",
+          skipnodeupdate: true,
+        });
+      }).throw("at least one of http/tcp is required");
+    });
+
+    it("should work", function () {
+      should(
+        utils.createCatalogRegistration({
+          id: "123",
+          node: "node",
+          nodeMeta: { "external-node": "true" },
+          check: {
+            node: "foo",
+            checkID: "service:web1",
+            serviceid: "service",
+            name: "Web HTTP check",
+            definition: {
+              http: "http://example.org/",
+              intervalduration: "5s",
+            },
+            notes: "http node check",
+            status: "critical",
+          },
+          service: { id: "service" },
+          address: "10.0.0.1",
+          skipnodeupdate: true,
+        })
+      ).eql({
+        ID: "123",
+        Node: "node",
+        NodeMeta: { "external-node": "true" },
+        Check: {
+          Node: "foo",
+          CheckID: "service:web1",
+          ServiceID: "service",
+          Name: "Web HTTP check",
+          Definition: {
+            HTTP: "http://example.org/",
+            IntervalDuration: "5s",
+          },
+          Notes: "http node check",
+          Status: "critical",
+        },
+        Service: { ID: "service" },
+        Address: "10.0.0.1",
+        SkipNodeUpdate: true,
+      });
+    });
+
+    it("should work", function () {
+      should(
+        utils.createCatalogRegistration({
+          id: "123",
+          node: "node",
+          nodeMeta: { "node-meta": "true" },
+          checks: [
+            {
+              name: "check2",
+              definition: {
+                http: "https://127.0.0.1:8000",
+                tLsskipverify: true,
+                tLsservername: "fqdn",
+                intervalduration: "60s",
+                deregistercriticalserviceafterduration: "120s",
+              },
+            },
+            {
+              name: "check3",
+              definition: {
+                tcp: "127.0.0.1:8000",
+                intervalduration: "60s",
+                timeoutduration: "10s",
+              },
+            },
+            {},
+          ],
+          service: {
+            id: "service",
+            service: "service",
+            tags: [],
+            meta: { defaultContext: "/nodeapi" },
+            address: "127.0.0.1",
+            port: 1234,
+          },
+          address: "10.0.0.1",
+        })
+      ).eql({
+        ID: "123",
+        Node: "node",
+        NodeMeta: { "node-meta": "true" },
+        Checks: [
+          {
+            Name: "check2",
+            Definition: {
+              HTTP: "https://127.0.0.1:8000",
+              TLSSkipVerify: true,
+              TLSServerName: "fqdn",
+              IntervalDuration: "60s",
+              DeregisterCriticalServiceAfterDuration: "120s",
+            },
+          },
+          {
+            Name: "check3",
+            Definition: {
+              TCP: "127.0.0.1:8000",
+              IntervalDuration: "60s",
+              TimeoutDuration: "10s",
+            },
+          },
+          {},
+        ],
+        Service: {
+          Service: "service",
+          ID: "service",
+          Tags: [],
+          Meta: { defaultContext: "/nodeapi" },
+          Address: "127.0.0.1",
+          Port: 1234,
+        },
+        Address: "10.0.0.1",
+      });
+    });
+    should(
+      utils.createCatalogRegistration({
+        taggedaddresses: {},
+      })
+    ).eql({
+      TaggedAddresses: {},
+    });
+  });
+
+  describe("createCatalogService", function () {
+    it("should work", function () {
+      should(utils.createCatalogService({})).eql({});
+    });
+  });
+
   describe("createService", function () {
     it("should work", function () {
       should(
