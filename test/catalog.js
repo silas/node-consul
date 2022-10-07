@@ -7,6 +7,60 @@ const helper = require("./helper");
 describe("Catalog", function () {
   helper.setup(this);
 
+  describe("register", function () {
+    it("should work (http) with just string", async function () {
+      this.nock
+        .put("/v1/catalog/register", {
+          Node: "node",
+          Address: "127.0.0.1",
+        })
+        .reply(200);
+
+      await this.consul.catalog.register("node");
+    });
+
+    it("should error (http) on missing required fields", async function () {
+      try {
+        await this.consul.catalog.register({
+          name: "test",
+          serviceid: "service",
+        });
+        should.ok(false);
+      } catch (err) {
+        should(err).property(
+          "message",
+          "consul: catalog.register: node and address required"
+        );
+      }
+    });
+  });
+
+  describe("deregister", function () {
+    it("should work (http) with just string", async function () {
+      this.nock
+        .put("/v1/catalog/deregister", {
+          Node: "node",
+        })
+        .reply(200);
+
+      await this.consul.catalog.deregister("node");
+    });
+
+    it("should error (http) on missing required fields", async function () {
+      try {
+        await this.consul.catalog.deregister({
+          name: "test",
+        });
+        should.ok(false);
+      } catch (err) {
+        should(err).property(
+          "message",
+          "consul: catalog.deregister: node required"
+        );
+      }
+    });
+  });
+
   describe("datacenters", function () {
     it("should work", async function () {
       this.nock.get("/v1/catalog/datacenters").reply(200, [{ ok: true }]);

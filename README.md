@@ -765,10 +765,87 @@ await consul.agent.service.maintenance({ id: "example", enable: true });
 
 ### consul.catalog
 
+- [register](#catalog-register)
+- [deregister](#catalog-deregister)
 - [datacenters](#catalog-datacenters)
 - [connect](#catalog-connect)
 - [node](#catalog-node)
 - [service](#catalog-service)
+
+<a id="catalog-register"></a>
+
+### consul.catalog.register(options)
+
+Registers or updates entries in the catalog.
+
+NOTE: this endpoint is a low-level mechanism for registering or updating entries in the catalog. It is usually preferable to instead use the agent endpoints for registration as they are simpler and perform anti-entropy. It is suggested to read the [catalog API](https://developer.hashicorp.com/consul/api-docs/catalog) documentation before using that.
+
+Options
+
+- id (String, optional): an optional UUID to assign to the node. This must be a 36-character UUID-formatted string
+- node (String, required): specifies the node ID to register
+- address (String, required): specifies the address to register.
+- taggedaddresses (Object, optional): specifies the tagged addresses
+- nodemeta (Object, optional): specifies arbitrary KV metadata pairs for filtering purposes
+- service (Objet, optional): specifies to register a service
+  - id (String): service ID. If ID is not provided, it will be defaulted to the value of the Service.Service property.
+    Only one service with a given ID may be present per node.
+  - service (String): service name
+  - tags (String[], optional): service tags
+  - meta (Object, optional): metadata linked to the service instance
+  - address (String): service IP address
+  - port (Integer): service port
+- check (Object, optional): specifies to register a check.The register API manipulates the health check entry in the Catalog, but it does not setup the
+  TCP/HTTP check to monitor the node's health.
+  - node (String): the node id this check will bind to
+  - name (String): check name
+  - checkid (String): the CheckID can be omitted and will default to the value of Name. The CheckID must be unique on this node.
+  - serviceid (String): if a ServiceID is provided that matches the ID of a service on that node, the check is treated as a service level health check, instead of a node level health check.
+  - notes (String): notes is an opaque field that is meant to hold human-readable text
+  - status (String): initial status. The Status must be one of `passing`, `warning`, or `critical`.
+  - definition (Object): health check definition
+    - http (String): URL endpoint, requires interval
+    - tlsskipverify (Boolean, default: false): skip HTTPS verification
+    - tlsservername (String): SNI
+    - tcp (String): host:port to test, passes if connection is established, fails otherwise
+    - intervalduration (String): interval to run check, requires script (ex: `15s`)
+    - timeoutduration (String): timeout for the check (ex: `10s`)
+    - deregistercriticalserviceafterduration (String): timeout after
+      which to automatically deregister service if check remains in critical state (ex: `120s`)
+- checks (Object[], optional): multiple checks can be provided by replacing `check` with `checks` and sending an array of `check` objects.
+- skipnodeupdate (Bool, optional): pecifies whether to skip updating the node's information in the registration. Note, if the parameter is enabled for a node that doesn't exist, it will still be created
+
+Usage
+
+```javascript
+await consul.catalog.register("example");
+```
+
+<a id="catalog-deregister"></a>
+
+### consul.catalog.deregister(options)
+
+Deregister entries in the catalog.
+
+NOTE:This endpoint is a low-level mechanism for directly removing entries from the Catalog. It is usually preferable to instead use the agent endpoints for deregistration as they are simpler and perform anti-entropy. It is suggested to read the [catalog API](https://developer.hashicorp.com/consul/api-docs/catalog) documentation before using that.
+
+Options
+
+- node (String, required): specifies the ID of the node. If no other values are provided, this node, all its services, and all its checks are removed.
+- checkid (String, optional): specifies the ID of the check to remove.
+- serviceid (String, optional): specifies the ID of the service to remove. The service and all associated checks will be removed.
+
+Usage
+
+```javascript
+await consul.catalog.deregister("example");
+```
+
+or
+
+```javascript
+await consul.catalog.deregister({ id: "example" });
+```
 
 <a id="catalog-datacenters"></a>
 
