@@ -20,12 +20,26 @@ describe("Watch", function () {
       .get("/v1/kv/key1?index=10&wait=30s")
       .reply(200, [{ n: 5 }], { "X-Consul-Index": "15" })
       .get("/v1/kv/key1?index=15&wait=30s")
+      .reply(200, [{ n: 6 }], { "X-Consul-Index": "14" })
+      .get("/v1/kv/key1?index=0&wait=30s")
+      .reply(200, [{ n: 7 }], { "X-Consul-Index": "6" })
+      .get("/v1/kv/key1?index=6&wait=30s")
+      .reply(200, [{ n: 8 }], { "X-Consul-Index": "0" })
+      .get("/v1/kv/key1?index=6&wait=30s")
       .reply(400);
 
     const watch = this.consul.watch({
       method: this.consul.kv.get,
       options: { key: "key1" },
     });
+
+    let doneCalled = false;
+    const safeDone = (err) => {
+      if (doneCalled) return;
+      doneCalled = true;
+      done(err);
+      watch.end();
+    };
 
     should(watch.isRunning()).be.true();
     should(watch.updateTime()).be.undefined();
@@ -40,6 +54,10 @@ describe("Watch", function () {
     const called = {};
 
     watch.on("error", (err) => {
+      if (err.message.includes("Nock")) {
+        return safeDone(err);
+      }
+
       called.error = true;
 
       errors.push(err);
@@ -48,13 +66,17 @@ describe("Watch", function () {
     watch.on("cancel", () => {
       called.cancel = true;
 
-      should(list).eql([1, 4, 5]);
+      try {
+        should(list).eql([1, 4, 5, 6, 7]);
 
-      watch._run();
-      watch._err();
+        watch._run();
+        watch._err();
 
-      watch.end();
-      should(watch.isRunning()).be.false();
+        watch.end();
+        should(watch.isRunning()).be.false();
+      } catch (err) {
+        safeDone(err);
+      }
     });
 
     watch.on("change", (data, res) => {
@@ -62,34 +84,48 @@ describe("Watch", function () {
 
       list.push(data.n);
 
-      switch (res.headers["x-consul-index"]) {
-        case "5":
-          should(watch.isRunning()).be.true();
-          should(watch.updateTime()).be.a.number();
-          should(errors).be.empty();
-          break;
-        case "10":
-          should(watch.isRunning()).be.true();
-          should(watch.updateTime()).be.a.number();
-          should(errors).have.length(1);
-          should(errors[0]).have.property(
-            "message",
-            "consul: kv.get: internal server error"
-          );
-          break;
-        case "15":
-          break;
-        default:
-          break;
+      try {
+        switch (res.headers["x-consul-index"]) {
+          case "5":
+            should(watch.isRunning()).be.true();
+            should(watch.updateTime()).be.a.Number();
+            should(errors).be.empty();
+            break;
+          case "10":
+            should(watch.isRunning()).be.true();
+            should(watch.updateTime()).be.a.Number();
+            should(errors).have.length(1);
+            should(errors[0]).have.property(
+              "message",
+              "consul: kv.get: internal server error"
+            );
+            break;
+          case "15":
+            break;
+          default:
+            break;
+        }
+      } catch (err) {
+        safeDone(err);
       }
     });
 
     watch.on("end", () => {
-      should(called).have.property("cancel", true);
-      should(called).have.property("change", true);
-      should(called).have.property("error", true);
+      try {
+        should(called).have.property("cancel", true);
+        should(called).have.property("change", true);
+        should(called).have.property("error", true);
 
-      done();
+        should(errors).have.length(3);
+        should(errors[1]).have.property(
+          "message",
+          "Consul returned zero index value"
+        );
+
+        safeDone();
+      } catch (err) {
+        safeDone(err);
+      }
     });
   });
 

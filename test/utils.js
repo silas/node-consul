@@ -239,11 +239,28 @@ describe("utils", function () {
       should(utils.parseDuration("1.5s")).equal(1500);
       should(utils.parseDuration("10.03m")).equal(601800);
 
-      should(utils.parseDuration()).be.undefined;
-      should(utils.parseDuration("")).be.undefined;
-      should(utils.parseDuration(".")).be.undefined;
-      should(utils.parseDuration("10x")).be.undefined;
-      should(utils.parseDuration(".ms")).be.undefined;
+      should(utils.parseDuration()).be.undefined();
+      should(utils.parseDuration("")).be.undefined();
+      should(utils.parseDuration(".")).be.undefined();
+      should(utils.parseDuration("10x")).be.undefined();
+      should(utils.parseDuration(".ms")).be.undefined();
+    });
+  });
+
+  describe("safeBigInt", function () {
+    it("should work", function () {
+      should(utils.safeBigInt(0)).equal(0n);
+      should(utils.safeBigInt(-1)).equal(-1n);
+      should(utils.safeBigInt(500)).equal(500n);
+      should(utils.safeBigInt("0")).equal(0n);
+      should(utils.safeBigInt("-1")).equal(-1n);
+      should(utils.safeBigInt("500")).equal(500n);
+
+      should(utils.safeBigInt("")).be.undefined();
+      should(utils.safeBigInt("a")).be.undefined();
+      should(utils.safeBigInt("1.0")).be.undefined();
+      should(utils.safeBigInt(null)).be.undefined();
+      should(utils.safeBigInt({})).be.undefined();
     });
   });
 
@@ -843,14 +860,15 @@ describe("utils", function () {
     it("should work", function () {
       should(utils.hasIndexChanged()).equal(false);
       should(utils.hasIndexChanged("")).equal(false);
-      should(utils.hasIndexChanged("1")).equal(true);
-      should(utils.hasIndexChanged("1", "")).equal(true);
-      should(utils.hasIndexChanged("10", "1")).equal(true);
-      should(utils.hasIndexChanged("0", "1")).equal(true);
-      should(utils.hasIndexChanged("1", "1")).equal(false);
-      should(utils.hasIndexChanged("1", "0")).equal(true);
-      should(utils.hasIndexChanged("2", "1")).equal(true);
-      should(utils.hasIndexChanged("2", "2")).equal(false);
+      should(utils.hasIndexChanged(0n)).equal(false);
+      should(utils.hasIndexChanged(1n)).equal(true);
+      should(utils.hasIndexChanged(1n, "")).equal(true);
+      should(utils.hasIndexChanged(10n, 1n)).equal(true);
+      should(utils.hasIndexChanged(0n, 1n)).equal(false);
+      should(utils.hasIndexChanged(1n, 1n)).equal(false);
+      should(utils.hasIndexChanged(1n, 0n)).equal(true);
+      should(utils.hasIndexChanged(2n, 1n)).equal(true);
+      should(utils.hasIndexChanged(2n, 2n)).equal(false);
     });
   });
 });

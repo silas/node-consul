@@ -1,6 +1,6 @@
 {
   "node": true,
-  "esversion": 9,
+  "esversion": 11,
   "globals": {
     // Mocha
     "describe": false,
@@ -15,7 +15,6 @@
   "eqnull": true,
   "indent": 2,
   "latedef": true,
-  "newcap": true,
   "quotmark": "double",
   "trailing": true,
   "undef": true,
