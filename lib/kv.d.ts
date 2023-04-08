@@ -3,11 +3,14 @@ import { Consul } from "./consul";
 interface GetOptions {
   key?: string;
   dc?: string;
-  recurse?: boolean;
   raw?: boolean;
   keys?: boolean;
   separator?: string;
   ns?: string;
+}
+
+interface GetOptionsRecurse extends GetOptions {
+  recurse: boolean;
 }
 
 interface GetItem {
@@ -19,9 +22,13 @@ interface GetItem {
   Value: string | null;
 }
 
-type GetResult = GetItem[] | GetItem | null;
+type GetResult = GetItem | null;
 
-type KeysOptions = GetOptions;
+type GetResultRecurse = GetItem[] | GetItem | null;
+
+interface KeysOptions extends GetOptions {
+  recurse?: boolean;
+}
 
 type KeysResult = string[];
 
@@ -55,6 +62,7 @@ declare class Kv {
 
   get(options?: GetOptions): Promise<GetResult>;
   get(key: string): Promise<GetResult>;
+  get(options?: GetOptionsRecurse): Promise<GetResultRecurse>;
 
   keys(options?: KeysOptions): Promise<KeysResult>;
   keys(key: string): Promise<KeysResult>;
