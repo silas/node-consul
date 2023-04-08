@@ -1,13 +1,13 @@
 import { AclLegacy } from "./acl/legacy";
-import { Consul } from "./consul";
+import { CommonOptions, Consul } from "./consul";
 
-interface BootstrapOptions {
+interface BootstrapOptions extends CommonOptions {
   bootstrapsecret?: string;
 }
 
 type BootstrapResult = any;
 
-interface ReplicationOptions {
+interface ReplicationOptions extends CommonOptions {
   dc?: string;
 }
 

@@ -1,6 +1,6 @@
-import { Consul } from "../consul";
+import { CommonOptions, Consul } from "../consul";
 
-interface ListOptions {
+interface ListOptions extends CommonOptions {
   dc?: string;
   near?: string;
   filter?: string;
@@ -8,7 +8,7 @@ interface ListOptions {
 
 type ListResult = any[];
 
-interface ServicesOptions {
+interface ServicesOptions extends CommonOptions {
   node: string;
   dc?: string;
   filter?: string;

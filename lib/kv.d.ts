@@ -6,18 +6,20 @@ interface GetOptions {
   recurse?: boolean;
   raw?: boolean;
   keys?: boolean;
-  separator?: boolean;
+  separator?: string;
   ns?: string;
 }
 
-interface GetResult {
+interface GetItem {
   CreateIndex: number;
   ModifyIndex: number;
   LockIndex: number;
   Key: string;
   Flags: number;
-  Value: string;
+  Value: string | null;
 }
+
+type GetResult = GetItem[] | GetItem | null;
 
 type KeysOptions = GetOptions;
 

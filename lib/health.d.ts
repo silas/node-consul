@@ -1,6 +1,6 @@
-import { Consul } from "./consul";
+import { CommonOptions, Consul } from "./consul";
 
-interface NodeOptions {
+interface NodeOptions extends CommonOptions {
   name: string;
   dc?: string;
   filter?: string;
@@ -23,7 +23,7 @@ interface Node {
 
 type NodeResult = Node[];
 
-interface ChecksOptions {
+interface ChecksOptions extends CommonOptions {
   service: string;
   dc?: string;
   near?: string;
@@ -33,7 +33,7 @@ interface ChecksOptions {
 
 type ChecksResult = Node[];
 
-interface ServiceOptions {
+interface ServiceOptions extends CommonOptions {
   service: string;
   dc?: string;
   near?: string;
@@ -46,7 +46,7 @@ interface ServiceOptions {
 
 type ServiceResult = any[];
 
-interface StateOptions {
+interface StateOptions extends CommonOptions {
   state: "any" | "passing" | "warning" | "critical";
   dc?: string;
   near?: string;

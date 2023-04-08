@@ -1,6 +1,6 @@
-import { Consul } from "./consul";
+import { CommonOptions, Consul } from "./consul";
 
-interface FireOptions {
+interface FireOptions extends CommonOptions {
   name: string;
   payload: string | Buffer;
   dc?: string;
@@ -20,7 +20,7 @@ interface FireResult {
   LTime: number;
 }
 
-interface ListOptions {
+interface ListOptions extends CommonOptions {
   name?: string;
   node?: string;
   service?: string;

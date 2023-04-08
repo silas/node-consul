@@ -1,6 +1,6 @@
-import { Consul } from "./consul";
+import { CommonOptions, Consul } from "./consul";
 
-interface ListOptions {}
+interface ListOptions extends CommonOptions {}
 
 type ListResult = any[];
 
@@ -21,7 +21,7 @@ interface CreateDnsOptions {
   ttl?: string;
 }
 
-interface CreateOptions {
+interface CreateOptions extends CommonOptions {
   name?: string;
   session?: string;
   token?: string;
@@ -37,7 +37,7 @@ interface CreateResult {
   ID: string;
 }
 
-interface GetOptions {
+interface GetOptions extends CommonOptions {
   query: string;
 }
 
@@ -49,13 +49,13 @@ interface UpdateOptions extends CreateOptions {
 
 type UpdateResult = any;
 
-interface ExecuteOptions {
+interface ExecuteOptions extends CommonOptions {
   query: string;
 }
 
 type ExecuteResult = any;
 
-interface ExplainOptions {
+interface ExplainOptions extends CommonOptions {
   query: string;
 }
 

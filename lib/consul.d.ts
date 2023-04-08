@@ -12,11 +12,26 @@ import { Status } from "./status";
 import { Transaction } from "./transaction";
 import { Watch, WatchOptions } from "./watch";
 
+export interface CommonOptions {
+  token?: string;
+}
+
+interface DefaultOptions extends CommonOptions {
+  dc?: string;
+  wan?: boolean;
+  consistent?: boolean;
+  stale?: boolean;
+  index?: string;
+  wait?: string;
+  near?: string;
+  filter?: string;
+}
+
 interface ConsulOptions {
   host?: string;
   port?: number;
   secure?: boolean;
-  defaults?: any;
+  defaults?: DefaultOptions;
   agent?: httpAgent | httpsAgent;
 }
 

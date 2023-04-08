@@ -1,6 +1,6 @@
-import { Consul } from "../consul";
+import { CommonOptions, Consul } from "../consul";
 
-interface ListOptions {
+interface ListOptions extends CommonOptions {
   dc?: string;
   ns?: string;
   filter?: string;
@@ -8,7 +8,7 @@ interface ListOptions {
 
 type ListResult = Record<string, string[]>;
 
-interface NodesOptions {
+interface NodesOptions extends CommonOptions {
   service: string;
   dc?: string;
   tag?: string;

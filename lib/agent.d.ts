@@ -1,4 +1,4 @@
-import { Consul } from "./consul";
+import { CommonOptions, Consul } from "./consul";
 import {
   AgentCheck,
   ListOptions as CheckListOptions,
@@ -10,36 +10,36 @@ import {
   ListResult as ServiceListResult,
 } from "./agent/service";
 
-interface MembersOptions {
+interface MembersOptions extends CommonOptions {
   wan?: boolean;
   segment?: string;
 }
 
 type MembersResult = any[];
 
-interface ReloadOptions {}
+interface ReloadOptions extends CommonOptions {}
 
 type ReloadResult = any;
 
-interface SelfOptions {}
+interface SelfOptions extends CommonOptions {}
 
 type SelfResult = any;
 
-interface MaintenanceOptions {
+interface MaintenanceOptions extends CommonOptions {
   enable: boolean;
   reason?: string;
 }
 
 type MaintenanceResult = any;
 
-interface JoinOptions {
+interface JoinOptions extends CommonOptions {
   address: string;
   wan?: boolean;
 }
 
 type JoinResult = any;
 
-interface ForceLeaveOptions {
+interface ForceLeaveOptions extends CommonOptions {
   node: string;
   prune?: boolean;
   wan?: boolean;

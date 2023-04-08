@@ -1,4 +1,4 @@
-import { Consul } from "./consul";
+import { CommonOptions, Consul } from "./consul";
 
 interface KVOption {
   verb: string;
@@ -28,11 +28,14 @@ interface CheckOption {
 
 type Operation = KVOption | NodeOption | ServiceOption | CheckOption;
 
-interface CreateOptions {
+interface CreateOptions extends CommonOptions {
   operations: Operation[];
 }
 
-type CreateResult = any;
+interface CreateResult {
+  Results?: Record<"KV" | "Node" | "Service" | "Check", any>[];
+  Errors?: any[];
+}
 
 declare class Transaction {
   constructor(consul: Consul);

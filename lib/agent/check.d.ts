@@ -1,6 +1,6 @@
-import { Consul } from "../consul";
+import { CommonOptions, Consul } from "../consul";
 
-interface ListOptions {
+interface ListOptions extends CommonOptions {
   filter?: string;
   ns?: string;
 }
@@ -27,7 +27,7 @@ interface Check {
 
 type ListResult = Record<string, Check>;
 
-interface RegisterOptions {
+interface RegisterOptions extends CommonOptions {
   name: string;
   id?: string;
   serviceid?: string;
@@ -53,27 +53,27 @@ interface RegisterOptions {
 
 type RegisterResult = any;
 
-interface DeregisterOptions {
+interface DeregisterOptions extends CommonOptions {
   id: string;
 }
 
 type DeregisterResult = any;
 
-interface PassOptions {
+interface PassOptions extends CommonOptions {
   id: string;
   note?: string;
 }
 
 type PassResult = any;
 
-interface WarnOptions {
+interface WarnOptions extends CommonOptions {
   id: string;
   note?: string;
 }
 
 type WarnResult = any;
 
-interface FailOptions {
+interface FailOptions extends CommonOptions {
   id: string;
   note?: string;
 }

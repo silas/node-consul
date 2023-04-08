@@ -1,7 +1,7 @@
 import { EventEmitter } from "events";
-import { Consul } from "./consul";
+import { CommonOptions, Consul } from "./consul";
 
-interface WatchOptions {
+interface WatchOptions extends CommonOptions {
   method: Function;
   options: Record<string, string>;
   backoffFactor?: number;

@@ -1,4 +1,4 @@
-import { Consul } from "./consul";
+import { CommonOptions, Consul } from "./consul";
 import { CatalogConnect } from "./catalog/connect";
 import {
   CatalogNode,
@@ -11,7 +11,7 @@ import {
   ListResult as ServiceListResult,
 } from "./catalog/service";
 
-interface DatacentersOptions {}
+interface DatacentersOptions extends CommonOptions {}
 
 type DatacentersResult = string[];
 
@@ -60,7 +60,7 @@ interface RegisterCheck {
   definition?: RegisterCheckHealthDefinition;
 }
 
-interface RegisterOptions {
+interface RegisterOptions extends CommonOptions {
   id?: string;
   node: string;
   address: string;
@@ -76,7 +76,7 @@ interface RegisterOptions {
 
 type RegisterResult = any;
 
-interface DeregisterOptions {
+interface DeregisterOptions extends CommonOptions {
   node: string;
   datacenter?: string;
   checkid?: string;

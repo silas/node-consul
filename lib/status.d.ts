@@ -1,10 +1,10 @@
-import { Consul } from "./consul";
+import { CommonOptions, Consul } from "./consul";
 
-interface LeaderOptions {}
+interface LeaderOptions extends CommonOptions {}
 
 type LeaderResult = string;
 
-interface PeersOptions {}
+interface PeersOptions extends CommonOptions {}
 
 type PeersResult = string[];
 

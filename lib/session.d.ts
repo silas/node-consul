@@ -1,6 +1,6 @@
-import { Consul } from "./consul";
+import { CommonOptions, Consul } from "./consul";
 
-interface CreateOptions {
+interface CreateOptions extends CommonOptions {
   dc?: string;
   lockdelay?: string;
   node?: string;
@@ -16,7 +16,7 @@ interface CreateResult {
   ID: string;
 }
 
-interface DestroyOptions {
+interface DestroyOptions extends CommonOptions {
   id: string;
   dc?: string;
   ns?: string;
@@ -24,7 +24,7 @@ interface DestroyOptions {
 
 type DestroyResult = boolean;
 
-interface InfoOptions {
+interface InfoOptions extends CommonOptions {
   id: string;
   dc?: string;
 }
@@ -46,20 +46,20 @@ type GetOptions = InfoOptions;
 
 type GetResult = InfoResult;
 
-interface NodeOptions {
+interface NodeOptions extends CommonOptions {
   node: string;
   dc?: string;
 }
 
 type NodeResult = InfoResult[];
 
-interface ListOptions {
+interface ListOptions extends CommonOptions {
   dc?: string;
 }
 
 type ListResult = InfoResult[];
 
-interface RenewOptions {
+interface RenewOptions extends CommonOptions {
   id: string;
   dc?: string;
 }
