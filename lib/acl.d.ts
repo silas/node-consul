@@ -1,5 +1,5 @@
-import {AclLegacy} from "./acl/legacy";
-import {Consul} from "./consul";
+import { AclLegacy } from "./acl/legacy";
+import { Consul } from "./consul";
 
 interface BootstrapOptions {
   bootstrapsecret?: string;

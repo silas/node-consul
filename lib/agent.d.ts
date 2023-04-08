@@ -1,6 +1,14 @@
-import {Consul} from "./consul";
-import {AgentCheck, ListOptions as CheckListOptions, ListResult as CheckListResult} from "./agent/check";
-import {AgentService, ListOptions as ServiceListOptions, ListResult as ServiceListResult} from "./agent/service";
+import { Consul } from "./consul";
+import {
+  AgentCheck,
+  ListOptions as CheckListOptions,
+  ListResult as CheckListResult,
+} from "./agent/check";
+import {
+  AgentService,
+  ListOptions as ServiceListOptions,
+  ListResult as ServiceListResult,
+} from "./agent/service";
 
 interface MembersOptions {
   wan?: boolean;
@@ -9,13 +17,11 @@ interface MembersOptions {
 
 type MembersResult = any[];
 
-interface ReloadOptions {
-}
+interface ReloadOptions {}
 
 type ReloadResult = any;
 
-interface SelfOptions {
-}
+interface SelfOptions {}
 
 type SelfResult = any;
 

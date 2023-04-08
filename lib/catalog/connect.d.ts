@@ -1,5 +1,5 @@
-import {Consul} from "../consul";
-import {NodesOptions, NodesResult} from "./service";
+import { Consul } from "../consul";
+import { NodesOptions, NodesResult } from "./service";
 
 declare class CatalogConnect {
   constructor(consul: Consul);

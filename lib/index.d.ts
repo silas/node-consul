@@ -1,3 +1,3 @@
-import {Consul} from "./consul";
+import { Consul } from "./consul";
 
 export = Consul;

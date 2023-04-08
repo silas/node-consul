@@ -1,8 +1,6 @@
-import {Consul} from "./consul";
+import { Consul } from "./consul";
 
-interface ListOptions {
-
-}
+interface ListOptions {}
 
 type ListResult = any[];
 
@@ -12,7 +10,7 @@ interface CreateServiceOptions {
   failover?: {
     nearestn?: number;
     datacenters?: string[];
-    targets?: {peer?: string; datacenter?: string}[];
+    targets?: { peer?: string; datacenter?: string }[];
   };
   ignorecheckids?: string[];
   onlypassing?: boolean;

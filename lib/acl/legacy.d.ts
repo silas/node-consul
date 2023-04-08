@@ -1,4 +1,4 @@
-import {Consul} from "../consul";
+import { Consul } from "../consul";
 
 interface CreateOptions {
   name?: string;
@@ -46,9 +46,7 @@ interface CloneOptions {
 
 type CloneResult = any;
 
-interface ListOptions {
-
-}
+interface ListOptions {}
 
 type ListResult = GetResult[];
 

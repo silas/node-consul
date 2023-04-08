@@ -1,4 +1,4 @@
-import {Consul} from "./consul";
+import { Consul } from "./consul";
 
 interface NodeOptions {
   name: string;
@@ -71,5 +71,7 @@ declare class Health {
   service(service: string): Promise<ServiceResult>;
 
   state(options: StateOptions): Promise<StateResult>;
-  state(state: "any" | "passing" | "warning" | "critical"): Promise<StateResult>;
+  state(
+    state: "any" | "passing" | "warning" | "critical"
+  ): Promise<StateResult>;
 }

@@ -1,4 +1,4 @@
-import {Consul} from "./consul";
+import { Consul } from "./consul";
 
 interface KVOption {
   verb: string;
@@ -40,5 +40,8 @@ declare class Transaction {
   consul: Consul;
 
   create(options: CreateOptions): Promise<CreateResult>;
-  create(operations: Operation[], options: CreateOptions): Promise<CreateResult>;
+  create(
+    operations: Operation[],
+    options: CreateOptions
+  ): Promise<CreateResult>;
 }

@@ -1,11 +1,17 @@
-import {Consul} from "./consul";
-import {CatalogConnect} from "./catalog/connect";
-import {CatalogNode, ListOptions as NodeListOptions, ListResult as NodeListResult} from "./catalog/node";
-import {CatalogService, ListOptions as ServiceListOptions, ListResult as ServiceListResult} from "./catalog/service";
+import { Consul } from "./consul";
+import { CatalogConnect } from "./catalog/connect";
+import {
+  CatalogNode,
+  ListOptions as NodeListOptions,
+  ListResult as NodeListResult,
+} from "./catalog/node";
+import {
+  CatalogService,
+  ListOptions as ServiceListOptions,
+  ListResult as ServiceListResult,
+} from "./catalog/service";
 
-interface DatacentersOptions {
-
-}
+interface DatacentersOptions {}
 
 type DatacentersResult = string[];
 
@@ -28,17 +34,21 @@ interface RegisterCheckHealthDefinitionBase {
   deregistercriticalserviceafterduration?: string;
 }
 
-interface RegisterCheckHealthDefinitionHttp extends RegisterCheckHealthDefinitionBase {
+interface RegisterCheckHealthDefinitionHttp
+  extends RegisterCheckHealthDefinitionBase {
   http: string;
   tlsskipverify?: boolean;
   tlsservername?: string;
 }
 
-interface RegisterCheckHealthDefinitionTcp extends RegisterCheckHealthDefinitionBase {
+interface RegisterCheckHealthDefinitionTcp
+  extends RegisterCheckHealthDefinitionBase {
   tcp: string;
 }
 
-type RegisterCheckHealthDefinition = RegisterCheckHealthDefinitionHttp | RegisterCheckHealthDefinitionTcp;
+type RegisterCheckHealthDefinition =
+  | RegisterCheckHealthDefinitionHttp
+  | RegisterCheckHealthDefinitionTcp;
 
 interface RegisterCheck {
   node?: string;

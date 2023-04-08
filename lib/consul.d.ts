@@ -1,16 +1,16 @@
-import {Agent as httpAgent} from "http";
-import {Agent as httpsAgent} from "https";
-import {Acl} from "./acl";
-import {Agent} from "./agent";
-import {Catalog} from "./catalog";
-import {Event} from "./event";
-import {Health} from "./health";
-import {Kv} from "./kv";
-import {Query} from "./query";
-import {Session} from "./session";
-import {Status} from "./status";
-import {Transaction} from "./transaction";
-import {Watch, WatchOptions} from "./watch";
+import { Agent as httpAgent } from "http";
+import { Agent as httpsAgent } from "https";
+import { Acl } from "./acl";
+import { Agent } from "./agent";
+import { Catalog } from "./catalog";
+import { Event } from "./event";
+import { Health } from "./health";
+import { Kv } from "./kv";
+import { Query } from "./query";
+import { Session } from "./session";
+import { Status } from "./status";
+import { Transaction } from "./transaction";
+import { Watch, WatchOptions } from "./watch";
 
 interface ConsulOptions {
   host?: string;
@@ -51,4 +51,4 @@ declare class Consul {
   watch(options: WatchOptions): Watch;
 }
 
-export {Consul};
+export { Consul };

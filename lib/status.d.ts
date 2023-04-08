@@ -1,14 +1,10 @@
-import {Consul} from "./consul";
+import { Consul } from "./consul";
 
-interface LeaderOptions {
-
-}
+interface LeaderOptions {}
 
 type LeaderResult = string;
 
-interface PeersOptions {
-
-}
+interface PeersOptions {}
 
 type PeersResult = string[];
 

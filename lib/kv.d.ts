@@ -1,4 +1,4 @@
-import {Consul} from "./consul";
+import { Consul } from "./consul";
 
 interface GetOptions {
   key?: string;
@@ -59,7 +59,11 @@ declare class Kv {
 
   set(options: SetOptions): Promise<SetResult>;
   set(key: string, value: string | Buffer): Promise<SetResult>;
-  set(key: string, value: string | Buffer, options: SetOptions): Promise<SetResult>;
+  set(
+    key: string,
+    value: string | Buffer,
+    options: SetOptions
+  ): Promise<SetResult>;
 
   del(options: DelOptions): Promise<DelResult>;
   del(key: string): Promise<DelResult>;

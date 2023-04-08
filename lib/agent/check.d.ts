@@ -1,4 +1,4 @@
-import {Consul} from "../consul";
+import { Consul } from "../consul";
 
 interface ListOptions {
   filter?: string;

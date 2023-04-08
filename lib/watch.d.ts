@@ -1,5 +1,5 @@
-import {EventEmitter} from "events";
-import {Consul} from "./consul";
+import { EventEmitter } from "events";
+import { Consul } from "./consul";
 
 interface WatchOptions {
   method: Function;
