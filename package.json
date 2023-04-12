@@ -3,6 +3,7 @@
   "version": "1.2.0",
   "description": "Consul client",
   "main": "./lib",
+  "types": "./lib/index.d.ts",
   "files": [
     "./lib"
   ],
