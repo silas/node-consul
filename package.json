@@ -3,6 +3,7 @@
   "version": "1.2.0",
   "description": "Consul client",
   "main": "./lib",
+  "types": "./lib/index.d.ts",
   "files": [
     "./lib"
   ],
@@ -10,6 +11,7 @@
     "papi": "^1.1.0"
   },
   "devDependencies": {
+    "@types/node": "*",
     "async": "^3.2.0",
     "debug": "^4.3.1",
     "jshint": "^2.5.5",
