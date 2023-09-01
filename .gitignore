@@ -2,6 +2,7 @@
 *.pid
 *swp
 .env
+.idea
 .nyc_output
 .rock.yml
 config

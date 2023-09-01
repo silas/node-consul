@@ -124,13 +124,13 @@ describe("utils", function () {
   });
 
   describe("options", function () {
-    it("should work", function () {
-      const test = (opts, req) => {
-        if (req === undefined) req = {};
-        utils.options(req, opts);
-        return req;
-      };
+    const test = (opts, req) => {
+      if (req === undefined) req = {};
+      utils.options(req, opts);
+      return req;
+    };
 
+    it("should work", function () {
       should(test()).eql({ headers: {}, query: {} });
       should(test({})).eql({ headers: {}, query: {} });
       should(test({ stale: true })).eql({ headers: {}, query: { stale: "1" } });
@@ -181,6 +181,44 @@ describe("utils", function () {
         headers: {},
         query: {},
         timeout: 10000,
+      });
+    });
+
+    describe("when token is undefined", function () {
+      it("should not include x-consul-token header", function () {
+        should(test({ token: undefined })).eql({
+          headers: {},
+          query: {},
+        });
+      });
+    });
+
+    describe("when token is null", function () {
+      it("should not include x-consul-token header", function () {
+        should(test({ token: null })).eql({
+          headers: {},
+          query: {},
+        });
+      });
+    });
+
+    describe("when token is empty string", function () {
+      it("should not include x-consul-token header", function () {
+        should(test({ token: "" })).eql({
+          headers: {},
+          query: {},
+        });
+      });
+    });
+
+    describe("when token is valid value", function () {
+      it("should include x-consul-token header", function () {
+        should(test({ token: "validToken" })).eql({
+          headers: {
+            "x-consul-token": "validToken",
+          },
+          query: {},
+        });
       });
     });
   });
