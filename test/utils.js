@@ -350,8 +350,9 @@ describe("utils", function () {
           interval: "60s",
           notes: "Just a note.",
           status: "passing",
-          failuresbeforecritical: 1,
-          successBeforePassing: 2,
+          failuresbeforewarning: 1,
+          failuresbeforecritical: 2,
+          successBeforePassing: 3,
         })
       ).eql({
         ID: "id",
@@ -362,8 +363,9 @@ describe("utils", function () {
         Interval: "60s",
         Notes: "Just a note.",
         Status: "passing",
-        FailuresBeforeCritical: 1,
-        SuccessBeforePassing: 2,
+        FailuresBeforeWarning: 1,
+        FailuresBeforeCritical: 2,
+        SuccessBeforePassing: 3,
       });
 
       should(
@@ -372,6 +374,7 @@ describe("utils", function () {
           name: "name",
           service_id: "service",
           tcp: "localhost:22",
+          tcpusetls: true,
           interval: "10s",
           notes: "SSH TCP on port 22",
           status: "passing",
@@ -382,6 +385,7 @@ describe("utils", function () {
         Name: "name",
         ServiceID: "service",
         TCP: "localhost:22",
+        TCPUseTLS: true,
         Interval: "10s",
         Notes: "SSH TCP on port 22",
         Status: "passing",
@@ -422,10 +426,56 @@ describe("utils", function () {
         utils.createServiceCheck({
           grpc: "localhost:50051",
           interval: "5s",
+          tlsservername: "server",
+          tlsskipverify: true,
+          outputmaxsize: 4096,
         })
       ).eql({
         GRPC: "localhost:50051",
         Interval: "5s",
+        TLSSkipVerify: true,
+        TLSServerName: "server",
+        OutputMaxSize: 4096,
+      });
+
+      should(
+        utils.createServiceCheck({
+          http: "https://example.com/test",
+          body: "{}",
+          disableredirects: true,
+          header: { authorization: ["one"] },
+          method: "POST",
+          interval: "5s",
+        })
+      ).eql({
+        HTTP: "https://example.com/test",
+        Body: "{}",
+        DisableRedirects: true,
+        Header: { authorization: ["one"] },
+        Method: "POST",
+        Interval: "5s",
+      });
+
+      should(
+        utils.createServiceCheck({
+          h2ping: "https://example.com/test",
+          interval: "5s",
+        })
+      ).eql({
+        H2Ping: "https://example.com/test",
+        Interval: "5s",
+      });
+
+      should(
+        utils.createServiceCheck({
+          h2ping: "http://example.com/test",
+          h2pingusetls: false,
+          interval: "5s",
+        })
+      ).eql({
+        H2Ping: "http://example.com/test",
+        Interval: "5s",
+        H2PingUseTLS: false,
       });
 
       should(
@@ -438,6 +488,38 @@ describe("utils", function () {
         GRPC: "localhost:50051",
         GRPCUseTLS: true,
         Interval: "10s",
+      });
+
+      should(
+        utils.createServiceCheck({
+          udp: "localhost:50051",
+          interval: "10s",
+        })
+      ).eql({
+        UDP: "localhost:50051",
+        Interval: "10s",
+      });
+
+      should(
+        utils.createServiceCheck({
+          tcp: "localhost:50051",
+          interval: "10s",
+        })
+      ).eql({
+        TCP: "localhost:50051",
+        Interval: "10s",
+      });
+
+      should(
+        utils.createServiceCheck({
+          tcp: "localhost:50051",
+          interval: "10s",
+          tcpusetls: true,
+        })
+      ).eql({
+        TCP: "localhost:50051",
+        Interval: "10s",
+        TCPUseTLS: true,
       });
 
       should(
@@ -472,7 +554,7 @@ describe("utils", function () {
         should(() => {
           utils.createCheck();
         }).throw(
-          "args/grpc/http/tcp and interval, ttl, or aliasnode/aliasservice"
+          "args/grpc/h2ping/http/tcp/udp and interval, ttl, or aliasnode/aliasservice"
         );
       }
     );

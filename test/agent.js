@@ -113,7 +113,7 @@ describe("Agent", function () {
         } catch (err) {
           should(err).property(
             "message",
-            "consul: agent.check.register: args/grpc/http/tcp and interval, " +
+            "consul: agent.check.register: args/grpc/h2ping/http/tcp/udp and interval, " +
               "ttl, or aliasnode/aliasservice"
           );
         }
@@ -300,7 +300,7 @@ describe("Agent", function () {
         } catch (err) {
           should(err).property(
             "message",
-            "consul: agent.service.register: args/grpc/http/tcp and interval, " +
+            "consul: agent.service.register: args/grpc/h2ping/http/tcp/udp and interval, " +
               "ttl, or aliasnode/aliasservice"
           );
         }

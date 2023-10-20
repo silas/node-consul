@@ -27,19 +27,26 @@ interface Check {
 
 type ListResult = Record<string, Check>;
 
-interface RegisterOptions extends CommonOptions {
+export interface CheckOptions {
   name: string;
   id?: string;
   serviceid?: string;
   http?: string;
+  body?: string;
+  header?: Record<string, string>;
+  disableredirects?: boolean;
+  h2ping?: string;
+  h2pingusetls?: boolean;
   tlsskipverify?: boolean;
   tcp?: string;
+  udp?: string;
   args?: string[];
   script?: string;
   dockercontainerid?: string;
   grpc?: string;
   grpcusetls?: boolean;
   shell?: string;
+  timeout: string;
   interval?: string;
   ttl?: string;
   aliasnode?: string;
@@ -47,9 +54,12 @@ interface RegisterOptions extends CommonOptions {
   notes?: string;
   status?: string;
   deregistercriticalserviceafter?: string;
+  failuresbeforewarning?: number;
   successbeforepassing?: number;
   failuresbeforecritical?: number;
 }
+
+interface RegisterOptions extends CheckOptions, CommonOptions {}
 
 type RegisterResult = any;
 

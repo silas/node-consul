@@ -1,24 +1,11 @@
 import { CommonOptions, Consul } from "../consul";
+import { CheckOptions } from "./check";
 
 interface ListOptions extends CommonOptions {
   filter?: string;
 }
 
 type ListResult = Record<string, any>;
-
-interface RegisterCheck {
-  http?: string;
-  tcp?: string;
-  script?: string;
-  dockercontainerid?: string;
-  shell?: string;
-  interval?: string;
-  timeout?: string;
-  ttl?: string;
-  notes?: string;
-  status?: string;
-  deregistercriticalserviceafter?: string;
-}
 
 interface RegisterConnect {
   native?: boolean;
@@ -38,8 +25,8 @@ interface RegisterOptions extends CommonOptions {
   kind?: string;
   proxy?: any;
   connect?: RegisterConnect;
-  check?: RegisterCheck;
-  checks?: RegisterCheck[];
+  check?: CheckOptions;
+  checks?: CheckOptions[];
 }
 
 type RegisterResult = any;
