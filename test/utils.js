@@ -20,17 +20,17 @@ describe("utils", function () {
       should(utils.getAgent({})).be.undefined();
 
       should(utils.getAgent("http://www.example.com")).be.instanceOf(
-        http.Agent
+        http.Agent,
       );
       should(utils.getAgent(new URL("http://www.example.com"))).be.instanceOf(
-        http.Agent
+        http.Agent,
       );
 
       should(utils.getAgent("https://www.example.com")).be.instanceOf(
-        https.Agent
+        https.Agent,
       );
       should(utils.getAgent(new URL("https://www.example.com"))).be.instanceOf(
-        https.Agent
+        https.Agent,
       );
     });
   });
@@ -117,8 +117,8 @@ describe("utils", function () {
           { one: 1 },
           { two: 2, one: "nope" },
           { three: 3, two: "nope" },
-          { three: "nope" }
-        )
+          { three: "nope" },
+        ),
       ).eql({ one: 1, two: 2, three: 3 });
     });
   });
@@ -140,8 +140,8 @@ describe("utils", function () {
           {
             headers: { hello: "headers" },
             query: { hello: "query" },
-          }
-        )
+          },
+        ),
       ).eql({
         headers: { hello: "headers" },
         query: { hello: "query" },
@@ -160,7 +160,7 @@ describe("utils", function () {
           filter: "Meta.env == qa",
           ctx: "ctx",
           timeout: 20,
-        })
+        }),
       ).eql({
         headers: {
           "x-consul-token": "token1",
@@ -233,7 +233,7 @@ describe("utils", function () {
       should(utils.decode("aGVsbG8gd29ybGQ=")).equal("hello world");
       should(utils.decode("aGVsbG8gd29ybGQ=", {})).equal("hello world");
       should(utils.decode("aGVsbG8gd29ybGQ=", { buffer: true })).eql(
-        Buffer.from("hello world")
+        Buffer.from("hello world"),
       );
     });
   });
@@ -315,7 +315,7 @@ describe("utils", function () {
           throw new Error("should have been canceled");
         },
         this.ctx,
-        10
+        10,
       );
 
       this.ctx.on("cancel", () => {
@@ -335,7 +335,7 @@ describe("utils", function () {
           done();
         },
         this.ctx,
-        0
+        0,
       );
     });
   });
@@ -355,7 +355,7 @@ describe("utils", function () {
           failuresbeforewarning: 1,
           failuresbeforecritical: 2,
           successBeforePassing: 3,
-        })
+        }),
       ).eql({
         ID: "id",
         Name: "name",
@@ -381,7 +381,7 @@ describe("utils", function () {
           notes: "SSH TCP on port 22",
           status: "passing",
           deregistercriticalserviceafter: "1h",
-        })
+        }),
       ).eql({
         ID: "id",
         Name: "name",
@@ -403,7 +403,7 @@ describe("utils", function () {
           args: ["/usr/bin/true"],
           interval: "30s",
           timeout: "5s",
-        })
+        }),
       ).eql({
         Args: ["/usr/bin/true"],
         Interval: "30s",
@@ -416,7 +416,7 @@ describe("utils", function () {
           interval: "30s",
           shell: "/bin/sh",
           dockercontainerid: "123",
-        })
+        }),
       ).eql({
         Script: "/usr/bin/true",
         Interval: "30s",
@@ -431,7 +431,7 @@ describe("utils", function () {
           tlsservername: "server",
           tlsskipverify: true,
           outputmaxsize: 4096,
-        })
+        }),
       ).eql({
         GRPC: "localhost:50051",
         Interval: "5s",
@@ -448,7 +448,7 @@ describe("utils", function () {
           header: { authorization: ["one"] },
           method: "POST",
           interval: "5s",
-        })
+        }),
       ).eql({
         HTTP: "https://example.com/test",
         Body: "{}",
@@ -462,7 +462,7 @@ describe("utils", function () {
         utils.createServiceCheck({
           h2ping: "https://example.com/test",
           interval: "5s",
-        })
+        }),
       ).eql({
         H2Ping: "https://example.com/test",
         Interval: "5s",
@@ -473,7 +473,7 @@ describe("utils", function () {
           h2ping: "http://example.com/test",
           h2pingusetls: false,
           interval: "5s",
-        })
+        }),
       ).eql({
         H2Ping: "http://example.com/test",
         Interval: "5s",
@@ -485,7 +485,7 @@ describe("utils", function () {
           grpc: "localhost:50051",
           grpcusetls: true,
           interval: "10s",
-        })
+        }),
       ).eql({
         GRPC: "localhost:50051",
         GRPCUseTLS: true,
@@ -496,7 +496,7 @@ describe("utils", function () {
         utils.createServiceCheck({
           udp: "localhost:50051",
           interval: "10s",
-        })
+        }),
       ).eql({
         UDP: "localhost:50051",
         Interval: "10s",
@@ -506,7 +506,7 @@ describe("utils", function () {
         utils.createServiceCheck({
           tcp: "localhost:50051",
           interval: "10s",
-        })
+        }),
       ).eql({
         TCP: "localhost:50051",
         Interval: "10s",
@@ -517,7 +517,7 @@ describe("utils", function () {
           tcp: "localhost:50051",
           interval: "10s",
           tcpusetls: true,
-        })
+        }),
       ).eql({
         TCP: "localhost:50051",
         Interval: "10s",
@@ -527,7 +527,7 @@ describe("utils", function () {
       should(
         utils.createServiceCheck({
           ttl: "15s",
-        })
+        }),
       ).eql({
         TTL: "15s",
       });
@@ -535,7 +535,7 @@ describe("utils", function () {
       should(
         utils.createServiceCheck({
           aliasnode: "web1",
-        })
+        }),
       ).eql({
         AliasNode: "web1",
       });
@@ -543,7 +543,7 @@ describe("utils", function () {
       should(
         utils.createServiceCheck({
           aliasservice: "web",
-        })
+        }),
       ).eql({
         AliasService: "web",
       });
@@ -556,9 +556,9 @@ describe("utils", function () {
         should(() => {
           utils.createCheck();
         }).throw(
-          "args/grpc/h2ping/http/tcp/udp and interval, ttl, or aliasnode/aliasservice"
+          "args/grpc/h2ping/http/tcp/udp and interval, ttl, or aliasnode/aliasservice",
         );
-      }
+      },
     );
   });
 
@@ -569,7 +569,7 @@ describe("utils", function () {
           node: "node",
           checkid: "check",
           serviceid: "service",
-        })
+        }),
       ).eql({
         Node: "node",
         CheckID: "check",
@@ -627,7 +627,7 @@ describe("utils", function () {
           service: { id: "service" },
           address: "10.0.0.1",
           skipnodeupdate: true,
-        })
+        }),
       ).eql({
         ID: "123",
         Node: "node",
@@ -686,7 +686,7 @@ describe("utils", function () {
             port: 1234,
           },
           address: "10.0.0.1",
-        })
+        }),
       ).eql({
         ID: "123",
         Node: "node",
@@ -726,7 +726,7 @@ describe("utils", function () {
     should(
       utils.createCatalogRegistration({
         taggedaddresses: {},
-      })
+      }),
     ).eql({
       TaggedAddresses: {},
     });
@@ -754,7 +754,7 @@ describe("utils", function () {
           },
           address: "10.0.0.1",
           port: 80,
-        })
+        }),
       ).eql({
         ID: "123",
         Name: "service",
@@ -777,7 +777,7 @@ describe("utils", function () {
             script: "true",
             interval: "5s",
           },
-        })
+        }),
       ).eql({
         Name: "service",
         Check: {
@@ -794,7 +794,7 @@ describe("utils", function () {
             ttl: "10s",
             notes: "ttl service check",
           },
-        })
+        }),
       ).eql({
         ID: "123",
         Name: "service",
@@ -812,7 +812,7 @@ describe("utils", function () {
             { ttl: "10s" },
             { http: "http://127.0.0.1:8000", interval: "60s" },
           ],
-        })
+        }),
       ).eql({
         ID: "123",
         Name: "service",
@@ -827,7 +827,7 @@ describe("utils", function () {
           connect: {
             native: true,
           },
-        })
+        }),
       ).eql({
         Connect: {
           Native: true,
@@ -844,7 +844,7 @@ describe("utils", function () {
               },
             },
           },
-        })
+        }),
       ).eql({
         Connect: {
           SidecarService: {
@@ -865,7 +865,7 @@ describe("utils", function () {
               },
             },
           },
-        })
+        }),
       ).eql({
         Connect: {
           SidecarService: {
@@ -890,7 +890,7 @@ describe("utils", function () {
               expose: {},
             },
           },
-        })
+        }),
       ).eql({
         Connect: {
           Proxy: {
@@ -909,7 +909,7 @@ describe("utils", function () {
       should(
         utils.createService({
           taggedaddresses: {},
-        })
+        }),
       ).eql({
         TaggedAddresses: {},
       });
@@ -920,7 +920,7 @@ describe("utils", function () {
             lan: {},
             wan: {},
           },
-        })
+        }),
       ).eql({
         TaggedAddresses: {
           lan: {},
@@ -940,7 +940,7 @@ describe("utils", function () {
               port: 80,
             },
           },
-        })
+        }),
       ).eql({
         TaggedAddresses: {
           lan: {

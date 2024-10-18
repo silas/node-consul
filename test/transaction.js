@@ -135,7 +135,7 @@ describe("Transaction", function () {
       } catch (err) {
         should(err).have.property(
           "message",
-          "consul: Transaction.create: a list of operations are required as first arguments"
+          "consul: Transaction.create: a list of operations are required as first arguments",
         );
       }
     });
@@ -147,7 +147,7 @@ describe("Transaction", function () {
       } catch (err) {
         should(err).have.property(
           "message",
-          "consul: Transaction.create: operations must be an array with at least one item"
+          "consul: Transaction.create: operations must be an array with at least one item",
         );
       }
     });

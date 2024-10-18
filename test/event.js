@@ -48,7 +48,7 @@ describe("Event", function () {
       } catch (err) {
         should(err).have.property(
           "message",
-          "consul: event.fire: name required"
+          "consul: event.fire: name required",
         );
       }
     });

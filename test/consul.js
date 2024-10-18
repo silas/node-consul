@@ -15,7 +15,7 @@ describe("Consul", function () {
     should(helper.consul()).not.have.property("_defaults");
 
     should(helper.consul({ defaults: { foo: "bar" } })).not.have.property(
-      "_defaults"
+      "_defaults",
     );
 
     should(helper.consul({ defaults: { token: "123" } }))
@@ -27,7 +27,7 @@ describe("Consul", function () {
     should(
       helper.consul({
         defaults: { token: "123", dc: "test", foo: "bar" },
-      })
+      }),
     )
       .have.property("_defaults")
       .eql({
@@ -47,7 +47,7 @@ describe("Consul", function () {
         host: "127.0.0.2",
         port: "8501",
         secure: true,
-      })._opts.baseUrl
+      })._opts.baseUrl,
     ).eql({
       protocol: "https:",
       port: "8501",
@@ -58,7 +58,7 @@ describe("Consul", function () {
     should(
       helper.consul({
         baseUrl: "https://user:pass@example.org:8502/proxy/v1",
-      })._opts.baseUrl
+      })._opts.baseUrl,
     ).eql({
       protocol: "https:",
       auth: "user:pass",
@@ -75,7 +75,7 @@ describe("Consul", function () {
     should(
       helper.consul({
         agent,
-      })._opts.agent
+      })._opts.agent,
     ).equal(agent);
   });
 
@@ -116,7 +116,7 @@ describe("Consul", function () {
             "x-consul-knownleader": "true",
             "x-consul-translate-addresses": "true",
           },
-        })
+        }),
       ).eql({
         LastIndex: "5",
         LastContact: 100,

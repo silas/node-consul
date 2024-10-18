@@ -72,6 +72,6 @@ declare class Health {
 
   state(options: StateOptions): Promise<StateResult>;
   state(
-    state: "any" | "passing" | "warning" | "critical"
+    state: "any" | "passing" | "warning" | "critical",
   ): Promise<StateResult>;
 }

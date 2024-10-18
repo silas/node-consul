@@ -45,6 +45,6 @@ declare class Transaction {
   create(options: CreateOptions): Promise<CreateResult>;
   create(
     operations: Operation[],
-    options: CreateOptions
+    options: CreateOptions,
   ): Promise<CreateResult>;
 }

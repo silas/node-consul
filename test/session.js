@@ -59,7 +59,7 @@ describe("Session", function () {
       } catch (err) {
         should(err).have.property(
           "message",
-          "consul: session.destroy: id required"
+          "consul: session.destroy: id required",
         );
         should(err).have.property("isValidation", true);
       }
@@ -95,7 +95,7 @@ describe("Session", function () {
       } catch (err) {
         should(err).have.property(
           "message",
-          "consul: session.info: id required"
+          "consul: session.info: id required",
         );
         should(err).have.property("isValidation", true);
       }
@@ -123,7 +123,7 @@ describe("Session", function () {
       } catch (err) {
         should(err).have.property(
           "message",
-          "consul: session.node: node required"
+          "consul: session.node: node required",
         );
         should(err).have.property("isValidation", true);
       }
@@ -167,7 +167,7 @@ describe("Session", function () {
       } catch (err) {
         should(err).have.property(
           "message",
-          "consul: session.renew: id required"
+          "consul: session.renew: id required",
         );
         should(err).have.property("isValidation", true);
       }

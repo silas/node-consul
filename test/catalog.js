@@ -29,7 +29,7 @@ describe("Catalog", function () {
       } catch (err) {
         should(err).property(
           "message",
-          "consul: catalog.register: node and address required"
+          "consul: catalog.register: node and address required",
         );
       }
     });
@@ -55,7 +55,7 @@ describe("Catalog", function () {
       } catch (err) {
         should(err).property(
           "message",
-          "consul: catalog.deregister: node required"
+          "consul: catalog.deregister: node required",
         );
       }
     });
@@ -146,7 +146,7 @@ describe("Catalog", function () {
         } catch (err) {
           should(err).property(
             "message",
-            "consul: catalog.node.services: node required"
+            "consul: catalog.node.services: node required",
           );
         }
       });
@@ -229,7 +229,7 @@ describe("Catalog", function () {
         } catch (err) {
           should(err).property(
             "message",
-            "consul: catalog.service.nodes: service required"
+            "consul: catalog.service.nodes: service required",
           );
         }
       });
@@ -251,7 +251,7 @@ describe("Catalog", function () {
         } catch (err) {
           should(err).property(
             "message",
-            "consul: catalog.connect.nodes: service required"
+            "consul: catalog.connect.nodes: service required",
           );
         }
       });

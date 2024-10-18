@@ -1,6 +1,6 @@
 {
   "name": "consul",
-  "version": "2.0.0-next.3",
+  "version": "2.0.0",
   "description": "Consul client",
   "main": "./lib",
   "types": "./lib/index.d.ts",
@@ -8,21 +8,20 @@
     "./lib"
   ],
   "dependencies": {
-    "papi": "^1.1.0"
+    "papi": "^1.1.0",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
-    "@definitelytyped/dtslint": "^0.0.159",
-    "@types/node": "*",
+    "@types/node": "^22.7.6",
     "async": "^3.2.0",
     "debug": "^4.3.1",
     "jshint": "^2.5.5",
-    "mocha": "^8.3.0",
+    "mocha": "^10.7.3",
     "nock": "^13.0.7",
-    "node-uuid": "^1.4.3",
-    "nyc": "^15.1.0",
-    "prettier": "^2.7.1",
+    "nyc": "^17.1.0",
+    "prettier": "^3.3.3",
     "should": "^13.2.1",
-    "sinon": "^9.2.4",
+    "sinon": "^19.0.2",
     "temp": "^0.9.4"
   },
   "scripts": {

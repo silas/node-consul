@@ -1,7 +1,7 @@
 "use strict";
 
 const should = require("should");
-const uuid = require("node-uuid");
+const uuid = require("uuid");
 
 const helper = require("./helper");
 
@@ -33,7 +33,7 @@ helper.describe("Event", function () {
         "ServiceFilter",
         "TagFilter",
         "Version",
-        "LTime"
+        "LTime",
       );
       should(event.Name).equal("test");
     });

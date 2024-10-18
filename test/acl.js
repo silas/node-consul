@@ -74,7 +74,7 @@ describe("Acl", function () {
           } catch (err) {
             should(err).have.property(
               "message",
-              "consul: acl.legacy.update: id required"
+              "consul: acl.legacy.update: id required",
             );
             should(err).have.property("isValidation", true);
           }
@@ -101,7 +101,7 @@ describe("Acl", function () {
           } catch (err) {
             should(err).have.property(
               "message",
-              "consul: acl.legacy.destroy: id required"
+              "consul: acl.legacy.destroy: id required",
             );
             should(err).have.property("isValidation", true);
           }
@@ -137,7 +137,7 @@ describe("Acl", function () {
           } catch (err) {
             should(err).have.property(
               "message",
-              "consul: acl.legacy.info: id required"
+              "consul: acl.legacy.info: id required",
             );
             should(err).have.property("isValidation", true);
           }
@@ -166,7 +166,7 @@ describe("Acl", function () {
           } catch (err) {
             should(err).have.property(
               "message",
-              "consul: acl.legacy.clone: id required"
+              "consul: acl.legacy.clone: id required",
             );
             should(err).have.property("isValidation", true);
           }

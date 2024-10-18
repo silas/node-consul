@@ -33,7 +33,7 @@ helper.describe("Kv", function () {
         "LockIndex",
         "Key",
         "Flags",
-        "Value"
+        "Value",
       );
       should(data.Key).eql(this.key);
       should(data.Flags).eql(0);
@@ -62,7 +62,7 @@ helper.describe("Kv", function () {
         "LockIndex",
         "Key",
         "Flags",
-        "Value"
+        "Value",
       );
       should(item.Key).eql(this.key);
       should(item.Flags).eql(0);
@@ -103,7 +103,7 @@ helper.describe("Kv", function () {
       should(data).eql(
         this.keys.filter((key) => {
           return key.match(/^a/);
-        })
+        }),
       );
     });
 
@@ -123,7 +123,7 @@ helper.describe("Kv", function () {
           })
           .map(function (v) {
             return v.slice(0, 4);
-          })
+          }),
       );
     });
 
@@ -151,7 +151,7 @@ helper.describe("Kv", function () {
         "LockIndex",
         "Key",
         "Flags",
-        "Value"
+        "Value",
       );
       should(data.Value).eql(value);
     });
@@ -171,7 +171,7 @@ helper.describe("Kv", function () {
         "LockIndex",
         "Key",
         "Flags",
-        "Value"
+        "Value",
       );
       should(data.Value).be.null();
     });

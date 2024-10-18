@@ -59,14 +59,14 @@ helper.describe("Transaction", function () {
         "ModifyIndex",
         "LockIndex",
         "Key",
-        "Flags"
+        "Flags",
       );
       should(results[1].KV).have.keys(
         "CreateIndex",
         "ModifyIndex",
         "LockIndex",
         "Key",
-        "Flags"
+        "Flags",
       );
 
       const data1 = await this.c1.kv.get(key1);

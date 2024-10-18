@@ -114,7 +114,7 @@ describe("Agent", function () {
           should(err).property(
             "message",
             "consul: agent.check.register: args/grpc/h2ping/http/tcp/udp and interval, " +
-              "ttl, or aliasnode/aliasservice"
+              "ttl, or aliasnode/aliasservice",
           );
         }
       });
@@ -129,7 +129,7 @@ describe("Agent", function () {
         } catch (err) {
           should(err).property(
             "message",
-            "consul: agent.check.register: name required"
+            "consul: agent.check.register: name required",
           );
         }
       });
@@ -155,7 +155,7 @@ describe("Agent", function () {
         } catch (err) {
           should(err).property(
             "message",
-            "consul: agent.check.deregister: id required"
+            "consul: agent.check.deregister: id required",
           );
         }
       });
@@ -184,7 +184,7 @@ describe("Agent", function () {
         } catch (err) {
           should(err).property(
             "message",
-            "consul: agent.check.pass: id required"
+            "consul: agent.check.pass: id required",
           );
         }
       });
@@ -213,7 +213,7 @@ describe("Agent", function () {
         } catch (err) {
           should(err).property(
             "message",
-            "consul: agent.check.warn: id required"
+            "consul: agent.check.warn: id required",
           );
         }
       });
@@ -242,7 +242,7 @@ describe("Agent", function () {
         } catch (err) {
           should(err).property(
             "message",
-            "consul: agent.check.fail: id required"
+            "consul: agent.check.fail: id required",
           );
         }
       });
@@ -301,7 +301,7 @@ describe("Agent", function () {
           should(err).property(
             "message",
             "consul: agent.service.register: args/grpc/h2ping/http/tcp/udp and interval, " +
-              "ttl, or aliasnode/aliasservice"
+              "ttl, or aliasnode/aliasservice",
           );
         }
       });
@@ -312,7 +312,7 @@ describe("Agent", function () {
         } catch (err) {
           should(err).property(
             "message",
-            "consul: agent.service.register: name required"
+            "consul: agent.service.register: name required",
           );
         }
       });
@@ -337,7 +337,7 @@ describe("Agent", function () {
         } catch (err) {
           should(err).property(
             "message",
-            "consul: agent.service.deregister: id required"
+            "consul: agent.service.deregister: id required",
           );
         }
       });
@@ -371,7 +371,7 @@ describe("Agent", function () {
         } catch (err) {
           should(err).have.property(
             "message",
-            "consul: agent.service.maintenance: id required"
+            "consul: agent.service.maintenance: id required",
           );
           should(err).have.property("isValidation", true);
         }
@@ -384,7 +384,7 @@ describe("Agent", function () {
         } catch (err) {
           should(err).have.property(
             "message",
-            "consul: agent.service.maintenance: enable required"
+            "consul: agent.service.maintenance: enable required",
           );
           should(err).have.property("isValidation", true);
         }
@@ -457,7 +457,7 @@ describe("Agent", function () {
       } catch (err) {
         should(err).have.property(
           "message",
-          "consul: agent.maintenance: enable required"
+          "consul: agent.maintenance: enable required",
         );
         should(err).have.property("isValidation", true);
       }
@@ -484,7 +484,7 @@ describe("Agent", function () {
       } catch (err) {
         should(err).have.property(
           "message",
-          "consul: agent.join: address required"
+          "consul: agent.join: address required",
         );
         should(err).have.property("isValidation", true);
       }
@@ -511,7 +511,7 @@ describe("Agent", function () {
       } catch (err) {
         should(err).have.property(
           "message",
-          "consul: agent.forceLeave: node required"
+          "consul: agent.forceLeave: node required",
         );
         should(err).have.property("isValidation", true);
       }

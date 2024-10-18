@@ -72,7 +72,7 @@ declare class Kv {
   set(
     key: string,
     value: string | Buffer,
-    options: SetOptions
+    options: SetOptions,
   ): Promise<SetResult>;
 
   del(options: DelOptions): Promise<DelResult>;
