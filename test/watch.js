@@ -97,7 +97,7 @@ describe("Watch", function () {
             should(errors).have.length(1);
             should(errors[0]).have.property(
               "message",
-              "consul: kv.get: internal server error"
+              "consul: kv.get: internal server error",
             );
             break;
           case "15":
@@ -119,7 +119,7 @@ describe("Watch", function () {
         should(errors).have.length(3);
         should(errors[1]).have.property(
           "message",
-          "Consul returned zero index value"
+          "Consul returned zero index value",
         );
 
         safeDone();

@@ -2,7 +2,7 @@
 
 const async_ = require("async");
 const should = require("should");
-const uuid = require("node-uuid");
+const uuid = require("uuid");
 
 const helper = require("./helper");
 

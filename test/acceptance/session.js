@@ -54,7 +54,7 @@ helper.describe("Session", function () {
         "NodeChecks",
         "LockDelay",
         "Behavior",
-        "TTL"
+        "TTL",
       );
     });
   });
@@ -75,7 +75,7 @@ helper.describe("Session", function () {
           "NodeChecks",
           "LockDelay",
           "Behavior",
-          "TTL"
+          "TTL",
         );
       }
     });
@@ -104,7 +104,7 @@ helper.describe("Session", function () {
           "NodeChecks",
           "LockDelay",
           "Behavior",
-          "TTL"
+          "TTL",
         );
       }
     });
@@ -126,7 +126,7 @@ helper.describe("Session", function () {
         "NodeChecks",
         "LockDelay",
         "Behavior",
-        "TTL"
+        "TTL",
       );
     });
   });

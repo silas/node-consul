@@ -57,7 +57,7 @@ describe("Kv", function () {
       } catch (err) {
         should(err).have.property(
           "message",
-          "consul: kv.get: internal server error"
+          "consul: kv.get: internal server error",
         );
       }
     });

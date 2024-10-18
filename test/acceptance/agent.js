@@ -2,7 +2,7 @@
 
 const async_ = require("async");
 const should = require("should");
-const uuid = require("node-uuid");
+const uuid = require("uuid");
 
 const constants = require("../../lib/constants");
 
@@ -26,7 +26,7 @@ helper.describe("Agent", function () {
       should(
         data.map((m) => {
           return m.Name;
-        })
+        }),
       ).containEql("node1");
     });
   });
@@ -61,7 +61,7 @@ helper.describe("Agent", function () {
       should(enableStatus).have.property("_node_maintenance");
       should(enableStatus._node_maintenance).have.property(
         "Status",
-        "critical"
+        "critical",
       );
 
       await this.c1.agent.maintenance({ enable: false });
@@ -77,7 +77,7 @@ helper.describe("Agent", function () {
       } catch (err) {
         should(err).have.property(
           "message",
-          "consul: agent.maintenance: enable required"
+          "consul: agent.maintenance: enable required",
         );
       }
     });
@@ -106,7 +106,7 @@ helper.describe("Agent", function () {
       } catch (err) {
         should(err).have.property(
           "message",
-          "consul: agent.join: address required"
+          "consul: agent.join: address required",
         );
       }
     });
@@ -138,7 +138,7 @@ helper.describe("Agent", function () {
       } catch (err) {
         should(err).have.property(
           "message",
-          "consul: agent.forceLeave: node required"
+          "consul: agent.forceLeave: node required",
         );
       }
     });
@@ -171,7 +171,7 @@ helper.describe("Agent", function () {
       const checks = await this.c1.agent.checks();
 
       await Promise.all(
-        Object.keys(checks).map((id) => this.c1.agent.check.deregister(id))
+        Object.keys(checks).map((id) => this.c1.agent.check.deregister(id)),
       );
 
       await this.c1.agent.check.register({ name: this.name, ttl: "10s" });
@@ -179,7 +179,7 @@ helper.describe("Agent", function () {
 
     afterEach(async function () {
       await Promise.all(
-        this.deregister.map((id) => this.c1.agent.check.deregister(id))
+        this.deregister.map((id) => this.c1.agent.check.deregister(id)),
       ).catch(() => null);
     });
 
@@ -266,7 +266,7 @@ helper.describe("Agent", function () {
 
     afterEach(async function () {
       await Promise.all(
-        this.deregister.map((id) => this.c1.agent.service.deregister(id))
+        this.deregister.map((id) => this.c1.agent.service.deregister(id)),
       ).catch(() => null);
     });
 

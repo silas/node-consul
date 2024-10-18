@@ -58,7 +58,7 @@ helper.describe("Watch", function () {
       },
       (next) => {
         setTimeout(next, 50);
-      }
+      },
     );
 
     const values = changes.map((data) => data && data.Value);
@@ -98,7 +98,7 @@ helper.describe("Watch", function () {
       },
       (next) => {
         setTimeout(next, 50);
-      }
+      },
     );
 
     should(watch).have.property("_attempts", 0);

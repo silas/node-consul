@@ -29,7 +29,7 @@ describe("Health", function () {
       } catch (err) {
         should(err).have.property(
           "message",
-          "consul: health.node: node required"
+          "consul: health.node: node required",
         );
       }
     });
@@ -57,7 +57,7 @@ describe("Health", function () {
       } catch (err) {
         should(err).have.property(
           "message",
-          "consul: health.checks: service required"
+          "consul: health.checks: service required",
         );
       }
     });
@@ -91,7 +91,7 @@ describe("Health", function () {
       } catch (err) {
         should(err).have.property(
           "message",
-          "consul: health.service: service required"
+          "consul: health.service: service required",
         );
       }
     });
@@ -119,7 +119,7 @@ describe("Health", function () {
       } catch (err) {
         should(err).have.property(
           "message",
-          "consul: health.state: state required"
+          "consul: health.state: state required",
         );
       }
     });
@@ -131,7 +131,7 @@ describe("Health", function () {
       } catch (err) {
         should(err).have.property(
           "message",
-          "consul: health.state: state invalid: foo"
+          "consul: health.state: state invalid: foo",
         );
       }
     });

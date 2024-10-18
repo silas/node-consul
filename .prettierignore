@@ -1,1 +1,14 @@
-.gitignore
+*.log
+*.pid
+*swp
+.env
+.idea
+.nyc_output
+.rock.yml
+config
+coverage
+example*.js
+node_modules
+package-lock.json
+pnpm-lock.yaml
+tmp

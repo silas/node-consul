@@ -97,7 +97,7 @@ describe("Query", function () {
       } catch (err) {
         should(err).have.property(
           "message",
-          "consul: query.create: service required"
+          "consul: query.create: service required",
         );
       }
     });
@@ -118,7 +118,7 @@ describe("Query", function () {
       } catch (err) {
         should(err).have.property(
           "message",
-          "consul: query.get: query required"
+          "consul: query.get: query required",
         );
       }
     });
@@ -183,7 +183,7 @@ describe("Query", function () {
       } catch (err) {
         should(err).have.property(
           "message",
-          "consul: query.update: query required"
+          "consul: query.update: query required",
         );
       }
     });
@@ -195,7 +195,7 @@ describe("Query", function () {
       } catch (err) {
         should(err).have.property(
           "message",
-          "consul: query.update: service required"
+          "consul: query.update: service required",
         );
       }
     });
@@ -215,7 +215,7 @@ describe("Query", function () {
       } catch (err) {
         should(err).have.property(
           "message",
-          "consul: query.destroy: query required"
+          "consul: query.destroy: query required",
         );
       }
     });
@@ -235,7 +235,7 @@ describe("Query", function () {
       } catch (err) {
         should(err).have.property(
           "message",
-          "consul: query.execute: query required"
+          "consul: query.execute: query required",
         );
       }
     });
@@ -255,7 +255,7 @@ describe("Query", function () {
       } catch (err) {
         should(err).have.property(
           "message",
-          "consul: query.explain: query required"
+          "consul: query.explain: query required",
         );
       }
     });

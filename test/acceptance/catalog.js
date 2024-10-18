@@ -2,7 +2,7 @@
 
 const async_ = require("async");
 const should = require("should");
-const uuid = require("node-uuid");
+const uuid = require("uuid");
 
 const helper = require("./helper");
 
@@ -63,7 +63,7 @@ helper.describe("Catalog", function () {
         should(data.Services[this.service.name]).have.properties(
           "ID",
           "Service",
-          "Tags"
+          "Tags",
         );
         should(data.Services[this.service.name].Service).eql(this.service.name);
         should(data.Services[this.service.name].Tags).eql([this.service.tag]);

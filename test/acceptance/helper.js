@@ -68,7 +68,7 @@ class Cluster {
     };
     await util.promisify(fs.writeFile)(
       serverConfigPath,
-      JSON.stringify(serverConfig)
+      JSON.stringify(serverConfig),
     );
 
     args.push("-config-file");
@@ -94,7 +94,7 @@ class Cluster {
     server.on("exit", (code) => {
       if (code !== 0 && !server._destroyed) {
         const err = new Error(
-          "Server exited (" + opts.node + "): " + code + "\n"
+          "Server exited (" + opts.node + "): " + code + "\n",
         );
         err.message += "Command: " + binPath + " " + JSON.stringify(args);
         throw err;
