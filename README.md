@@ -64,6 +64,7 @@ const consul = new Consul();
 These options can be included with any method call, although only certain endpoints support them. See the [HTTP API][consul-docs-api] for more information.
 
 - dc (String, optional): datacenter (defaults to local for agent)
+- partition (String, optional): partition (defaults to 'default' partition)
 - wan (Boolean, default: false): return WAN members instead of LAN members
 - consistent (Boolean, default: false): require strong consistency
 - stale (Boolean, default: false): use whatever is available, can be arbitrarily stale

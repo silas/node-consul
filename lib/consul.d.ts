@@ -18,6 +18,7 @@ export interface CommonOptions {
 
 interface DefaultOptions extends CommonOptions {
   dc?: string;
+  partition?: string;
   wan?: boolean;
   consistent?: boolean;
   stale?: boolean;

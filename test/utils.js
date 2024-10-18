@@ -149,6 +149,7 @@ describe("utils", function () {
       should(
         test({
           dc: "dc1",
+          partition: "partition1",
           wan: true,
           consistent: true,
           index: 10,
@@ -166,6 +167,7 @@ describe("utils", function () {
         },
         query: {
           dc: "dc1",
+          partition: "partition1",
           wan: "1",
           consistent: "1",
           index: 10,
