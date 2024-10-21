@@ -810,6 +810,12 @@ describe("utils", function () {
           name: "service",
           checks: [
             { ttl: "10s" },
+            {
+              ttl: "10s",
+              name: "service-check-name-1",
+              checkid: "service-check-id-1",
+              notes: "service-check-notes-1",
+            },
             { http: "http://127.0.0.1:8000", interval: "60s" },
           ],
         }),
@@ -818,6 +824,12 @@ describe("utils", function () {
         Name: "service",
         Checks: [
           { TTL: "10s" },
+          {
+            TTL: "10s",
+            Name: "service-check-name-1",
+            CheckID: "service-check-id-1",
+            Notes: "service-check-notes-1",
+          },
           { HTTP: "http://127.0.0.1:8000", Interval: "60s" },
         ],
       });
