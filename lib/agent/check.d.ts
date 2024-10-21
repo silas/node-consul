@@ -29,7 +29,7 @@ type ListResult = Record<string, Check>;
 
 export interface CheckOptions {
   name: string;
-  id?: string;
+  checkid?: string;
   serviceid?: string;
   http?: string;
   body?: string;
