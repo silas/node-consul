@@ -8,8 +8,7 @@
     "./lib"
   ],
   "dependencies": {
-    "papi": "^1.1.0",
-    "uuid": "^10.0.0"
+    "papi": "^1.1.0"
   },
   "devDependencies": {
     "@types/node": "^22.7.6",
@@ -22,12 +21,14 @@
     "prettier": "^3.3.3",
     "should": "^13.2.1",
     "sinon": "^19.0.2",
-    "temp": "^0.9.4"
+    "temp": "^0.9.4",
+    "tsd": "^0.31.2",
+    "uuid": "^10.0.0"
   },
   "scripts": {
     "format": "prettier -w .",
     "test": "jshint lib test && prettier -c . && nyc mocha -- --recursive --check-leaks && nyc check-coverage --statements 100 --functions 100 --branches 100 --lines 100",
-    "types": "dtslint test/types",
+    "types": "tsd",
     "acceptance": "ACCEPTANCE=true nyc mocha -- test/acceptance --recursive --check-leaks --timeout 30000",
     "acceptanceSetupMacOS": "sudo ifconfig lo0 alias 127.0.0.2 up && sudo ifconfig lo0 alias 127.0.0.3 up"
   },
