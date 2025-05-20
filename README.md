@@ -1,3 +1,6 @@
+> [!CAUTION]
+> This project is no longer maintained.
+
 # Consul
 
 This is a [Consul][consul] client.
